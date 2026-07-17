@@ -1,0 +1,2241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAP T-Code Knowledge Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#EDF1FB; --bg2:#F7F2FA; --bg3:#EFF7F6;
+  --ink:#0F1222;
+  --ink-soft:rgba(30,35,60,.62);
+  --ink-faint:rgba(30,35,60,.42);
+  --glass:rgba(255,255,255,.52);
+  --glass-strong:rgba(255,255,255,.68);
+  --glass-brd:rgba(255,255,255,.65);
+  --glass-brd-soft:rgba(255,255,255,.45);
+  --shadow:0 8px 32px rgba(80,90,160,.14);
+  --shadow-lift:0 16px 48px rgba(80,90,160,.20);
+  --surface:rgba(255,255,255,.88);
+  --border:rgba(120,130,175,.22);
+  --mm:#2563EB; --mm-soft:rgba(37,99,235,.12);
+  --fi:#059669; --fi-soft:rgba(5,150,105,.12);
+  --sd:#9333EA; --sd-soft:rgba(147,51,234,.11);
+  --pp:#EA7C1F; --pp-soft:rgba(234,124,31,.13);
+  --qm:#0891B2; --qm-soft:rgba(8,145,178,.12);
+  --pm:#B45309; --pm-soft:rgba(180,83,9,.12);
+  --hr:#DB2777; --hr-soft:rgba(219,39,119,.11);
+  --pel:#1D4ED8; --pel-soft:rgba(29,78,216,.11);
+  --ps:#0D9488; --ps-soft:rgba(13,148,136,.12);
+  --refx:#92580F; --refx-soft:rgba(146,88,15,.12);
+  --gold:#D97706;
+  --grad:linear-gradient(135deg,#3B82F6 0%,#8B5CF6 55%,#D946EF 100%);
+  --radius:22px;
+  --radius-sm:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;
+  background:linear-gradient(160deg,var(--bg1) 0%,var(--bg2) 55%,var(--bg3) 100%);
+  color:var(--ink);
+  padding:44px 32px 90px;
+  -webkit-font-smoothing:antialiased;
+  min-height:100%;
+}
+.mono{font-family:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace}
+
+/* Ambient gradient blobs behind the glass */
+.bg-blobs{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.bg-blobs span{
+  position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;
+  animation:drift 26s ease-in-out infinite alternate}
+.bg-blobs span:nth-child(1){width:560px;height:560px;background:#7CA7FF;top:-160px;left:-120px}
+.bg-blobs span:nth-child(2){width:480px;height:480px;background:#C79BFF;top:16%;right:-140px;animation-delay:-8s}
+.bg-blobs span:nth-child(3){width:520px;height:520px;background:#7FE3D3;bottom:-180px;left:22%;animation-delay:-15s}
+.bg-blobs span:nth-child(4){width:380px;height:380px;background:#FFB7DE;bottom:8%;right:16%;opacity:.4;animation-delay:-4s}
+@keyframes drift{
+  from{transform:translate(0,0) scale(1)}
+  to{transform:translate(60px,40px) scale(1.12)}
+}
+@media (prefers-reduced-motion:reduce){
+  .bg-blobs span{animation:none}
+  *{transition-duration:.01ms!important;animation-duration:.01ms!important}
+}
+
+.wrap{max-width:1180px;margin:auto}
+
+/* ---------- Hero ---------- */
+.hero{margin-bottom:30px}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-soft);margin-bottom:16px;
+  background:var(--glass);border:1px solid var(--glass-brd);
+  backdrop-filter:blur(18px) saturate(170%);-webkit-backdrop-filter:blur(18px) saturate(170%);
+  padding:7px 16px;border-radius:999px;box-shadow:var(--shadow)}
+.eyebrow::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--grad)}
+.hero h1{
+  font-size:clamp(32px,4.4vw,46px);font-weight:700;line-height:1.12;
+  letter-spacing:-.03em;margin-bottom:12px}
+.hero h1 span{
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--ink-soft);font-size:15px;max-width:640px;line-height:1.65;font-weight:400}
+
+/* ---------- Search + chips ---------- */
+.tool-row{display:flex;gap:12px;margin:26px 0 22px;flex-wrap:wrap}
+.search-box{
+  flex:1;min-width:240px;display:flex;align-items:center;gap:10px;
+  background:var(--glass-strong);border:1px solid var(--glass-brd);border-radius:16px;
+  backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);
+  padding:13px 18px;transition:box-shadow .2s,border-color .2s;box-shadow:var(--shadow)}
+.search-box:focus-within{border-color:rgba(59,130,246,.55);box-shadow:0 0 0 4px rgba(59,130,246,.14),var(--shadow)}
+.search-box svg{flex-shrink:0;color:var(--ink-faint)}
+.search-box input{
+  border:none;outline:none;background:none;font-family:inherit;
+  font-size:14px;color:var(--ink);width:100%}
+.search-box input::placeholder{color:var(--ink-faint)}
+.clear-btn{
+  border:none;background:none;color:var(--ink-soft);cursor:pointer;
+  font-size:13px;padding:2px 4px;display:none;font-family:inherit}
+.fav-chip{
+  border:1px solid var(--glass-brd);background:var(--glass);cursor:pointer;
+  backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);
+  font-family:inherit;font-weight:600;font-size:13px;color:var(--ink-soft);
+  padding:0 18px;border-radius:16px;display:flex;align-items:center;gap:7px;
+  transition:transform .18s,box-shadow .18s,color .18s;box-shadow:var(--shadow)}
+.fav-chip:hover{transform:translateY(-1px);box-shadow:var(--shadow-lift);color:var(--ink)}
+.fav-chip.active{background:linear-gradient(135deg,#F59E0B,#D97706);border-color:transparent;color:#fff}
+.fav-chip .fc{font-size:11px;font-weight:700;background:rgba(15,18,34,.08);border-radius:999px;padding:2px 8px}
+.fav-chip.active .fc{background:rgba(255,255,255,.28)}
+
+/* ---------- Glossary / panels ---------- */
+.glossary-panel{
+  background:var(--glass);border:1px solid var(--glass-brd);border-radius:var(--radius);
+  backdrop-filter:blur(26px) saturate(175%);-webkit-backdrop-filter:blur(26px) saturate(175%);
+  box-shadow:var(--shadow);
+  padding:22px;margin-bottom:26px}
+.glossary-head{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.glossary-head h3{font-size:16px;font-weight:700;margin-right:auto;letter-spacing:-.01em}
+.glossary-search{
+  flex:1;min-width:200px;border:1px solid var(--glass-brd);border-radius:12px;
+  background:var(--glass-strong);
+  padding:10px 14px;font-family:inherit;font-size:13px;outline:none;color:var(--ink);
+  transition:border-color .2s,box-shadow .2s}
+.glossary-search:focus{border-color:rgba(59,130,246,.55);box-shadow:0 0 0 4px rgba(59,130,246,.12)}
+.glossary-close{border:none;background:none;color:var(--ink-soft);cursor:pointer;font-size:13px;font-weight:600;font-family:inherit}
+.glossary-cats{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+.gcat-chip{
+  border:1px solid var(--glass-brd-soft);background:rgba(255,255,255,.4);font-size:12px;font-weight:500;
+  padding:7px 14px;border-radius:999px;cursor:pointer;color:var(--ink-soft);font-family:inherit;
+  transition:.18s;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.gcat-chip:hover{background:rgba(255,255,255,.7)}
+.gcat-chip.active{background:var(--ink);border-color:var(--ink);color:#fff}
+.glossary-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.gterm{border:1px solid var(--glass-brd-soft);border-radius:var(--radius-sm);padding:15px 17px;background:rgba(255,255,255,.45)}
+.gterm-head{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.gterm-name{font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:700;font-size:13.5px;color:var(--ink)}
+.gterm-cat{font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--mm-soft);color:var(--mm)}
+.gterm-cat.pel{background:var(--pel-soft);color:var(--pel)}
+.gterm-def{font-size:13px;color:var(--ink-soft);line-height:1.6}
+
+/* ---------- Diagram boxes ---------- */
+.diagram-toggle{
+  margin-top:14px;width:100%;border:1px solid var(--glass-brd);background:rgba(255,255,255,.5);color:var(--ink);
+  font-family:inherit;font-weight:600;font-size:13px;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  padding:11px 16px;border-radius:12px;cursor:pointer;transition:.18s}
+.diagram-toggle:hover{background:rgba(255,255,255,.75);box-shadow:var(--shadow)}
+.diagram-box{display:none;margin-top:12px;padding:16px;background:rgba(255,255,255,.5);border:1px solid var(--glass-brd-soft);border-radius:var(--radius-sm);overflow-x:auto}
+.diagram-box.open{display:block;animation:f .22s ease}
+
+/* ---------- Process flow ---------- */
+.flow-card{border:1px solid var(--glass-brd-soft);border-radius:var(--radius-sm);padding:17px 19px;margin-bottom:12px;background:rgba(255,255,255,.42)}
+.flow-card:last-child{margin-bottom:0}
+.flow-title{font-size:15px;font-weight:700;margin-bottom:4px;letter-spacing:-.01em}
+.flow-desc{font-size:13px;color:var(--ink-soft);line-height:1.55;margin-bottom:10px}
+.flow-legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.flow-legend span{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;font-weight:600;background:var(--pel-soft);color:var(--pel);padding:3px 9px;border-radius:999px}
+.flow-diagram-box{display:none;margin-top:8px;padding:16px;background:rgba(255,255,255,.55);border:1px solid var(--glass-brd-soft);border-radius:var(--radius-sm);overflow-x:auto}
+.flow-diagram-box.open{display:block;animation:f .22s ease}
+
+/* ---------- Top tabs: floating glass pills ---------- */
+.top-tabs{
+  display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;
+  background:var(--glass);border:1px solid var(--glass-brd);
+  backdrop-filter:blur(24px) saturate(175%);-webkit-backdrop-filter:blur(24px) saturate(175%);
+  padding:8px;border-radius:18px;box-shadow:var(--shadow)}
+.top-tab{
+  border:1px solid transparent;background:none;cursor:pointer;
+  font-family:inherit;font-weight:600;font-size:13px;
+  color:var(--ink-soft);padding:9px 15px;border-radius:12px;
+  transition:background .18s,color .18s,box-shadow .18s;white-space:nowrap}
+.top-tab:hover{background:rgba(255,255,255,.55);color:var(--ink)}
+.top-tab.active{background:rgba(255,255,255,.92);color:var(--mm);box-shadow:0 4px 14px rgba(80,90,160,.18);border-color:var(--glass-brd)}
+.top-tab.fi.active{color:var(--fi)}
+.top-tab.sd.active{color:var(--sd)}
+.top-tab.pp.active{color:var(--pp)}
+.top-tab.qm.active{color:var(--qm)}
+.top-tab.pm.active{color:var(--pm)}
+.top-tab.hr.active{color:var(--hr)}
+.top-tab.pel.active{color:var(--pel)}
+.top-tab.ps.active{color:var(--ps)}
+.top-tab.refx.active{color:var(--refx)}
+
+/* ---------- Sub tabs ---------- */
+.sub-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.sub-tab{
+  border:1px solid var(--glass-brd-soft);background:rgba(255,255,255,.42);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  font-family:inherit;font-weight:500;font-size:13px;color:var(--ink-soft);
+  padding:8px 15px;border-radius:999px;cursor:pointer;
+  display:flex;align-items:center;gap:7px;transition:.18s}
+.sub-tab:hover{background:rgba(255,255,255,.7);color:var(--ink)}
+.sub-tab.active{background:var(--ink);border-color:var(--ink);color:#fff;box-shadow:0 6px 18px rgba(15,18,34,.22)}
+.count-badge{
+  font-size:11px;font-weight:600;background:rgba(15,18,34,.07);
+  border-radius:999px;padding:1px 7px}
+.sub-tab.active .count-badge{background:rgba(255,255,255,.22)}
+
+.result-heading{font-size:13px;color:var(--ink-soft);font-weight:500;margin-bottom:16px}
+.result-heading b{color:var(--ink);font-weight:600}
+
+.empty-state{
+  text-align:center;padding:64px 20px;color:var(--ink-soft);
+  background:var(--glass);border:1px dashed rgba(120,130,175,.4);border-radius:var(--radius);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.empty-state .es-emoji{font-size:32px;margin-bottom:10px}
+.empty-state .es-title{font-weight:600;color:var(--ink);font-size:15px;margin-bottom:4px}
+.empty-state .es-desc{font-size:13px}
+
+/* ---------- Cards ---------- */
+.tcode-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+.tc{
+  background:var(--glass);border:1px solid var(--glass-brd);border-radius:var(--radius);
+  backdrop-filter:blur(24px) saturate(175%);-webkit-backdrop-filter:blur(24px) saturate(175%);
+  box-shadow:var(--shadow);
+  overflow:hidden;transition:transform .22s ease,box-shadow .22s ease}
+.tc:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift)}
+.tc-head{display:flex;align-items:center;padding:19px;gap:14px;cursor:pointer}
+.badge{
+  font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:700;font-size:13px;
+  padding:8px 11px;border-radius:11px;letter-spacing:.01em;white-space:nowrap;
+  border:1px solid rgba(255,255,255,.55)}
+.badge.mm{background:var(--mm-soft);color:var(--mm)}
+.badge.fi{background:var(--fi-soft);color:var(--fi)}
+.badge.sd{background:var(--sd-soft);color:var(--sd)}
+.badge.pp{background:var(--pp-soft);color:var(--pp)}
+.badge.qm{background:var(--qm-soft);color:var(--qm)}
+.badge.pm{background:var(--pm-soft);color:var(--pm)}
+.badge.hr{background:var(--hr-soft);color:var(--hr)}
+.badge.pel{background:var(--pel-soft);color:var(--pel)}
+.badge.ps{background:var(--ps-soft);color:var(--ps)}
+.badge.refx{background:var(--refx-soft);color:var(--refx)}
+.tc-info{min-width:0}
+.tc-purpose{font-size:15.5px;font-weight:600;line-height:1.3;letter-spacing:-.01em}
+.tc-desc{color:var(--ink-soft);font-size:13px;margin-top:2px;font-weight:400}
+.mod-tag{font-size:11px;color:var(--ink-faint);font-weight:500;margin-top:4px}
+.tc-actions{margin-left:auto;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.star-btn{
+  border:none;background:none;cursor:pointer;font-size:17px;line-height:1;
+  color:rgba(30,35,60,.25);padding:2px;transition:transform .15s,color .15s}
+.star-btn:hover{transform:scale(1.18)}
+.star-btn.on{color:var(--gold)}
+.arr{transition:transform .2s;color:var(--ink-faint);font-size:11px}
+.arr.open{transform:rotate(90deg)}
+.tc-body{display:none;padding:2px 19px 21px;border-top:1px solid var(--glass-brd-soft)}
+.tc-body.open{display:block;animation:f .22s ease}
+
+/* ---------- Steps ---------- */
+.steps{position:relative;padding-top:16px}
+.step{display:flex;gap:13px;position:relative;padding-bottom:16px}
+.step:last-child{padding-bottom:0}
+.step::before{
+  content:'';position:absolute;left:12px;top:26px;bottom:0;width:1px;
+  background:linear-gradient(to bottom,rgba(99,102,241,.35),rgba(99,102,241,.08))}
+.step:last-child::before{display:none}
+.sn{
+  width:25px;height:25px;border-radius:50%;background:var(--grad);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:600;
+  font-size:11px;flex-shrink:0;z-index:1;box-shadow:0 4px 10px rgba(99,102,241,.35)}
+.st{font-weight:600;font-size:13.5px;margin-bottom:3px}
+.sd-text{color:var(--ink-soft);font-size:13px;line-height:1.65;font-weight:400}
+.fp{
+  font-family:'JetBrains Mono',ui-monospace,monospace;background:var(--mm-soft);color:var(--mm);
+  padding:1px 6px;border-radius:6px;font-size:12px;font-weight:600}
+
+.note,.tip{
+  margin-top:14px;padding:13px 15px;border-radius:var(--radius-sm);font-size:13px;
+  line-height:1.6;font-weight:400;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.note{background:rgba(251,191,36,.14);border:1px solid rgba(217,119,6,.28);color:#7A5410}
+.note strong{color:#92400E}
+.tip{background:rgba(16,185,129,.12);border:1px solid rgba(5,150,105,.28);color:#065F46}
+.tip strong{color:var(--fi)}
+
+.ask-btn{
+  margin-top:16px;width:100%;border:none;background:var(--grad);color:#fff;
+  font-family:inherit;font-weight:600;font-size:13px;
+  padding:13px 16px;border-radius:13px;cursor:pointer;
+  transition:transform .18s,box-shadow .18s;
+  box-shadow:0 8px 22px rgba(99,102,241,.35)}
+.ask-btn:hover{transform:translateY(-1px);box-shadow:0 12px 30px rgba(99,102,241,.45)}
+
+button:focus-visible,input:focus-visible{outline:2px solid rgba(59,130,246,.7);outline-offset:2px}
+
+/* ---------- Module map ---------- */
+.mmap-scroll{overflow-x:auto;padding:8px 0}
+.mmap-scroll svg{min-width:760px}
+.mmap-node{cursor:pointer}
+.mmap-node rect{transition:filter .15s,stroke-width .15s}
+.mmap-node:hover rect{filter:brightness(1.04) drop-shadow(0 4px 10px rgba(80,90,160,.25));stroke-width:2.2}
+.mmap-legend{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:5px 18px;margin-top:14px}
+.mmap-legend div{font-size:12px;color:var(--ink-soft);line-height:1.5}
+.mmap-legend b{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11.5px;color:var(--ink)}
+
+/* ---------- Industry cycle cards ---------- */
+.ind-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+.ind-card{
+  border:1px solid var(--glass-brd-soft);border-radius:var(--radius-sm);
+  background:rgba(255,255,255,.42);padding:15px 17px;transition:box-shadow .2s,transform .2s}
+.ind-card:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.ind-top{display:flex;align-items:flex-start;gap:8px;margin-bottom:3px}
+.ind-name{font-size:13.5px;font-weight:700;letter-spacing:-.01em;line-height:1.35;margin-right:auto}
+.ind-sol{
+  font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10px;font-weight:700;
+  padding:3px 8px;border-radius:999px;white-space:nowrap;flex-shrink:0;
+  border:1px solid rgba(255,255,255,.55)}
+.ind-cyc{font-size:12px;font-weight:700;font-style:italic;margin-bottom:6px}
+.ind-desc{font-size:12.5px;color:var(--ink-soft);line-height:1.6}
+.ind-ex{font-size:11.5px;color:var(--ink-faint);margin-top:7px;font-weight:500}
+
+/* ---------- Business process cards ---------- */
+.bp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.bp-card{
+  border:1px solid var(--glass-brd-soft);border-radius:var(--radius-sm);
+  background:rgba(255,255,255,.42);overflow:hidden;transition:box-shadow .2s}
+.bp-card:hover{box-shadow:var(--shadow)}
+.bp-card.expanded{grid-column:1/-1;background:rgba(255,255,255,.55)}
+.bp-head{display:flex;align-items:center;gap:12px;padding:15px 17px;cursor:pointer}
+.bp-num{
+  font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;font-weight:700;
+  width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;border:1px solid rgba(255,255,255,.55)}
+.bp-titles{min-width:0}
+.bp-title{font-size:14.5px;font-weight:700;letter-spacing:-.01em;line-height:1.3}
+.bp-en{font-size:12px;color:var(--ink-soft);font-style:italic;margin-top:1px}
+.bp-mods{margin-left:auto;display:flex;gap:5px;flex-shrink:0;align-items:center}
+.bp-mod{
+  font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10.5px;font-weight:700;
+  padding:3px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.55)}
+.bp-body{display:none;padding:2px 17px 18px;border-top:1px solid var(--glass-brd-soft)}
+.bp-body.open{display:block;animation:f .22s ease}
+.bp-desc{font-size:13px;color:var(--ink-soft);line-height:1.6;margin:12px 0 14px}
+.bp-section-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin:14px 0 8px}
+.bp-acts{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:6px 18px;list-style:none}
+.bp-acts li{
+  font-size:13px;color:var(--ink-soft);line-height:1.55;padding-left:18px;position:relative}
+.bp-acts li::before{content:'';position:absolute;left:2px;top:8px;width:6px;height:6px;border-radius:50%;background:var(--grad)}
+.bp-ctrl li::before{background:linear-gradient(135deg,#F59E0B,#DC2626)}
+.bp-tcodes{display:flex;flex-wrap:wrap;gap:6px}
+.bp-tc{
+  font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11.5px;font-weight:700;
+  padding:5px 11px;border-radius:999px;cursor:pointer;border:1px solid rgba(255,255,255,.55);
+  transition:transform .15s,box-shadow .15s}
+.bp-tc:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(80,90,160,.2)}
+.bp-note-int{
+  margin-top:14px;padding:12px 14px;border-radius:var(--radius-sm);font-size:12.5px;line-height:1.6;
+  background:rgba(99,102,241,.09);border:1px solid rgba(99,102,241,.25);color:#3B3F8C}
+
+@keyframes f{from{opacity:0;transform:translateY(-4px)}to{opacity:1}}
+@media(max-width:768px){
+  body{padding:24px 16px 60px}
+  .tcode-grid{grid-template-columns:1fr}
+  .top-tabs{gap:6px}
+  .tool-row{flex-direction:column}
+  .fav-chip{padding:12px 18px;justify-content:center}
+}
+
+</style>
+</head>
+<body>
+<div class="bg-blobs" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">SAP Knowledge Hub</div>
+  <h1>Panduan T-Code SAP,<br><span>lebih rapi & mudah diikuti</span></h1>
+  <p>Kumpulan T-Code SAP MM, FI/CO, SD, PP, QM, PM, HR, dan modul khusus PELINDO — lengkap dengan langkah step-by-step, diagram alur visual, dan glosarium istilah. Cari T-code apa pun atau simpan yang sering kamu pakai ke Favorit.</p>
+</header>
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden">Master panduan T-code SAP lintas modul dengan langkah penggunaan lengkap</h2>
+
+<div class="tool-row">
+  <div class="search-box">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input id="search-input" type="text" placeholder="Cari T-code, fungsi, atau kata kunci (misal: 'goods receipt', 'ME21N', 'vendor')...">
+    <button class="clear-btn" id="clear-search">Hapus ✕</button>
+  </div>
+  <button class="fav-chip" id="fav-toggle">⭐ Favorit <span class="fc" id="fav-count">0</span></button>
+  <button class="fav-chip" id="modmap-toggle">🗺️ Peta Modul</button>
+  <button class="fav-chip" id="process-toggle">🏢 Proses Bisnis</button>
+  <button class="fav-chip" id="glossary-toggle">📖 Glosarium</button>
+  <button class="fav-chip" id="flows-toggle">🔗 Alur Proses End-to-End</button>
+</div>
+<div id="modmap-panel" class="glossary-panel" style="display:none"></div>
+<div id="process-panel" class="glossary-panel" style="display:none"></div>
+<div id="glossary-panel" class="glossary-panel" style="display:none"></div>
+<div id="flows-panel" class="glossary-panel" style="display:none"></div>
+
+<div class="top-tabs" id="top-tabs"></div>
+<div class="sub-tabs" id="sub-tabs"></div>
+<div id="result-heading-wrap"></div>
+<div class="tcode-grid" id="grid"></div>
+</div>
+<script>
+if(typeof sendPrompt!=='function'){
+  window.sendPrompt=function(t){
+    const el=document.createElement('div');
+    el.textContent='Pertanyaan disalin: "'+t+'" — tempel ke chat Claude untuk penjelasan lebih dalam.';
+    Object.assign(el.style,{position:'fixed',left:'50%',bottom:'28px',transform:'translateX(-50%)',
+      background:'#1C1C1E',color:'#fff',padding:'12px 18px',borderRadius:'10px',fontFamily:"'Inter',sans-serif",
+      fontSize:'13px',maxWidth:'88vw',textAlign:'center',zIndex:9999,boxShadow:'0 8px 24px rgba(0,0,0,.2)'});
+    document.body.appendChild(el);
+    if(navigator.clipboard) navigator.clipboard.writeText(t).catch(()=>{});
+    setTimeout(()=>el.remove(),3500);
+  };
+}
+
+const MODULE_META = {
+  MM:{label:"SAP MM — Material Management", cls:"mm"},
+  FI:{label:"SAP FI/CO — Finance & Controlling", cls:"fi"},
+  PELINDO:{label:"SAP FI/CO — PELINDO (Company Code 1000)", cls:"pel"},
+  SD:{label:"SAP SD — Sales & Distribution", cls:"sd"},
+  PP:{label:"SAP PP — Production Planning", cls:"pp"},
+  QM:{label:"SAP QM — Quality Management", cls:"qm"},
+  PM:{label:"SAP PM — Plant Maintenance", cls:"pm"},
+  HR:{label:"SAP HR — Human Resources", cls:"hr"},
+  PS:{label:"SAP PS — Project System", cls:"ps"},
+  REFX:{label:"SAP RE-FX — Real Estate Management", cls:"refx"},
+};
+
+const DB = {
+MM:{
+  "Material Master":[
+    {code:"MM01",purpose:"Create Material",desc:"Buat material master record baru",cls:"mm",steps:[
+      {t:"Buka MM01",d:"Ketik <span class='fp'>MM01</span> → Enter. Layar 'Create Material' muncul."},
+      {t:"Isi nomor & industry sector",d:"<span class='fp'>Material</span> (kosong = sistem generate otomatis). <span class='fp'>Industry Sector</span> (M=Mechanical, A=Plant Eng). <span class='fp'>Material Type</span> (ROH=Raw Mat, FERT=Finished, HALB=Semi-finished)."},
+      {t:"Pilih views",d:"Centang views yang dibutuhkan: Basic Data 1&2, Purchasing, MRP 1-4, Accounting 1&2, Costing 1&2, Storage, Sales."},
+      {t:"Pilih Org Level",d:"<span class='fp'>Plant</span>. <span class='fp'>Storage Location</span>. <span class='fp'>Sales Org</span>/<span class='fp'>Distr. Channel</span> jika perlu."},
+      {t:"Isi Basic Data 1",d:"<span class='fp'>Description</span>. <span class='fp'>Base Unit of Measure</span> (KG, EA, L). <span class='fp'>Material Group</span>. <span class='fp'>Gross/Net Weight</span>."},
+      {t:"Isi Purchasing",d:"<span class='fp'>Purchasing Group</span>. <span class='fp'>Order Unit</span>. <span class='fp'>Purchasing Value Key</span>. GR processing time."},
+      {t:"Isi MRP 1",d:"<span class='fp'>MRP Type</span> (PD=MRP, VB=Reorder Point). <span class='fp'>MRP Controller</span>. <span class='fp'>Lot Size</span> (EX=Exact, FX=Fixed)."},
+      {t:"Isi Accounting 1",d:"<span class='fp'>Valuation Class</span>. <span class='fp'>Price Control</span> (V=Moving Average, S=Standard). <span class='fp'>Moving Price</span> atau <span class='fp'>Standard Price</span>."},
+      {t:"Simpan",d:"Ctrl+S → Material Number tergenerate. Catat nomor ini."},
+    ],tip:"Buat checklist view yang wajib diisi sesuai SOP perusahaan — tiap perusahaan bisa berbeda."},
+    {code:"MM02",purpose:"Change Material",desc:"Edit material master yang sudah ada",cls:"mm",steps:[
+      {t:"Buka MM02",d:"Ketik <span class='fp'>MM02</span> → masukkan <span class='fp'>Material Number</span>."},
+      {t:"Pilih view yang mau diedit",d:"Centang hanya view yang perlu diubah → pilih Org Level → Enter."},
+      {t:"Edit field",d:"Ubah field yang diperlukan. Field berwarna abu = tidak bisa diubah jika sudah ada transaksi."},
+      {t:"Simpan",d:"Ctrl+S. Perubahan langsung aktif."},
+    ],note:"Beberapa field seperti Base UoM tidak bisa diubah jika sudah ada stock atau PO aktif."},
+    {code:"MM03",purpose:"Display Material",desc:"Lihat material master (read only)",cls:"mm",steps:[
+      {t:"Buka MM03",d:"Ketik <span class='fp'>MM03</span> → <span class='fp'>Material Number</span> → pilih views → Enter."},
+      {t:"Review data",d:"Semua field display only. Gunakan ini untuk verifikasi data tanpa risiko mengubah apapun."},
+    ],tip:"Gunakan MM03 saat audit trail atau cross-check data sebelum transaksi besar."},
+    {code:"MM17",purpose:"Mass Maintenance",desc:"Update banyak material sekaligus",cls:"mm",steps:[
+      {t:"Buka MM17",d:"Ketik <span class='fp'>MM17</span>. Pilih <span class='fp'>Table</span> yang mau di-update (misal: MARC untuk plant-level data)."},
+      {t:"Tentukan material scope",d:"Masukkan range material atau gunakan selection criteria. Pilih <span class='fp'>Views</span>."},
+      {t:"Set nilai baru",d:"Centang field yang mau diubah → isi nilai baru → akan diapply ke semua material dalam selection."},
+      {t:"Execute & simpan",d:"F8 untuk preview → Ctrl+S untuk simpan massal."},
+    ],note:"Hati-hati! MM17 mengubah data massal. Selalu test di sistem dev dulu."},
+  ],
+  "Vendor Master":[
+    {code:"XK01",purpose:"Create Vendor",desc:"Buat vendor master lengkap",cls:"mm",steps:[
+      {t:"Buka XK01",d:"Ketik <span class='fp'>XK01</span>. Isi <span class='fp'>Company Code</span> dan <span class='fp'>Purchasing Org</span>. <span class='fp'>Account Group</span> (misal LIEF/KRED untuk vendor biasa — kodenya tergantung konfigurasi tiap perusahaan)."},
+      {t:"Isi General Data",d:"<span class='fp'>Name</span>. <span class='fp'>Search Term</span>. <span class='fp'>Street/City/Country</span>. <span class='fp'>Language</span>. <span class='fp'>Tax Number</span> (NPWP)."},
+      {t:"Isi Communication",d:"<span class='fp'>Phone</span>. <span class='fp'>Fax</span>. <span class='fp'>Email</span>."},
+      {t:"Isi Company Code Data",d:"<span class='fp'>Reconciliation Account</span> (akun hutang dagang di GL). <span class='fp'>Payment Terms</span>. <span class='fp'>Payment Methods</span>. <span class='fp'>Sort Key</span>."},
+      {t:"Isi Bank Data",d:"Tab Bank Accounts: <span class='fp'>Bank Country</span>. <span class='fp'>Bank Key</span>. <span class='fp'>Bank Account</span>. <span class='fp'>Account Holder</span>."},
+      {t:"Isi Purchasing Data",d:"<span class='fp'>Order Currency</span>. <span class='fp'>Payment Terms</span>. <span class='fp'>Incoterms</span>."},
+      {t:"Simpan",d:"Ctrl+S → Vendor Number tergenerate."},
+    ],tip:"XK01 buat semua level sekaligus (General+Company+Purchasing). Gunakan MK01 jika hanya perlu Purchasing level."},
+    {code:"XK02",purpose:"Change Vendor",desc:"Edit vendor master",cls:"mm",steps:[
+      {t:"Buka XK02",d:"<span class='fp'>XK02</span> → isi <span class='fp'>Vendor Number</span> → <span class='fp'>Company Code</span> → <span class='fp'>Purchasing Org</span>."},
+      {t:"Pilih data yang diubah",d:"Centang checkbox view yang mau diedit: General Data / Company Code / Purchasing Data."},
+      {t:"Edit & simpan",d:"Ubah field → Ctrl+S."},
+    ]},
+    {code:"FK03",purpose:"Display Vendor",desc:"Lihat detail vendor (FI view)",cls:"mm",steps:[
+      {t:"Buka FK03",d:"<span class='fp'>FK03</span> → <span class='fp'>Vendor</span> → <span class='fp'>Company Code</span>."},
+      {t:"Pilih view",d:"Centang: General Data, Company Code Data, Bank Accounts. Enter."},
+      {t:"Review",d:"Cek Payment Terms, Reconciliation Account, dan Bank Data — penting sebelum payment run."},
+    ],tip:"FK03 hanya menampilkan view FI. Untuk lihat data lengkap termasuk Purchasing Data, gunakan XK03 (Display Vendor Centrally)."},
+  ],
+  "Purchasing":[
+    {code:"ME21N",purpose:"Create Purchase Order",desc:"Buat PO baru",cls:"mm",steps:[
+      {t:"Buka ME21N",d:"Ketik <span class='fp'>ME21N</span>. Layar create PO terbuka secara default."},
+      {t:"Isi header PO",d:"<span class='fp'>Vendor</span>. <span class='fp'>Purchasing Org</span>. <span class='fp'>Purchasing Group</span>. <span class='fp'>Company Code</span>. <span class='fp'>Doc. Date</span>."},
+      {t:"Isi baris item",d:"Di tabel Items: <span class='fp'>Material</span> atau <span class='fp'>Short Text</span> (jika tanpa material master). <span class='fp'>Qty</span>. <span class='fp'>UoM</span>. <span class='fp'>Price</span>. <span class='fp'>Currency</span>. <span class='fp'>Delivery Date</span>. <span class='fp'>Plant</span>. <span class='fp'>Storage Location</span>."},
+      {t:"Cek Account Assignment",d:"Jika biaya langsung ke cost center: <span class='fp'>Account Assignment Cat.</span> = K → isi <span class='fp'>G/L Account</span> dan <span class='fp'>Cost Center</span>."},
+      {t:"Cek kondisi harga",d:"Tab 'Conditions' di baris item — verifikasi harga, diskon, freight sudah benar."},
+      {t:"Simpan",d:"Ctrl+S → PO Number tergenerate (10 digit). Catat untuk GR dan invoice."},
+    ],tip:"Bisa copy dari PO lama: aktifkan Document Overview On di ME21N, cari PO lama, lalu klik Adopt (atau drag ke keranjang) — hemat waktu untuk PO recurring."},
+    {code:"ME22N",purpose:"Change Purchase Order",desc:"Edit PO yang sudah ada",cls:"mm",steps:[
+      {t:"Buka ME22N",d:"<span class='fp'>ME22N</span> → masukkan <span class='fp'>PO Number</span> → Enter."},
+      {t:"Edit yang diperlukan",d:"Ubah quantity, harga, delivery date, atau tambah baris item baru."},
+      {t:"Simpan",d:"Ctrl+S. Perubahan tersimpan dan PO history terupdate."},
+    ],note:"PO yang sudah fully invoiced atau closed tidak bisa diubah."},
+    {code:"ME23N",purpose:"Display Purchase Order",desc:"Lihat detail PO",cls:"mm",steps:[
+      {t:"Buka ME23N",d:"<span class='fp'>ME23N</span> → <span class='fp'>PO Number</span> → Enter. Semua tab tampil read-only."},
+      {t:"Cek status PO",d:"Tab 'Status' → lihat berapa yang sudah di-GR, berapa yang sudah diinvoice (MIRO), sisa outstanding."},
+    ],tip:"ME23N + tab Status adalah cara cepat untuk monitor progress PO dari PR sampai payment."},
+    {code:"ME51N",purpose:"Create Purchase Requisition",desc:"Buat PR permintaan pembelian",cls:"mm",steps:[
+      {t:"Buka ME51N",d:"Ketik <span class='fp'>ME51N</span>. Layar 'Create Purchase Requisition'."},
+      {t:"Isi header",d:"<span class='fp'>Doc. Type</span> = NB (standar). <span class='fp'>Source Determination</span> = centang jika mau SAP cari vendor otomatis."},
+      {t:"Isi item",d:"<span class='fp'>Material</span>. <span class='fp'>Qty</span>. <span class='fp'>Delivery Date</span>. <span class='fp'>Plant</span>. <span class='fp'>Storage Location</span>. <span class='fp'>Acct. Assignment Cat.</span> jika biaya langsung."},
+      {t:"Simpan",d:"Ctrl+S → PR Number tergenerate. PR perlu approval sebelum bisa dikonversi ke PO."},
+    ]},
+    {code:"ME57",purpose:"Assign PR to PO/RFQ",desc:"Konversi PR menjadi PO",cls:"mm",steps:[
+      {t:"Buka ME57",d:"<span class='fp'>ME57</span>. Filter PR yang belum punya PO: <span class='fp'>Purchasing Group</span>, <span class='fp'>Plant</span>, periode."},
+      {t:"Execute",d:"F8 → tampil list PR yang perlu di-assign vendor."},
+      {t:"Assign vendor",d:"Pilih PR → klik 'Assign' → pilih vendor (dari source list atau manual). Bisa langsung generate PO dari sini."},
+    ]},
+  ],
+  "Inventory Management":[
+    {code:"MIGO",purpose:"Goods Movement",desc:"Semua pergerakan stok",cls:"mm",steps:[
+      {t:"Buka MIGO",d:"Ketik <span class='fp'>MIGO</span>. Layar serbaguna untuk semua goods movement."},
+      {t:"Pilih transaction & ref doc",d:"Dropdown pertama: <span class='fp'>Goods Receipt / Goods Issue / Transfer Posting / Other</span>. Dropdown kedua: <span class='fp'>Purchase Order / Material Document / Order / etc</span>."},
+      {t:"Untuk GR dari PO",d:"Pilih 'Goods Receipt' + 'Purchase Order'. Masukkan <span class='fp'>PO Number</span> → Enter → sistem auto-fill item dari PO."},
+      {t:"Verifikasi quantity",d:"Cek <span class='fp'>Quantity</span> yang diterima vs PO. Ubah jika partial receipt. Set <span class='fp'>Movement Type</span> = 101 untuk GR normal."},
+      {t:"Isi Storage Location",d:"Pastikan <span class='fp'>Storage Location</span> sudah benar. Isi <span class='fp'>Batch</span> jika batch-managed."},
+      {t:"Centang Item OK",d:"Centang kolom 'Item OK' di setiap baris → klik <span class='fp'>Post</span>. Material Document Number tergenerate."},
+    ],tip:"Movement Type paling penting: 101=GR dari PO, 261=GI ke Production Order, 301=Transfer antar Plant, 311=Transfer antar SLoc."},
+    {code:"MB1A",purpose:"Goods Issue",desc:"Pengeluaran barang (biaya)",cls:"mm",steps:[
+      {t:"Buka MB1A",d:"<span class='fp'>MB1A</span>. Isi <span class='fp'>Movement Type</span> = 201 (GI to Cost Center). <span class='fp'>Plant</span>. <span class='fp'>Storage Location</span>."},
+      {t:"Isi item",d:"<span class='fp'>Material</span>. <span class='fp'>Quantity</span>. <span class='fp'>Cost Center</span> (untuk mvt 201). Tekan Enter untuk validasi."},
+      {t:"Post",d:"Ctrl+S → stok berkurang, biaya ter-charge ke cost center."},
+    ],note:"Untuk GI ke Production Order, lebih baik gunakan MIGO dengan referensi Production Order."},
+    {code:"MB52",purpose:"List Warehouse Stock",desc:"Daftar saldo stok gudang per material",cls:"mm",steps:[
+      {t:"Buka MB52",d:"<span class='fp'>MB52</span> (List of Warehouse Stocks on Hand) untuk tampilan list/ALV. Untuk tampilan tree per Client → Company → Plant → SLoc, gunakan <span class='fp'>MMBE</span> (Stock Overview)."},
+      {t:"Masukkan filter",d:"<span class='fp'>Material</span> (atau range). <span class='fp'>Plant</span>. <span class='fp'>Storage Location</span>. Centang 'Only Display Special Stocks' jika perlu."},
+      {t:"Execute",d:"F8 → tampil stok: Unrestricted Use, Quality Inspection, Blocked, In Transit, dll."},
+    ]},
+    {code:"MB5B",purpose:"Stock on Date",desc:"Stok pada tanggal tertentu",cls:"mm",steps:[
+      {t:"Buka MB5B",d:"<span class='fp'>MB5B</span>. Isi <span class='fp'>Material</span>, <span class='fp'>Plant</span>, dan <span class='fp'>Key Date</span> (tanggal yang ingin dicek)."},
+      {t:"Execute",d:"F8 → tampil saldo stok per tanggal tersebut. Berguna untuk rekonsiliasi historis."},
+    ]},
+  ],
+  "Invoice Verification":[
+    {code:"MIRO",purpose:"Enter Incoming Invoice",desc:"Posting invoice vendor untuk PO",cls:"mm",steps:[
+      {t:"Buka MIRO",d:"Ketik <span class='fp'>MIRO</span>. Ini adalah 3-way match: PO + GR + Invoice."},
+      {t:"Isi header invoice",d:"<span class='fp'>Invoice Date</span>. <span class='fp'>Posting Date</span>. <span class='fp'>Reference</span> (nomor invoice vendor). <span class='fp'>Amount</span> total. <span class='fp'>Currency</span>. <span class='fp'>Tax Amount</span> jika ada."},
+      {t:"Masukkan referensi PO",d:"Di tab 'PO Reference': masukkan <span class='fp'>Purchase Order</span> number → Enter. SAP auto-fill item dari GR yang belum diinvoice."},
+      {t:"Verifikasi & match",d:"Cek qty dan amount setiap baris. Jika ada selisih harga kecil, SAP bisa auto-tolerance. Jika di luar tolerance → invoice ter-block."},
+      {t:"Simulate & Post",d:"Klik <span class='fp'>Simulate</span> → cek jurnal: Debit Expense/Asset, Kredit Vendor. Klik <span class='fp'>Post</span>."},
+    ],tip:"MIRO wajib ada GR dulu (MIGO 101) sebelum bisa diproses. Ini kontrol 3-way match yang penting."},
+    {code:"MRBR",purpose:"Release Blocked Invoices",desc:"Approve invoice yang ter-block",cls:"mm",steps:[
+      {t:"Buka MRBR",d:"<span class='fp'>MRBR</span>. Isi <span class='fp'>Company Code</span>, range tanggal. Filter jenis block jika perlu."},
+      {t:"Execute",d:"F8 → tampil semua invoice yang ter-block beserta alasan block (price, qty, dll)."},
+      {t:"Review & release",d:"Pilih invoice → cek detail → jika sudah sesuai, centang → klik Release. Invoice bisa diproses payment."},
+    ],note:"Invoice ter-block tidak bisa dibayar sampai di-release atau di-cancel."},
+  ],
+  "Physical Inventory":[
+    {code:"MI01",purpose:"Create Phys. Inventory Doc",desc:"Buat dokumen stock opname",cls:"mm",steps:[
+      {t:"Buka MI01",d:"<span class='fp'>MI01</span>. Isi <span class='fp'>Planned Count Date</span>. <span class='fp'>Plant</span>. <span class='fp'>Storage Location</span>."},
+      {t:"Isi item",d:"Masukkan <span class='fp'>Material</span> yang akan di-opname (atau bisa dari batch input). Freeze Book Inventory = centang jika tidak mau stok berubah saat counting."},
+      {t:"Simpan",d:"Ctrl+S → Physical Inventory Document Number tergenerate. Print sebagai form hitungan."},
+    ]},
+    {code:"MI04",purpose:"Enter Inventory Count",desc:"Input hasil hitungan fisik",cls:"mm",steps:[
+      {t:"Buka MI04",d:"<span class='fp'>MI04</span>. Masukkan <span class='fp'>Physical Inventory Doc</span> number. <span class='fp'>Count Date</span>."},
+      {t:"Input qty hasil hitung",d:"Isi <span class='fp'>Quantity Counted</span> untuk setiap item sesuai hasil fisik. Jangan lihat sistem dulu untuk objektivitas."},
+      {t:"Simpan",d:"Ctrl+S. Data count tersimpan. Selanjutnya MI07 untuk post differences."},
+    ]},
+    {code:"MI07",purpose:"Post Differences",desc:"Posting selisih stock opname",cls:"mm",steps:[
+      {t:"Buka MI07",d:"<span class='fp'>MI07</span>. Masukkan <span class='fp'>Phys. Inventory Doc</span>."},
+      {t:"Cek selisih",d:"Tampil selisih antara book inventory vs count. Selisih positif = kelebihan stok, negatif = kekurangan."},
+      {t:"Post",d:"Jika selisih sudah diverifikasi dan diapprove → klik <span class='fp'>Post</span>. Jurnal adjustment stok ter-posting otomatis."},
+    ],note:"Post differences biasanya perlu approval supervisor. Selisih besar wajib investigasi dulu."},
+  ],
+  "MRP":[
+    {code:"MD01",purpose:"MRP Run (Total Plant)",desc:"Jalankan MRP untuk seluruh plant",cls:"mm",steps:[
+      {t:"Buka MD01",d:"<span class='fp'>MD01</span> menjalankan MRP untuk <b>seluruh plant</b>. Untuk satu material saja gunakan <span class='fp'>MD02</span> (single-item, multi-level) atau <span class='fp'>MD03</span> (single-level). Di S/4HANA tersedia <span class='fp'>MD01N</span> (MRP Live) yang lebih cepat."},
+      {t:"Set parameter",d:"<span class='fp'>Plant</span>. <span class='fp'>Processing Key</span>: NEUPL=regenerative (hapus semua planned orders), NETCH=net change (hanya yang berubah). <span class='fp'>Planning Mode</span> = 1. <span class='fp'>Scheduling</span> = 1."},
+      {t:"Jalankan",d:"F8. Proses bisa lama untuk seluruh plant. Hasilnya: Planned Orders, Purchase Requisitions, Schedule Lines."},
+    ],note:"NEUPL (regenerative) memproses ulang semua material — gunakan hanya jika diperlukan. NETCH lebih efisien untuk run harian."},
+    {code:"MD04",purpose:"Stock/Requirements List",desc:"Lihat situasi stok & demand",cls:"mm",steps:[
+      {t:"Buka MD04",d:"<span class='fp'>MD04</span>. Masukkan <span class='fp'>Material</span> dan <span class='fp'>Plant</span> → Enter."},
+      {t:"Analisis list",d:"Tampil timeline: stock awal, semua kebutuhan (Planned Orders, Sales Orders, reservasi), semua supply (PR, PO, Production Orders). Kolom ATP = Available to Promise."},
+      {t:"Drill-down",d:"Double-click baris manapun untuk lihat detail dokumen aslinya (PO, SO, dll)."},
+    ],tip:"MD04 adalah dashboard perencanaan utama — gunakan setiap pagi untuk monitor material kritis."},
+  ],
+  "Reporting & Analysis":[
+    {code:"ME2M",purpose:"PO by Material",desc:"List semua PO per material",cls:"mm",steps:[
+      {t:"Buka ME2M",d:"<span class='fp'>ME2M</span>. Isi <span class='fp'>Material</span>, <span class='fp'>Plant</span>, <span class='fp'>Vendor</span> (opsional), range tanggal."},
+      {t:"Set scope",d:"<span class='fp'>Scope of List</span>: ALV untuk tampilan grid. Centang 'Selection Parameters' jika mau filter by status."},
+      {t:"Execute",d:"F8 → tampil semua PO untuk material tersebut beserta status delivery dan invoice."},
+    ]},
+    {code:"ME80FN",purpose:"General Analysis of PO",desc:"Analisis komprehensif purchasing",cls:"mm",steps:[
+      {t:"Buka ME80FN",d:"<span class='fp'>ME80FN</span>. Report purchasing paling komprehensif."},
+      {t:"Set filter",d:"Bisa filter by: <span class='fp'>Vendor</span>, <span class='fp'>Material</span>, <span class='fp'>Purchasing Group</span>, <span class='fp'>Plant</span>, <span class='fp'>Document Date</span>."},
+      {t:"Pilih display",d:"<span class='fp'>Purchasing Documents</span> (tampil per PO) atau <span class='fp'>Statistics</span> (tampil agregat)."},
+      {t:"Execute & analisis",d:"F8 → bisa sort, subtotal, export Excel. Ideal untuk spend analysis dan vendor performance."},
+    ]},
+  ],
+},
+FI:{
+  "General Ledger":[
+    {code:"FS00",purpose:"GL Account Master Data",desc:"Create/change/display akun GL",cls:"fi",steps:[
+      {t:"Buka FS00",d:"<span class='fp'>FS00</span>. Di sini kamu bisa create, change, atau display G/L account."},
+      {t:"Masukkan identitas",d:"<span class='fp'>G/L Account</span> (nomor akun). <span class='fp'>Company Code</span>. Pilih action: Create / Change / Display."},
+      {t:"Isi Type/Description (untuk create)",d:"<span class='fp'>Account Group</span>. <span class='fp'>P&L Statement Acct</span> atau <span class='fp'>Balance Sheet Account</span>. <span class='fp'>Short Text</span> dan <span class='fp'>Long Text</span>."},
+      {t:"Isi Control Data",d:"<span class='fp'>Account Currency</span>. <span class='fp'>Tax Category</span>. <span class='fp'>Reconciliation Account</span> for (jika ini recon acct untuk AR/AP/AA)."},
+      {t:"Isi Create/Bank/Interest",d:"<span class='fp'>Field Status Group</span> (menentukan field apa yang wajib diisi saat posting). <span class='fp'>Post Automatically Only</span> jika tidak boleh diposting manual."},
+      {t:"Simpan",d:"Ctrl+S."},
+    ],tip:"FS00 menggabungkan OBD4 (chart of accounts data) dan FS01 (company code data) dalam satu layar."},
+    {code:"FB50",purpose:"Enter GL Document",desc:"Posting jurnal GL langsung",cls:"fi",steps:[
+      {t:"Buka FB50",d:"<span class='fp'>FB50</span>. Layar posting jurnal manual."},
+      {t:"Isi header",d:"<span class='fp'>Document Date</span>. <span class='fp'>Posting Date</span>. <span class='fp'>Doc. Type</span> (SA=GL posting). <span class='fp'>Company Code</span>. <span class='fp'>Currency</span>. <span class='fp'>Reference</span>. <span class='fp'>Doc. Header Text</span>."},
+      {t:"Isi baris debit",d:"Kolom G/L Account → isi akun debit. <span class='fp'>D/C</span> = Debit. <span class='fp'>Amount</span>. <span class='fp'>Cost Center</span>/<span class='fp'>Profit Center</span> jika perlu."},
+      {t:"Isi baris kredit",d:"Baris kedua: akun kredit. <span class='fp'>D/C</span> = Credit. Amount sama. Balance harus = 0."},
+      {t:"Simulate → Post",d:"Ctrl+F9 untuk simulate → cek. Ctrl+S untuk post. Catat document number."},
+    ],note:"Pastikan posting period terbuka (cek OB52). Jika error 'Period not open', hubungi Finance Manager."},
+    {code:"FBL3N",purpose:"GL Line Items",desc:"Semua transaksi per akun GL",cls:"fi",steps:[
+      {t:"Buka FBL3N",d:"<span class='fp'>FBL3N</span>. Report line item paling detail untuk G/L."},
+      {t:"Set parameter",d:"<span class='fp'>G/L Account</span> (satu atau range). <span class='fp'>Company Code</span>. Pilih: <span class='fp'>Open Items</span> / <span class='fp'>Cleared Items</span> / <span class='fp'>All Items</span>. Set range <span class='fp'>Posting Date</span>."},
+      {t:"Execute",d:"F8 → list semua transaksi. Bisa sort, filter, group, atau export Excel via List → Export."},
+    ]},
+    {code:"FAGLB03",purpose:"Display GL Balances",desc:"Saldo GL per periode (New GL)",cls:"fi",steps:[
+      {t:"Buka FAGLB03",d:"<span class='fp'>FAGLB03</span>. Versi enhanced untuk New General Ledger."},
+      {t:"Isi parameter",d:"<span class='fp'>G/L Account</span>. <span class='fp'>Company Code</span>. <span class='fp'>Fiscal Year</span>. Tambah dimensi: <span class='fp'>Segment</span>, <span class='fp'>Profit Center</span>, <span class='fp'>Business Area</span> jika perlu."},
+      {t:"Execute & drill-down",d:"F8 → saldo per periode. Double-click → line items → double-click lagi → dokumen asli."},
+    ]},
+    {code:"OB52",purpose:"Open/Close Posting Periods",desc:"Kelola periode yang bisa diposting",cls:"fi",steps:[
+      {t:"Buka OB52",d:"<span class='fp'>OB52</span>. Konfigurasi — akses terbatas."},
+      {t:"Pilih variant",d:"Pilih <span class='fp'>Posting Period Variant</span> untuk company code kamu."},
+      {t:"Edit tabel periode",d:"Setiap baris = account type (A/D/K/S/+). Kolom: <span class='fp'>From Period 1</span> / <span class='fp'>Year 1</span> / <span class='fp'>To Period 1</span> (periode normal). Dan From/To Period 2 (periode khusus, misal: untuk back-posting tertentu)."},
+      {t:"Simpan",d:"Ctrl+S. Langsung efektif."},
+    ],note:"Selalu koordinasi dengan semua user finance sebelum tutup periode. Umumnya dilakukan setelah semua closing entry selesai."},
+  ],
+  "Accounts Payable":[
+    {code:"FK01",purpose:"Vendor Master Creation",desc:"Buat vendor (FI view)",cls:"fi",steps:[
+      {t:"Buka FK01",d:"<span class='fp'>FK01</span>. Isi <span class='fp'>Vendor Number</span> (atau biarkan kosong), <span class='fp'>Company Code</span>, <span class='fp'>Account Group</span>."},
+      {t:"Isi General Data",d:"Nama, alamat, tax number. Sama seperti XK01 tapi tanpa Purchasing data."},
+      {t:"Isi Company Code Data",d:"<span class='fp'>Reconciliation Account</span>. <span class='fp'>Payment Terms</span>. <span class='fp'>Payment Methods</span>. <span class='fp'>Clerk</span>."},
+      {t:"Bank Data",d:"Masukkan rekening bank vendor untuk payment run."},
+      {t:"Simpan",d:"Ctrl+S."},
+    ],tip:"FK01 untuk FI only. Jika vendor juga dipakai di MM (procurement), gunakan XK01 agar data lengkap."},
+    {code:"FBL1N",purpose:"Vendor Line Items",desc:"Semua transaksi hutang per vendor",cls:"fi",steps:[
+      {t:"Buka FBL1N",d:"<span class='fp'>FBL1N</span>. Report hutang dagang."},
+      {t:"Isi parameter",d:"<span class='fp'>Vendor Account</span> (satu atau range). <span class='fp'>Company Code</span>. Pilih item type."},
+      {t:"Execute",d:"F8. Perhatikan <span class='fp'>Net Due Date</span> untuk aging hutang. Sort by due date untuk prioritas pembayaran."},
+      {t:"Export & analisis",d:"Export ke Excel untuk buat aging AP: 0-30, 31-60, 61-90, >90 hari."},
+    ]},
+    {code:"F-44",purpose:"Clear Vendor",desc:"Clear open items vendor manual",cls:"fi",steps:[
+      {t:"Buka F-44",d:"<span class='fp'>F-44</span>. Digunakan untuk manual clearing — match invoice dengan payment."},
+      {t:"Isi header",d:"<span class='fp'>Account</span> = vendor number. <span class='fp'>Company Code</span>. <span class='fp'>Clearing Date</span>. <span class='fp'>Currency</span>."},
+      {t:"Process open items",d:"Klik <span class='fp'>Process Open Items</span> → tampil semua invoice dan payment yang belum clear. Pilih yang mau di-match."},
+      {t:"Balance & Post",d:"Pastikan balance = 0 → klik <span class='fp'>Post</span>."},
+    ]},
+    {code:"F110",purpose:"Automatic Payment Run",desc:"Payment vendor massal otomatis",cls:"fi",steps:[
+      {t:"Buka F110",d:"<span class='fp'>F110</span>. Isi <span class='fp'>Run Date</span> dan <span class='fp'>Identification</span> (kode unik) → Enter."},
+      {t:"Tab Parameter",d:"<span class='fp'>Posting Date</span>. <span class='fp'>Docs Entered Up To</span>. <span class='fp'>Company Codes</span>. <span class='fp'>Payment Methods</span>. <span class='fp'>Next Payment Date</span>."},
+      {t:"Proposal Run",d:"Klik <span class='fp'>Proposal</span>. Tunggu proses → cek 'Proposal List' untuk review invoice yang akan dibayar."},
+      {t:"Edit Proposal",d:"Jika ada yang perlu dikecualikan atau ditambah → klik 'Edit Proposal'. Setelah OK lanjut ke Payment Run."},
+      {t:"Payment Run",d:"Klik <span class='fp'>Payment Run</span>. SAP posting payment dan clear invoice vendor."},
+      {t:"Print/Transfer",d:"Klik <span class='fp'>Printout/Data Medium</span> → generate file untuk transfer bank."},
+    ],note:"WAJIB cek Proposal List dulu sebelum Payment Run. Jangan langsung Payment Run tanpa review!"},
+  ],
+  "Accounts Receivable":[
+    {code:"FD01",purpose:"Customer Master Creation",desc:"Buat customer master (FI view)",cls:"fi",steps:[
+      {t:"Buka FD01",d:"<span class='fp'>FD01</span>. Isi <span class='fp'>Customer</span>, <span class='fp'>Company Code</span>, <span class='fp'>Account Group</span>."},
+      {t:"Isi General Data",d:"Nama, alamat, tax number, komunikasi."},
+      {t:"Isi Company Code Data",d:"<span class='fp'>Reconciliation Account</span> (akun AR di GL). <span class='fp'>Payment Terms</span>. <span class='fp'>Dunning Procedure</span>. <span class='fp'>Sort Key</span>."},
+      {t:"Simpan",d:"Ctrl+S → Customer Number tergenerate."},
+    ]},
+    {code:"FBL5N",purpose:"Customer Line Items",desc:"Semua transaksi piutang per customer",cls:"fi",steps:[
+      {t:"Buka FBL5N",d:"<span class='fp'>FBL5N</span>. Report piutang dagang."},
+      {t:"Isi parameter",d:"<span class='fp'>Customer Account</span>. <span class='fp'>Company Code</span>. Pilih: Open / Cleared / All. Set range tanggal."},
+      {t:"Execute & analisis",d:"F8 → list piutang. Kolom <span class='fp'>Net Due Date</span> = jatuh tempo. Kolom <span class='fp'>Clearing Doc</span> = bukti sudah dibayar."},
+    ],tip:"Jalankan FBL5N mingguan dan filter Open Items + overdue → kirim reminder ke customer."},
+    {code:"F-28",purpose:"Incoming Payment",desc:"Posting penerimaan pembayaran customer",cls:"fi",steps:[
+      {t:"Buka F-28",d:"<span class='fp'>F-28</span>. Proses posting uang masuk dari customer."},
+      {t:"Isi header",d:"<span class='fp'>Document Date</span>. <span class='fp'>Posting Date</span>. <span class='fp'>Amount</span> yang diterima. <span class='fp'>Bank Account</span> G/L. <span class='fp'>Value Date</span>."},
+      {t:"Isi customer",d:"<span class='fp'>Account</span> = customer number. <span class='fp'>Account Type</span> = D. Klik <span class='fp'>Process Open Items</span>."},
+      {t:"Select invoice",d:"Double-click invoice yang dibayar → pindah ke assigned. Jika partial payment, isi amount yang dibayar. Pastikan balance = 0."},
+      {t:"Post",d:"Ctrl+S → piutang ter-clear otomatis."},
+    ]},
+    {code:"F-32",purpose:"Clear Customer",desc:"Manual clearing piutang customer",cls:"fi",steps:[
+      {t:"Buka F-32",d:"<span class='fp'>F-32</span>. Mirip F-44 tapi untuk customer (debitor)."},
+      {t:"Isi header & process",d:"<span class='fp'>Account</span> = customer. Klik <span class='fp'>Process Open Items</span>. Pilih invoice & payment yang mau di-match."},
+      {t:"Post",d:"Balance = 0 → Post."},
+    ]},
+  ],
+  "Asset Accounting":[
+    {code:"AS01",purpose:"Create Asset Master",desc:"Buat aset tetap baru",cls:"fi",steps:[
+      {t:"Buka AS01",d:"<span class='fp'>AS01</span>. Pilih <span class='fp'>Asset Class</span> → <span class='fp'>Company Code</span> → <span class='fp'>Number of Similar Assets</span> = 1."},
+      {t:"General tab",d:"<span class='fp'>Description</span>. <span class='fp'>Serial Number</span>. <span class='fp'>Inventory Number</span>. <span class='fp'>Capitalization Date</span>."},
+      {t:"Time-dependent tab",d:"<span class='fp'>Cost Center</span>. <span class='fp'>Plant</span>. <span class='fp'>Business Area</span>. <span class='fp'>Profit Center</span>."},
+      {t:"Depreciation areas tab",d:"<span class='fp'>Dep. Key</span> (LINR=Straight Line). <span class='fp'>Useful Life</span> (tahun). <span class='fp'>Ordinary Dep. Start Date</span>."},
+      {t:"Simpan",d:"Ctrl+S → Asset Number tergenerate."},
+    ]},
+    {code:"AS02",purpose:"Change Asset Master",desc:"Edit data aset",cls:"fi",steps:[
+      {t:"Buka AS02",d:"<span class='fp'>AS02</span>. Masukkan <span class='fp'>Asset Number</span> dan <span class='fp'>Company Code</span>."},
+      {t:"Edit data",d:"Ubah field yang perlu: deskripsi, cost center, depreciation key, dll. Field tertentu tidak bisa diubah jika sudah ada transaksi."},
+      {t:"Simpan",d:"Ctrl+S."},
+    ]},
+    {code:"AW01N",purpose:"Asset Explorer",desc:"Lihat nilai & depresiasi aset lengkap",cls:"fi",steps:[
+      {t:"Buka AW01N",d:"<span class='fp'>AW01N</span>. Masukkan <span class='fp'>Asset</span> number dan <span class='fp'>Company Code</span>."},
+      {t:"Tab Planned Values",d:"Lihat: Acquisition Value, Accumulated Depr, Net Book Value per periode. Proyeksi sampai fully depreciated."},
+      {t:"Tab Posted Values",d:"Nilai yang sudah ter-post ke GL. Pastikan konsisten dengan Planned Values."},
+      {t:"Tab Transactions",d:"Semua transaksi aset: akuisisi, depresiasi bulanan, transfer, retirement."},
+    ],tip:"AW01N wajib cek setiap akhir tahun untuk rekonsiliasi nilai buku aset dengan GL."},
+    {code:"ABAON",purpose:"Asset Retirement",desc:"Penghapusan/penjualan aset",cls:"fi",steps:[
+      {t:"Buka ABAON",d:"<span class='fp'>ABAON</span> untuk retirement dengan pendapatan. Atau <span class='fp'>ABAVN</span> untuk retirement tanpa pendapatan (scrap)."},
+      {t:"Isi data",d:"<span class='fp'>Asset</span>. <span class='fp'>Company Code</span>. <span class='fp'>Document Date</span>. <span class='fp'>Asset Value Date</span>. <span class='fp'>Revenue</span> jika ada penjualan. <span class='fp'>Percentage</span> atau <span class='fp'>Quantity</span> jika partial retirement."},
+      {t:"Post",d:"SAP auto hitung: Net Book Value yang di-write off, gain/loss on disposal. Jurnal ter-post otomatis."},
+    ],note:"Retirement permanen dan tidak bisa di-undo. Pastikan sudah ada approval sebelum posting."},
+  ],
+  "Controlling (CO)":[
+    {code:"KS01",purpose:"Create Cost Center",desc:"Buat cost center baru",cls:"fi",steps:[
+      {t:"Buka KS01",d:"<span class='fp'>KS01</span>. Isi <span class='fp'>Cost Center</span> number (atau follow numbering) dan <span class='fp'>Valid From</span> date."},
+      {t:"Isi Basic Data",d:"<span class='fp'>Name</span> dan <span class='fp'>Description</span>. <span class='fp'>Responsible Person</span>. <span class='fp'>Department</span>. <span class='fp'>Cost Center Category</span> (A=Administration, P=Production, dll). <span class='fp'>Hierarchy Area</span>."},
+      {t:"Isi Control",d:"<span class='fp'>Company Code</span>. <span class='fp'>Profit Center</span>. <span class='fp'>Currency</span>."},
+      {t:"Simpan",d:"Ctrl+S."},
+    ]},
+    {code:"KSB1",purpose:"Cost Center Line Items",desc:"Semua transaksi biaya per cost center",cls:"fi",steps:[
+      {t:"Buka KSB1",d:"<span class='fp'>KSB1</span>. Report biaya per cost center."},
+      {t:"Isi parameter",d:"<span class='fp'>Cost Center</span> (satu atau range). <span class='fp'>Controlling Area</span>. <span class='fp'>Fiscal Year</span>. <span class='fp'>From Period / To Period</span>. <span class='fp'>Cost Element</span> (opsional, filter jenis biaya)."},
+      {t:"Execute",d:"F8 → list semua biaya. Bisa drill-down ke dokumen FI asli."},
+    ],tip:"KSB1 adalah tools utama untuk analisis biaya departemen — cocok untuk monthly cost review dengan manager."},
+    {code:"KP06",purpose:"Cost Center Planning",desc:"Input budget/rencana biaya",cls:"fi",steps:[
+      {t:"Buka KP06",d:"<span class='fp'>KP06</span>. Masukkan <span class='fp'>Version</span> (umumnya 0 = versi plan utama yang dibandingkan dengan actual; versi 1 dst untuk skenario alternatif), <span class='fp'>From/To Period</span>, <span class='fp'>Fiscal Year</span>, <span class='fp'>Cost Center</span>."},
+      {t:"Pilih cost element",d:"<span class='fp'>Cost Element Group</span> atau individual cost elements yang mau di-plan."},
+      {t:"Input nilai plan",d:"Spreadsheet-like grid muncul. Isi nilai rencana per periode per cost element."},
+      {t:"Simpan",d:"Ctrl+S. Plan values bisa di-report vs actuals di S_ALR_87013611."},
+    ]},
+    {code:"KO01",purpose:"Create Internal Order",desc:"Buat internal order untuk project/event",cls:"fi",steps:[
+      {t:"Buka KO01",d:"<span class='fp'>KO01</span>. Pilih <span class='fp'>Order Type</span> (misal: 0400 untuk overhead orders)."},
+      {t:"Isi Assignments",d:"<span class='fp'>Description</span>. <span class='fp'>Company Code</span>. <span class='fp'>Business Area</span>. <span class='fp'>Profit Center</span>. <span class='fp'>Responsible CCtr</span>."},
+      {t:"Isi Control Data",d:"<span class='fp'>Currency</span>. <span class='fp'>Object Class</span> (OVER=overhead, CAPIT=capex). Set status ke Released agar bisa diposting."},
+      {t:"Simpan",d:"Ctrl+S → Internal Order Number tergenerate."},
+    ]},
+  ],
+  "Profit Center Accounting":[
+    {code:"KE51",purpose:"Create Profit Center",desc:"Buat profit center",cls:"fi",steps:[
+      {t:"Buka KE51",d:"<span class='fp'>KE51</span>. Isi <span class='fp'>Profit Center</span> dan <span class='fp'>Valid From</span>."},
+      {t:"Isi Basic Data",d:"<span class='fp'>Name</span>. <span class='fp'>Long Text</span>. <span class='fp'>Department</span>. <span class='fp'>Person Responsible</span>. <span class='fp'>Segment</span> (untuk IFRS 8 reporting jika perlu)."},
+      {t:"Isi Indicators",d:"<span class='fp'>Controlling Area</span>. <span class='fp'>Company Code</span>. Profit center group / hierarchy."},
+      {t:"Simpan & aktifkan",d:"Ctrl+S → profit center otomatis masuk status Active."},
+    ]},
+  ],
+  "Financial Statements":[
+    {code:"F.01",purpose:"Financial Statements",desc:"Generate Neraca & Laba Rugi",cls:"fi",steps:[
+      {t:"Buka F.01",d:"<span class='fp'>F.01</span>. Report laporan keuangan standar."},
+      {t:"Isi parameter",d:"<span class='fp'>Chart of Accounts</span>. <span class='fp'>Company Code</span>. <span class='fp'>Financial Statement Version</span> (template layout). <span class='fp'>Reporting Year</span>. <span class='fp'>Reporting Periods</span>. <span class='fp'>Comparison Year</span> (opsional YoY)."},
+      {t:"Execute",d:"F8 → tampil Balance Sheet dan P&L sesuai FS Version. Bisa drill-down ke akun dan dokumen."},
+    ],tip:"Financial Statement Version (FS Version) dikonfigurasi di OB58. Buat FS Version terpisah untuk kebutuhan internal vs PSAK."},
+    {code:"S_ALR_87012284",purpose:"Profit & Loss Statement",desc:"Laporan laba rugi detail",cls:"fi",steps:[
+      {t:"Buka T-code",d:"<span class='fp'>S_ALR_87012284</span>. Report P&L dengan breakdown per cost element."},
+      {t:"Isi parameter",d:"<span class='fp'>Company Code</span>. <span class='fp'>Fiscal Year</span>. <span class='fp'>Periods</span>. Pilih Comparison Period untuk YoY atau budget vs actual."},
+      {t:"Execute & analisis",d:"F8 → tampil P&L. Double-click akun untuk lihat semua transaksi pembentuknya."},
+    ]},
+    {code:"S_ALR_87012291",purpose:"Balance Sheet",desc:"Laporan neraca detail",cls:"fi",steps:[
+      {t:"Buka T-code",d:"<span class='fp'>S_ALR_87012291</span>. Report Balance Sheet."},
+      {t:"Isi parameter",d:"<span class='fp'>Company Code</span>. <span class='fp'>Fiscal Year</span>. <span class='fp'>As of Period</span>. <span class='fp'>Comparison period</span> (opsional)."},
+      {t:"Execute",d:"F8 → tampil Aset, Kewajiban, Ekuitas. Pastikan Balance Sheet balance = Aset = Kewajiban + Ekuitas."},
+    ]},
+  ],
+  "Bank Accounting":[
+    {code:"FF67",purpose:"Manual Bank Statement",desc:"Input rekening koran manual",cls:"fi",steps:[
+      {t:"Buka FF67",d:"<span class='fp'>FF67</span>. Input rekening koran (bank statement) secara manual."},
+      {t:"Pilih House Bank",d:"<span class='fp'>House Bank</span>. <span class='fp'>Account ID</span>. <span class='fp'>Statement Number</span>. <span class='fp'>Statement Date</span>. <span class='fp'>Opening Balance</span>. <span class='fp'>Closing Balance</span>."},
+      {t:"Input transaksi",d:"Isi setiap baris: <span class='fp'>Value Date</span>. <span class='fp'>Amount</span> (+ untuk credit, - untuk debit). <span class='fp'>Posting Key</span>. <span class='fp'>Account</span>. <span class='fp'>Reference</span>."},
+      {t:"Post",d:"Ctrl+S → bank statement ter-post. Gunakan FEBA untuk melakukan matching otomatis."},
+    ],note:"Jika perusahaan pakai electronic bank statement (MT940), gunakan T-code FF.5 bukan FF67."},
+  ],
+},
+PELINDO:{
+  "Master Data CO — Cost & Profit Center":[
+    {code:"KS01",purpose:"Create Cost Center (Pelindo)",desc:"Buat cost center baru sesuai struktur regional Pelindo",cls:"pel",steps:[
+      {t:"Cek dulu via KS03",d:"Sebelum create, cek apakah <span class='fp'>Cost Center</span> sudah ada via KS03 dan cek hierarki via <span class='fp'>OKENN</span>. Alur Pelindo: permintaan dari Strategi SDM → koordinasi penyesuaian → dieksekusi Dept. Perencanaan Keuangan."},
+      {t:"Buka KS01",d:"Isi <span class='fp'>Controlling Area</span> = 1000 (Controlling Area Pelindo). <span class='fp'>Cost Center</span> sesuai kodefikasi regional. <span class='fp'>Valid From</span> date."},
+      {t:"Isi Basic Data & Control",d:"<span class='fp'>Name/Description</span>. <span class='fp'>Cost Center Category</span>. <span class='fp'>Company Code</span> = 1000. <span class='fp'>Profit Center</span> terkait (merepresentasikan entitas Pelindo Regional). <span class='fp'>Currency</span> = IDR."},
+      {t:"Simpan",d:"Ctrl+S. Setelah aktif, lakukan sosialisasi cost center baru ke unit terkait sesuai flow Pelindo."},
+    ],tip:"Struktur Pelindo: 1 Company Code (1000) menaungi banyak Profit Center regional, dan tiap Profit Center punya beberapa Cost Center di bawahnya."},
+    {code:"KS02",purpose:"Change / Lock Cost Center (Pelindo)",desc:"Edit atau lock cost center existing",cls:"pel",steps:[
+      {t:"Buka KS02",d:"Masukkan <span class='fp'>Cost Center</span> yang mau diubah."},
+      {t:"Change atau Lock",d:"Jika hanya update data → langsung edit field. Jika mau menonaktifkan (lock) karena tidak dipakai lagi → centang blocking indicator di tab Control."},
+      {t:"Cek transaksi dulu sebelum delete",d:"Sesuai flow Pelindo, cost center hanya bisa di-<span class='fp'>delete (KS04)</span> jika belum pernah ada transaksi. Jika sudah ada transaksi, pilihannya hanya Lock, bukan Delete."},
+      {t:"Simpan",d:"Ctrl+S."},
+    ]},
+    {code:"KE51",purpose:"Create Profit Center (Pelindo)",desc:"Buat profit center yang merepresentasikan entitas regional",cls:"pel",steps:[
+      {t:"Cek dulu via KE53",d:"Cek <span class='fp'>Profit Center</span> Master Data (KE53) dan hierarki (KCH6N) sebelum create — flow sama seperti Cost Center: Strategi SDM → Dept. Perencanaan Keuangan."},
+      {t:"Buka KE51",d:"<span class='fp'>Controlling Area</span> = 1000. <span class='fp'>Profit Center</span> sesuai kode entitas regional. <span class='fp'>Valid From</span>."},
+      {t:"Isi Basic Data",d:"<span class='fp'>Name</span>. <span class='fp'>Long Text</span>. <span class='fp'>Segment</span> (untuk pelaporan IFRS 8 bila diperlukan). <span class='fp'>Person Responsible</span>."},
+      {t:"Simpan & aktifkan",d:"Ctrl+S → status otomatis Active. Setelah aktif, sosialisasikan Profit Center baru ke unit terkait."},
+    ],tip:"Di ERP Pelindo, Profit Center dan Cost Center di bawahnya merepresentasikan entitas Pelindo Regional (bukan company code terpisah, karena sudah 1 Company Code 1000)."},
+    {code:"KE52",purpose:"Change / Lock Profit Center (Pelindo)",desc:"Edit atau lock profit center existing",cls:"pel",steps:[
+      {t:"Buka KE52",d:"Masukkan <span class='fp'>Profit Center</span> yang mau diubah."},
+      {t:"Change atau Lock",d:"Update data langsung edit. Untuk menonaktifkan, centang <span class='fp'>Lock Indicator</span>."},
+      {t:"Cek transaksi sebelum delete",d:"Sama seperti Cost Center — <span class='fp'>delete (KE54)</span> hanya untuk profit center yang belum pernah ada transaksi."},
+      {t:"Simpan",d:"Ctrl+S."},
+    ]},
+    {code:"KCH6N / OKENN",purpose:"Cek Hierarchy Profit/Cost Center",desc:"Verifikasi posisi cost/profit center dalam hierarki organisasi",cls:"pel",steps:[
+      {t:"Buka KCH6N (Profit Center) atau OKENN (Cost Center)",d:"Tampilkan struktur hierarki standar yang berlaku di Controlling Area 1000."},
+      {t:"Cek posisi node",d:"Pastikan cost/profit center baru masuk ke node hierarki yang benar sesuai struktur organisasi regional Pelindo — ini wajib dicek sebelum create master data baru (langkah 4 di SOP: 'Cek Hierarchy')."},
+    ],note:"Langkah cek hierarki ini wajib dilakukan SEBELUM create master data baru, bukan sesudahnya — untuk menghindari cost/profit center 'nyasar' di struktur yang salah."},
+  ],
+  "Jurnal Manual & Closing":[
+    {code:"FV50 / FBV0",purpose:"Park & Post Jurnal Manual",desc:"Proses jurnal manual (adjustment) sesuai wilayah kerja",cls:"pel",steps:[
+      {t:"Input Jurnal Parking via FV50",d:"Dilakukan oleh Dep. Akuntansi Umum <span class='fp'>Cabang</span>. Closing ditetapkan tanggal 1 setiap awal bulan — jurnal adjustment hanya bisa dibukukan di periode berikutnya jika lewat closing."},
+      {t:"Review & Posting via FBV0",d:"Untuk KP, R1, R2, & R4 → posting dilakukan oleh Dep. Akuntansi <span class='fp'>Regional</span>. Untuk R3 → posting dilakukan oleh Dep. Akuntansi <span class='fp'>Sub-Regional</span>."},
+      {t:"Contoh penggunaan",d:"Adjustment journal umum, koreksi klasifikasi akun, dsb."},
+    ],tip:"Ini termasuk proses recurring & accrual — perbedaan alurnya hanya di siapa yang park (selalu Cabang) vs siapa yang review & post (Regional atau Sub-Regional tergantung wilayah)."},
+    {code:"FBS1",purpose:"Jurnal Accrual Bulanan",desc:"Posting accrual manual untuk beban periodik",cls:"pel",steps:[
+      {t:"Buka FBS1",d:"Digunakan untuk accrual manual bulanan (bukan year-end). Dilakukan oleh Dep. Akuntansi Cabang/Regional/Kantor Pusat sesuai kewenangan."},
+      {t:"Contoh kasus Pelindo",d:"Beban listrik yang belum ada invoice, sharing revenue KSO yang masih estimasi, dll."},
+      {t:"Simpan",d:"Ctrl+S. Jurnal accrual biasanya di-reverse otomatis di periode berikutnya."},
+    ]},
+    {code:"F-02",purpose:"Jurnal Accrual Year-End Close",desc:"Posting accrual khusus penutupan tahun",cls:"pel",steps:[
+      {t:"Buka F-02",d:"Dipakai khusus untuk accrual di <span class='fp'>Year End Close</span>, memanfaatkan 4 special periods pada Fiscal Year Variant K4 milik Pelindo."},
+      {t:"Isi jurnal",d:"Sama seperti FBS1 tapi postingnya masuk ke periode khusus (special period) untuk keperluan audit adjustment akhir tahun."},
+    ],note:"Fiscal Year Variant Pelindo adalah K4 (Calendar year + 4 special periods) — pastikan posting year-end masuk ke special period yang benar, bukan periode 12 reguler."},
+    {code:"FAGL_FCV",purpose:"Revaluasi Mata Uang Asing",desc:"Revaluasi saldo akun dalam mata uang asing ke IDR",cls:"pel",steps:[
+      {t:"Cek transaksi pada sistem",d:"Dilakukan oleh Dep. Akuntansi Kantor Pusat."},
+      {t:"Cek konfigurasi akun selisih kurs & kurs terbaru",d:"Pastikan akun gain/loss selisih kurs sudah di-maintain di <span class='fp'>OBA1</span> dan kurs penutupan bulan sudah diupdate di <span class='fp'>OB08</span> sebelum revaluasi dijalankan."},
+      {t:"Test Run dulu",d:"Jalankan FAGL_FCV dalam mode <span class='fp'>Test Run</span> → cek apakah ada selisih kurs yang wajar."},
+      {t:"Export report & Posting Revaluation",d:"Jika hasil test run sesuai, export laporan lalu jalankan FAGL_FCV mode posting (bukan test run) untuk membukukan selisih kurs."},
+    ]},
+    {code:"F-03 / F.13",purpose:"Clearing Document (Manual/Automatic)",desc:"Clearing open item akun GL",cls:"pel",steps:[
+      {t:"Cek akun GL open item",d:"Via FBL3N/FAGLL03H, dilakukan Dep. Akuntansi Umum Regional/Kantor Pusat."},
+      {t:"Pilih metode",d:"<span class='fp'>F-03</span> untuk clearing manual (pilih baris satu per satu). <span class='fp'>F.13</span> untuk automatic clearing (sistem match otomatis berdasarkan kriteria yang di-set)."},
+      {t:"Post",d:"Ctrl+S. Item yang sudah clear tidak lagi muncul sebagai open item di laporan."},
+    ]},
+  ],
+  "Account Receivable Pelindo":[
+    {code:"F-29",purpose:"Penerimaan Uang Titipan / Uper",desc:"Posting penerimaan uang muka pelanggan (Uper) sebelum ada nota tagihan resmi",cls:"pel",steps:[
+      {t:"Terima Payment Order dari customer",d:"Customer setor Uper (Uang Pertanggungan) berdasarkan Payment Order (RE). Dilakukan oleh Dep. Perbendaharaan Regional."},
+      {t:"Buka F-29",d:"Buat <span class='fp'>Incoming Journal</span> untuk mencatat penerimaan uang muka ini sebagai kredit di akun Uper pelanggan (special G/L)."},
+      {t:"Simpan",d:"Ctrl+S. Uper ini nanti akan di-clear (F-32) saat nota tagihan resmi terbit."},
+    ]},
+    {code:"F-32 (Pelindo)",purpose:"Clearing Piutang dengan Uper/Utip",desc:"Pelunasan piutang menggunakan saldo uang titipan yang sudah ada",cls:"pel",steps:[
+      {t:"Cek saldo Utip",d:"Via FBL5N, cek apakah saldo Uang Titipan (Utip) customer > 0."},
+      {t:"Clearing AR via F-32",d:"Jika Utip mencukupi (Utip > tagihan), lakukan clearing langsung tanpa perlu pembayaran kas baru. Dep. Perbendaharaan Cabang/Regional yang memproses."},
+      {t:"Notifikasi ke customer/INCO",d:"Setelah clear, sistem/manual mengirim notifikasi pelunasan via Utip ke customer atau ke aplikasi INCO."},
+    ],tip:"Ini beda dengan clearing biasa — di Pelindo, prioritas pelunasan pertama dicek dari saldo Utip dulu sebelum minta pembayaran kas/bank baru."},
+    {code:"FB08",purpose:"Pembatalan Nota",desc:"Membatalkan dokumen nota/tagihan yang keliru",cls:"pel",steps:[
+      {t:"Ajukan Permohonan Pembatalan",d:"Dari Cabang, cek dulu apakah sudah lewat periode pelaporan pajak."},
+      {t:"Jika belum lewat periode pajak",d:"Langsung pakai FB08 untuk pembatalan dokumen nota. Dilakukan oleh Dep. Perbendaharaan Regional."},
+      {t:"Jika sudah lewat periode pajak",d:"Tidak bisa FB08 biasa — harus <span class='fp'>Clearing dengan biaya lainnya (F-32)</span> agar tidak mengganggu pelaporan pajak periode yang sudah lewat."},
+    ],note:"Untuk nota yang sudah lunas, alurnya beda lagi: perlu Create Jurnal Pelunasan/Reset & Reverse (F-32/FBRA) dulu sebelum FB08, baru dilanjut proses Pengembalian Uang Titipan."},
+    {code:"FBRA",purpose:"Reset & Reverse Document",desc:"Membuka kembali dokumen yang sudah di-clear untuk dikoreksi",cls:"pel",steps:[
+      {t:"Buka FBRA",d:"Dipakai saat perlu membatalkan nota yang sudah lunas — reset clearing dulu sebelum reverse dokumen."},
+      {t:"Reset & Reverse",d:"Sistem membuka kembali link clearing antara invoice dan payment, lalu reverse dokumen aslinya."},
+      {t:"Lanjutkan proses",d:"Setelah reset, lanjutkan ke FB08 (pembatalan nota) dan proses pengembalian uang titipan jika diperlukan."},
+    ]},
+  ],
+  "Account Payable — Payment Workflow (ZFI)":[
+    {code:"ZFI051",purpose:"Submit Berkas Pembayaran (Park Document)",desc:"Submit dokumen tagihan/pembayaran ke Shared Service (Z-transaction custom Pelindo)",cls:"pel",steps:[
+      {t:"Siapkan dokumen sesuai kelengkapan SSC",d:"Untuk PR/PO (tipe RE&KA): Nota Dinas, Surat Permohonan, Invoice/Kwitansi, Faktur Pajak, SPT PPN, BAST, Kontrak/PO/SPK, dll. Untuk Non PR/PO dan PJKO (tipe KR): dokumen sesuai kategorinya masing-masing."},
+      {t:"Scan & beri nama sesuai standar",d:"Scan terpisah per dokumen, minimal 300dpi, potrait, format PDF, dengan penamaan file sesuai <span class='fp'>Standarisasi Nama File</span> Pelindo (contoh: STAGIHAN_, SP2_, INVOICE_, dst)."},
+      {t:"Submit via ZFI051",d:"Upload seluruh dokumen pendukung dan submit sebagai parked document ke Shared Service Center (SSC) untuk verifikasi."},
+    ],note:"Dokumen asli (hardcopy) tetap jadi tanggung jawab penyimpanan unit fungsi terkait — yang di-upload cukup hasil scan berkualitas baik."},
+    {code:"ZFI052",purpose:"Proses Verifikasi oleh Shared Service",desc:"Verifikasi berjenjang dokumen pembayaran",cls:"pel",steps:[
+      {t:"Verifikasi Staff",d:"Staff Shared Service/Integrasi Layanan Keuangan mengecek kesesuaian dokumen vs kelengkapan yang disyaratkan."},
+      {t:"Verifikasi Dep. Head",d:"Jika sesuai, lanjut ke level Dep. Head untuk verifikasi berikutnya via FIORI."},
+      {t:"Verifikasi Group Head (jika nominal besar)",d:"Untuk nominal di atas ambang batas (misal >500 juta), verifikasi berlanjut ke Group Head sebelum masuk proses pembayaran."},
+    ],tip:"Ambang batas nominal (misalnya 500 juta) menentukan berapa banyak layer approval yang dilewati — semakin besar nominal, semakin tinggi level approval yang dibutuhkan."},
+    {code:"ZFI053",purpose:"Payment Proposal & Approval (FIORI)",desc:"Approval berjenjang dan eksekusi pembayaran via H2H",cls:"pel",steps:[
+      {t:"Persetujuan Payment Proposal",d:"Berjenjang via aplikasi FIORI: Dep. Head Perbendaharaan → Group Head Pengelolaan Keuangan → Direksi (untuk Kantor Pusat) sesuai nominal."},
+      {t:"SAP kirim perintah bayar via H2H",d:"Setelah semua approval selesai, SAP mengirim perintah bayar Host-to-Host (H2H) ke server bank."},
+      {t:"Cek Rejection Report",d:"Jika ada penolakan dari bank, dokumen perlu di-Reset & Reverse (FBRA) dan dikonfirmasi ulang ke SSC dan Departemen terkait."},
+      {t:"Auto-clearing journal (SM35)",d:"Jika tidak ada rejection, sistem menjalankan batch input auto-clearing journal untuk menutup pembayaran ini."},
+    ],note:"Untuk Kantor Pusat, approval-nya lebih panjang (sampai ke Direksi untuk nominal tertentu) dibanding Regional yang cukup sampai Division Head Perbendaharaan."},
+    {code:"MIGO / ML81N",purpose:"Penerimaan Barang & Jasa (GR/SES)",desc:"Goods Receipt (barang) atau Service Entry Sheet (jasa) sebagai syarat awal pembayaran PO",cls:"pel",steps:[
+      {t:"MIGO untuk barang",d:"Sama seperti Goods Receipt standar SAP MM (movement type 101), dipakai untuk PO barang."},
+      {t:"ML81N untuk jasa",d:"Service Entry Sheet & Acceptance — dipakai untuk PO jasa (konsultansi, supervisi, dll)."},
+      {t:"Lanjut ke pengakuan hutang",d:"Setelah GR/SES ini, baru bisa lanjut ke proses pengakuan & pembayaran hutang usaha PO (ZFI051 → ZFI052 → ZFI053)."},
+    ]},
+    {code:"ZMM6003",purpose:"Submit PR ke Procurement / Lelang",desc:"Konversi PR menjadi proses pengadaan (Z-transaction custom Pelindo)",cls:"pel",steps:[
+      {t:"Setelah PR dibuat & di-release",d:"PR dibuat via ME51N, di-release via ME54N/FIORI."},
+      {t:"Submit ke Procurement",d:"ZMM6003 dipakai untuk submit PR ke tim procurement agar diproses lelang/pembuatan PO."},
+      {t:"Lelang/Pembuatan PO",d:"Tim procurement menjalankan proses lelang vendor, lalu PO terbentuk."},
+    ]},
+    {code:"FV60",purpose:"Park Dokumen Non PO",desc:"Entry jurnal pembayaran untuk transaksi tanpa PR/PO",cls:"pel",steps:[
+      {t:"Kapan dipakai",d:"Untuk 16 jenis pembayaran tanpa proses PR/PO seperti listrik, internet, jasa pengiriman, biaya promosi, CSR, PBB, materai, dll — dan 5 jenis pembayaran langsung ke vendor (uang duka, klaim asuransi, dividen, autodebet, PNBP/konsesi)."},
+      {t:"Buka FV60",d:"Entry jurnal pembayaran sebagai parked document, lalu lanjut ke ZFI051 (submit) → ZFI052 (verifikasi) → ZFI053 (pembayaran)."},
+    ],note:"Tipe dokumen untuk Non PR/PO adalah KR — beda kelengkapan dokumennya dengan tipe RE&KA (PR/PO)."},
+  ],
+  "Asset Accounting Pelindo":[
+    {code:"CJ20N",purpose:"Project Planner — Perencanaan RKAP Investasi",desc:"Perencanaan proyek untuk pengadaan aset investasi (module PS)",cls:"pel",steps:[
+      {t:"Buka CJ20N",d:"Pengadaan Aset Property Investasi dan Aset KSO di Pelindo dilakukan lewat <span class='fp'>Project Planner (SAP module PS)</span>, bukan lewat MM biasa."},
+      {t:"Rencanakan RKAP Investasi",d:"Buat struktur project (WBS) untuk investasi tahun berjalan sesuai RKAP."},
+      {t:"Lanjut ke settlement",d:"Setelah biaya proyek terkumpul, lanjut ke AIAB (maintain settlement rule) dan AIBU (settlement ke fixed asset)."},
+    ],tip:"Bedakan: Aset Property Investasi & KSO → lewat Project Planner (PS module). Aset Non Investasi → lewat pengadaan biasa (MM module, ME21N dst)."},
+    {code:"AIAB / AIBU",purpose:"Settlement Rule & Settlement AUC",desc:"Memindahkan biaya Asset Under Construction (AUC) ke aset tetap final",cls:"pel",steps:[
+      {t:"Maintain Settlement Rule (AIAB)",d:"Tentukan aturan settlement: berapa persen/nilai biaya proyek yang akan dialokasikan ke aset akhir (fixed asset)."},
+      {t:"Settlement AUC ke Fix Asset (AIBU)",d:"Eksekusi settlement, memindahkan saldo AUC ke Asset Class final sesuai BAST (Berita Acara Serah Terima)."},
+      {t:"Dilakukan oleh",d:"Dept. Asset Tetap Kantor Pusat, berdasarkan proses dari Project Planner dan Master Data Asset Tetap yang sudah dibuat sebelumnya."},
+    ]},
+    {code:"AS02 (Relokasi)",purpose:"Relokasi Aset Tetap",desc:"Memindahkan aset antar wilayah/cabang dengan approval berjenjang",cls:"pel",steps:[
+      {t:"Kajian Kantor Pusat",d:"Untuk relokasi hasil kajian KP: Unit Terkait → Dept. Asset Tetap KP buat Settlement Rule → Region Asal & Tujuan approve BA Relokasi → AS02 di KP."},
+      {t:"Kajian Regional",d:"Untuk relokasi hasil kajian Regional: perlu persetujuan Regional Head, lalu koordinasi dengan Regional Asal, Direktorat Teknik KP, baru dieksekusi Dept. Asset Tetap Regional via AS02."},
+      {t:"Antar Cabang",d:"Relokasi antar cabang dalam 1 regional: dieksekusi langsung oleh Dept. Asset Tetap Kantor Regional via AS02, dengan approval Cabang Asal & Cabang Tujuan."},
+    ],note:"Ada 3 jalur relokasi berbeda di Pelindo tergantung siapa yang mengajukan kajian — pastikan pakai jalur approval yang sesuai."},
+    {code:"ABAON / F-92",purpose:"Penghapusan Aset",desc:"Proses write-off/penjualan aset tetap dengan approval Dekom",cls:"pel",steps:[
+      {t:"Evaluasi & usulan",d:"Unit terkait evaluasi data aset → ajukan ke Regional Head → surat usulan ke Kantor Pusat."},
+      {t:"Klarifikasi umur & approval Dekom",d:"Klarifikasi umur aset. Jika umur aset >5 tahun, perlu surat rekomendasi Dekom ke PS dan surat persetujuan Dekom."},
+      {t:"Eksekusi",d:"Jika akan dijual → <span class='fp'>ABAON</span> (penghapusan aset tersedia dijual). Jika dihapus buku langsung tanpa dijual → <span class='fp'>F-92</span> (penghapusan aset)."},
+      {t:"Dilakukan oleh",d:"Dept. Asset Tetap Kantor Pusat, dikoordinasikan dengan Dept. Akuntansi Umum KP untuk surat persetujuan penjualan."},
+    ],note:"Catatan standar SAP: ABAON = penjualan aset tanpa customer, F-92 = penjualan aset dengan customer (revenue tercatat ke AR), ABAVN = scrapping tanpa pendapatan. Penamaan di SOP internal bisa sedikit berbeda — ikuti flow approval Pelindo di atas."},
+    {code:"ABAA / ABGL",purpose:"Impairment Aset",desc:"Penurunan nilai aset akibat kondisi tertentu",cls:"pel",steps:[
+      {t:"Permohonan impairment",d:"Diajukan dari Dept. Asset Tetap Regional."},
+      {t:"Tentukan periode",d:"Jika impairment untuk tahun berjalan → <span class='fp'>ABGL/ABAA</span> (tahun berjalan). Jika untuk tahun sebelumnya → kode transaksi berbeda (ABGF/ABAA)."},
+      {t:"Eksekusi",d:"Dept. Asset Tetap Kantor Pusat memproses dan posting impairment ke nilai buku aset."},
+    ]},
+  ],
+  "Cash Management Pelindo":[
+    {code:"ZFF_5",purpose:"Automatic Bank Reconciliation",desc:"Rekonsiliasi rekening koran otomatis via MT940",cls:"pel",steps:[
+      {t:"Download File MT940",d:"File rekening koran bank diunduh (format standar MT940)."},
+      {t:"Automatic Bank Statement via ZFF_5",d:"Sistem otomatis mem-parsing dan mencocokkan transaksi rekening koran dengan dokumen SAP."},
+      {t:"Clearing (F-03)",d:"Jika transaksi bukan dari H2H, lanjutkan clearing manual via F-03. Jika dari H2H, sudah otomatis clear."},
+      {t:"Dilakukan oleh",d:"Perbendaharaan Regional & Kantor Pusat."},
+    ]},
+    {code:"ZCASHPOOL",purpose:"Posting Opening Balance Cash Pooling",desc:"Posting hasil auto-sweeping dana antar rekening",cls:"pel",steps:[
+      {t:"Perintah auto sweeping",d:"Dana di rekening cabang/regional otomatis di-sweep ke rekening pusat sesuai kebijakan cash pooling."},
+      {t:"Auto Bank Recon (ZFF_5)",d:"Rekonsiliasi hasil sweeping dengan rekening koran."},
+      {t:"Posting OB (ZCASHPOOL)",d:"Posting opening balance hasil cash pooling ke akun terkait. Dilakukan Dep. Keuangan Regional & Dep. Perbendaharaan Kantor Pusat."},
+    ]},
+  ],
+},
+SD:{
+  "Customer Master (Sales)":[
+    {code:"VD01",purpose:"Create Customer (Sales View)",desc:"Buat customer master - sales area data",cls:"sd",steps:[
+      {t:"Buka VD01",d:"Ketik <span class='fp'>VD01</span>. Isi <span class='fp'>Customer</span> (kosongkan jika internal number range), <span class='fp'>Account Group</span>, <span class='fp'>Sales Organization</span>, <span class='fp'>Distribution Channel</span>, <span class='fp'>Division</span>."},
+      {t:"Isi General Data",d:"<span class='fp'>Name</span>. <span class='fp'>Address</span>. <span class='fp'>Search Term</span>. <span class='fp'>Tax Number/NPWP</span>."},
+      {t:"Isi Sales Area Data",d:"Tab Sales: <span class='fp'>Sales District</span>, <span class='fp'>Customer Group</span>, <span class='fp'>Currency</span>. Tab Shipping: <span class='fp'>Delivery Priority</span>, <span class='fp'>Shipping Condition</span>. Tab Billing: <span class='fp'>Payment Terms</span>, <span class='fp'>Incoterms</span>, <span class='fp'>Tax Classification</span>."},
+      {t:"Simpan",d:"Ctrl+S → Customer Number tergenerate."},
+    ],tip:"VD01 hanya buat Sales Area data. Gunakan XD01 kalau mau sekaligus General + Company Code + Sales data dalam satu langkah."},
+    {code:"XD01",purpose:"Create Customer (Centralized)",desc:"Buat customer lengkap semua view sekaligus",cls:"sd",steps:[
+      {t:"Buka XD01",d:"<span class='fp'>XD01</span> membuat General Data + Company Code Data (FI) + Sales Area Data (SD) sekaligus."},
+      {t:"Isi identitas",d:"<span class='fp'>Account Group</span>, <span class='fp'>Company Code</span>, <span class='fp'>Sales Org / Distr. Channel / Division</span>."},
+      {t:"Lengkapi 3 bagian",d:"General (nama, alamat), Company Code (recon account, payment terms), Sales Area (delivery, pricing, tax)."},
+      {t:"Simpan",d:"Ctrl+S."},
+    ]},
+    {code:"VD02",purpose:"Change Customer (Sales View)",desc:"Edit data customer sales area",cls:"sd",steps:[
+      {t:"Buka VD02",d:"Masukkan <span class='fp'>Customer</span>, <span class='fp'>Sales Org/Distr.Channel/Division</span>."},
+      {t:"Pilih view",d:"Centang view yang mau diedit: Sales, Shipping, Billing, Partner Functions."},
+      {t:"Edit & simpan",d:"Ubah field yang perlu → Ctrl+S."},
+    ]},
+    {code:"VD03",purpose:"Display Customer (Sales View)",desc:"Lihat data customer sales area (read only)",cls:"sd",steps:[
+      {t:"Buka VD03",d:"<span class='fp'>VD03</span> → masukkan <span class='fp'>Customer</span> dan Sales Area → Enter."},
+      {t:"Review",d:"Semua field read-only. Cocok untuk verifikasi sebelum membuat Sales Order."},
+    ]},
+  ],
+  "Sales Order Processing":[
+    {code:"VA01",purpose:"Create Sales Order",desc:"Buat sales order baru",cls:"sd",steps:[
+      {t:"Buka VA01",d:"Ketik <span class='fp'>VA01</span>. Isi <span class='fp'>Order Type</span> (OR=Standard Order). <span class='fp'>Sales Org</span>. <span class='fp'>Distribution Channel</span>. <span class='fp'>Division</span>."},
+      {t:"Isi header",d:"<span class='fp'>Sold-to Party</span> (customer). <span class='fp'>PO Number</span> (referensi PO customer). <span class='fp'>Requested Delivery Date</span>."},
+      {t:"Isi item",d:"<span class='fp'>Material</span>. <span class='fp'>Order Quantity</span>. Sistem otomatis pull harga dari pricing condition dan cek ATP (Available to Promise)."},
+      {t:"Cek Schedule Lines",d:"Tab Schedule Lines menampilkan tanggal konfirmasi delivery berdasarkan stok tersedia."},
+      {t:"Cek Conditions/Pricing",d:"Tab Conditions di level item — verifikasi harga, diskon, pajak sudah sesuai."},
+      {t:"Simpan",d:"Ctrl+S → Sales Order Number tergenerate."},
+    ],tip:"Jika ATP menunjukkan stok tidak cukup, sistem akan split schedule line otomatis sesuai ketersediaan."},
+    {code:"VA02",purpose:"Change Sales Order",desc:"Edit sales order yang sudah ada",cls:"sd",steps:[
+      {t:"Buka VA02",d:"<span class='fp'>VA02</span> → masukkan <span class='fp'>Sales Order</span> number → Enter."},
+      {t:"Edit yang diperlukan",d:"Ubah quantity, harga, delivery date, atau tambah item baru."},
+      {t:"Simpan",d:"Ctrl+S. Perubahan tersimpan dan history order terupdate."},
+    ],note:"Order yang sudah fully delivered/invoiced hanya bisa diubah pada field tertentu."},
+    {code:"VA03",purpose:"Display Sales Order",desc:"Lihat detail sales order",cls:"sd",steps:[
+      {t:"Buka VA03",d:"<span class='fp'>VA03</span> → <span class='fp'>Sales Order</span> → Enter. Semua tab read-only."},
+      {t:"Cek status",d:"Tab 'Status Overview' → lihat progress: delivery, billing, dan sisa quantity outstanding."},
+    ]},
+    {code:"VA05",purpose:"List of Sales Orders",desc:"Laporan daftar sales order",cls:"sd",steps:[
+      {t:"Buka VA05",d:"<span class='fp'>VA05</span>. Isi filter: <span class='fp'>Sold-to Party</span>, <span class='fp'>Material</span>, <span class='fp'>Sales Org</span>, range tanggal."},
+      {t:"Execute",d:"F8 → tampil list semua sales order sesuai filter, lengkap dengan status."},
+    ],tip:"Gunakan VA05 untuk monitor order backlog mingguan."},
+  ],
+  "Delivery & Shipping":[
+    {code:"VL01N",purpose:"Create Outbound Delivery",desc:"Buat dokumen pengiriman dari sales order",cls:"sd",steps:[
+      {t:"Buka VL01N",d:"<span class='fp'>VL01N</span>. Isi <span class='fp'>Shipping Point</span>, <span class='fp'>Selection Date</span>, <span class='fp'>Order</span> number."},
+      {t:"Cek picking quantity",d:"Sistem auto-fill quantity dari sales order. Sesuaikan dengan stok aktual jika partial delivery."},
+      {t:"Post Goods Issue (jika siap kirim)",d:"Setelah barang benar-benar keluar gudang, klik <span class='fp'>Post Goods Issue</span> untuk update stok dan trigger billing due list."},
+      {t:"Simpan",d:"Ctrl+S → Delivery Number tergenerate."},
+    ]},
+    {code:"VL02N",purpose:"Change Outbound Delivery",desc:"Edit delivery / proses PGI",cls:"sd",steps:[
+      {t:"Buka VL02N",d:"<span class='fp'>VL02N</span> → masukkan <span class='fp'>Delivery</span> number."},
+      {t:"Edit atau Post Goods Issue",d:"Ubah quantity picking, atau langsung klik <span class='fp'>Post Goods Issue</span> jika barang sudah keluar."},
+      {t:"Simpan",d:"Ctrl+S."},
+    ]},
+    {code:"VL06O",purpose:"Outbound Delivery Monitor",desc:"Dashboard monitoring semua delivery",cls:"sd",steps:[
+      {t:"Buka VL06O",d:"<span class='fp'>VL06O</span>. Pilih kategori: <span class='fp'>For Picking</span>, <span class='fp'>For Goods Issue</span>, <span class='fp'>General List</span>, dll."},
+      {t:"Filter",d:"Isi <span class='fp'>Shipping Point</span>, range tanggal, <span class='fp'>Route</span> jika perlu."},
+      {t:"Execute & proses massal",d:"F8 → pilih beberapa delivery sekaligus untuk PGI massal atau print dokumen pengiriman."},
+    ],tip:"VL06O adalah 'command center' harian tim gudang untuk memantau delivery yang perlu diproses."},
+  ],
+  "Billing":[
+    {code:"VF01",purpose:"Create Billing Document",desc:"Buat invoice dari delivery/order",cls:"sd",steps:[
+      {t:"Buka VF01",d:"<span class='fp'>VF01</span>. Masukkan <span class='fp'>Delivery</span> atau <span class='fp'>Sales Order</span> number sebagai referensi."},
+      {t:"Cek item & harga",d:"Sistem tarik harga dari pricing condition. Verifikasi <span class='fp'>Billing Quantity</span> dan <span class='fp'>Net Value</span> per item."},
+      {t:"Simpan",d:"Ctrl+S → Billing Document (invoice) tergenerate dan otomatis membuat jurnal akuntansi (AR debit, Revenue credit)."},
+    ],tip:"VF01 bisa diproses massal via VF04 (Maintain Billing Due List) untuk banyak delivery sekaligus."},
+    {code:"VF02",purpose:"Change Billing Document",desc:"Edit invoice yang sudah dibuat",cls:"sd",steps:[
+      {t:"Buka VF02",d:"<span class='fp'>VF02</span> → masukkan <span class='fp'>Billing Document</span> number."},
+      {t:"Edit terbatas",d:"Field yang bisa diubah sangat terbatas (misal output/print). Untuk koreksi nilai, umumnya buat credit/debit memo baru."},
+      {t:"Simpan",d:"Ctrl+S."},
+    ],note:"Invoice yang sudah posting ke FI tidak bisa dihapus — gunakan cancel billing (VF11) jika salah total."},
+    {code:"VF03",purpose:"Display Billing Document",desc:"Lihat detail invoice",cls:"sd",steps:[
+      {t:"Buka VF03",d:"<span class='fp'>VF03</span> → <span class='fp'>Billing Document</span> → Enter."},
+      {t:"Cek Accounting",d:"Klik ikon 'Accounting' untuk lihat jurnal FI yang terbentuk dari invoice ini."},
+    ]},
+    {code:"VF05",purpose:"List of Billing Documents",desc:"Laporan daftar invoice",cls:"sd",steps:[
+      {t:"Buka VF05",d:"<span class='fp'>VF05</span>. Isi filter: <span class='fp'>Sold-to Party</span>, <span class='fp'>Billing Type</span>, range tanggal."},
+      {t:"Execute",d:"F8 → tampil list invoice. Bisa export untuk rekonsiliasi revenue bulanan."},
+    ]},
+  ],
+  "Pricing":[
+    {code:"VK11",purpose:"Create Condition Record",desc:"Set harga jual / diskon per kondisi",cls:"sd",steps:[
+      {t:"Buka VK11",d:"<span class='fp'>VK11</span>. Masukkan <span class='fp'>Condition Type</span> (PR00=harga dasar, K004=diskon material, dll)."},
+      {t:"Pilih key combination",d:"Pilih kombinasi: Material, atau Customer/Material, atau Price List/Material — sesuai struktur pricing perusahaan."},
+      {t:"Isi harga",d:"Masukkan <span class='fp'>Sales Org/Distr.Channel</span>, <span class='fp'>Material</span>, <span class='fp'>Amount</span>, <span class='fp'>Unit</span>, <span class='fp'>Valid From/To</span>."},
+      {t:"Simpan",d:"Ctrl+S. Harga langsung berlaku untuk sales order baru sesuai periode validitas."},
+    ]},
+    {code:"VK12",purpose:"Change Condition Record",desc:"Update harga jual yang sudah ada",cls:"sd",steps:[
+      {t:"Buka VK12",d:"<span class='fp'>VK12</span>. Pilih <span class='fp'>Condition Type</span> dan key combination yang sama seperti saat create."},
+      {t:"Edit harga",d:"Cari baris material/customer yang mau diubah → update <span class='fp'>Amount</span> atau <span class='fp'>Valid To</span>."},
+      {t:"Simpan",d:"Ctrl+S."},
+    ],note:"Sales order yang sudah dibuat sebelum perubahan harga tidak otomatis ter-update — perlu update pricing manual (VA02 → Update Pricing)."},
+  ],
+},
+PP:{
+  "Bill of Material (BOM)":[
+    {code:"CS01",purpose:"Create BOM",desc:"Buat struktur material (bill of material)",cls:"pp",steps:[
+      {t:"Buka CS01",d:"<span class='fp'>CS01</span>. Isi <span class='fp'>Material</span> (parent/finished good), <span class='fp'>Plant</span>, <span class='fp'>BOM Usage</span> (1=Production)."},
+      {t:"Isi header BOM",d:"<span class='fp'>Valid From</span> date. <span class='fp'>Base Quantity</span> (jumlah parent per BOM ini, misal 1 EA)."},
+      {t:"Isi komponen",d:"Tabel item: <span class='fp'>Component</span> (material anak). <span class='fp'>Quantity</span>. <span class='fp'>Unit of Measure</span>. <span class='fp'>Item Category</span> (L=Stock item)."},
+      {t:"Simpan",d:"Ctrl+S. BOM langsung aktif sesuai tanggal validitas."},
+    ],tip:"Base Quantity harus konsisten dengan satuan produksi — kalau parent diproduksi per 100 EA, sesuaikan quantity komponen jadi rasio per 100 EA."},
+    {code:"CS02",purpose:"Change BOM",desc:"Edit struktur BOM",cls:"pp",steps:[
+      {t:"Buka CS02",d:"<span class='fp'>CS02</span> → <span class='fp'>Material</span>, <span class='fp'>Plant</span>, <span class='fp'>BOM Usage</span>."},
+      {t:"Edit komponen",d:"Tambah/hapus/ubah quantity komponen. Bisa juga set <span class='fp'>Valid To</span> untuk komponen lama saat engineering change."},
+      {t:"Simpan",d:"Ctrl+S."},
+    ],note:"Perubahan BOM sebaiknya menggunakan Engineering Change Number (ECN) di lingkungan produksi live agar ada audit trail."},
+    {code:"CS03",purpose:"Display BOM",desc:"Lihat struktur BOM (read only)",cls:"pp",steps:[
+      {t:"Buka CS03",d:"<span class='fp'>CS03</span> → <span class='fp'>Material</span>, <span class='fp'>Plant</span>, <span class='fp'>BOM Usage</span> → Enter."},
+      {t:"Review struktur",d:"Lihat semua level komponen. Bisa expand multi-level BOM via CS11/CS12 jika struktur bertingkat."},
+    ]},
+  ],
+  "Routing":[
+    {code:"CA01",purpose:"Create Routing",desc:"Buat urutan operasi produksi",cls:"pp",steps:[
+      {t:"Buka CA01",d:"<span class='fp'>CA01</span>. Isi <span class='fp'>Material</span> dan <span class='fp'>Plant</span>."},
+      {t:"Isi header routing",d:"<span class='fp'>Usage</span> (1=Production). <span class='fp'>Status</span> (4=Released)."},
+      {t:"Isi operasi",d:"Tabel operasi: <span class='fp'>Operation Number</span>. <span class='fp'>Work Center</span>. <span class='fp'>Description</span>. <span class='fp'>Standard Values</span> (setup time, machine time, labor time)."},
+      {t:"Simpan",d:"Ctrl+S. Routing ini akan dipakai sistem untuk hitung durasi dan biaya production order."},
+    ]},
+    {code:"CA02",purpose:"Change Routing",desc:"Edit urutan operasi",cls:"pp",steps:[
+      {t:"Buka CA02",d:"<span class='fp'>CA02</span> → <span class='fp'>Material</span>, <span class='fp'>Plant</span>, <span class='fp'>Group</span>."},
+      {t:"Edit operasi",d:"Ubah work center, waktu standar, atau tambah/hapus operasi."},
+      {t:"Simpan",d:"Ctrl+S."},
+    ]},
+  ],
+  "Production Order":[
+    {code:"CO01",purpose:"Create Production Order",desc:"Buat order produksi",cls:"pp",steps:[
+      {t:"Buka CO01",d:"<span class='fp'>CO01</span>. Isi <span class='fp'>Material</span>, <span class='fp'>Plant</span>, <span class='fp'>Order Type</span> (PP01=standard)."},
+      {t:"Isi header order",d:"<span class='fp'>Total Quantity</span> yang mau diproduksi. <span class='fp'>Basic Start/Finish Date</span>."},
+      {t:"Sistem baca BOM & Routing",d:"SAP otomatis pull komponen dari BOM dan operasi dari Routing sesuai material."},
+      {t:"Cek Availability Check",d:"Sistem cek ketersediaan komponen. Jika kurang, akan muncul warning."},
+      {t:"Release order",d:"Klik <span class='fp'>Release</span> (bendera hijau) agar order bisa mulai dieksekusi (goods issue, confirmation)."},
+      {t:"Simpan",d:"Ctrl+S → Production Order Number tergenerate."},
+    ]},
+    {code:"CO02",purpose:"Change Production Order",desc:"Edit order produksi",cls:"pp",steps:[
+      {t:"Buka CO02",d:"<span class='fp'>CO02</span> → masukkan <span class='fp'>Order</span> number."},
+      {t:"Edit",d:"Ubah quantity, tanggal, komponen, atau operasi sesuai kebutuhan aktual di lapangan."},
+      {t:"Simpan",d:"Ctrl+S."},
+    ]},
+    {code:"CO03",purpose:"Display Production Order",desc:"Lihat detail order produksi",cls:"pp",steps:[
+      {t:"Buka CO03",d:"<span class='fp'>CO03</span> → <span class='fp'>Order</span> → Enter."},
+      {t:"Cek status",d:"Lihat status order: Created, Released, Partially Confirmed, Technically Completed, Closed."},
+    ]},
+    {code:"CO11N",purpose:"Confirm Production Order",desc:"Konfirmasi hasil produksi & waktu kerja",cls:"pp",steps:[
+      {t:"Buka CO11N",d:"<span class='fp'>CO11N</span>. Masukkan <span class='fp'>Order</span> number atau <span class='fp'>Personnel Number</span>."},
+      {t:"Isi hasil konfirmasi",d:"<span class='fp'>Yield</span> (quantity yang berhasil diproduksi). <span class='fp'>Scrap</span> (quantity gagal/reject). <span class='fp'>Actual Work</span> (jam kerja aktual)."},
+      {t:"Post",d:"Ctrl+S → sistem update status order dan siap untuk goods receipt hasil produksi (via MIGO mvt 101 dengan order reference)."},
+    ],tip:"Konfirmasi yang akurat penting untuk perhitungan variance biaya produksi (actual vs planned cost)."},
+    {code:"COHV",purpose:"Mass Processing Production Orders",desc:"Proses banyak order sekaligus",cls:"pp",steps:[
+      {t:"Buka COHV",d:"<span class='fp'>COHV</span>. Filter order berdasarkan <span class='fp'>Plant</span>, <span class='fp'>Order Type</span>, <span class='fp'>Status</span>, range tanggal."},
+      {t:"Pilih function",d:"Pilih aksi massal: Release, Print, Technically Complete, dll dari dropdown Function."},
+      {t:"Execute",d:"F8 → pilih order yang mau diproses → jalankan aksi massal."},
+    ]},
+  ],
+  "Capacity Planning":[
+    {code:"CM01",purpose:"Capacity Load Overview",desc:"Lihat beban kapasitas work center",cls:"pp",steps:[
+      {t:"Buka CM01",d:"<span class='fp'>CM01</span>. Isi <span class='fp'>Plant</span> dan <span class='fp'>Work Center</span> (atau Work Center Group)."},
+      {t:"Set periode",d:"Isi <span class='fp'>Period/Planning Period</span> (hari/minggu/bulan) dan range tanggal."},
+      {t:"Execute & analisis",d:"F8 → tampil grafik beban vs kapasitas tersedia. Overload (merah) menandakan perlu reschedule atau tambah shift."},
+    ]},
+  ],
+},
+QM:{
+  "Inspection":[
+    {code:"QP01",purpose:"Create Inspection Plan",desc:"Buat rencana pemeriksaan kualitas material",cls:"qm",steps:[
+      {t:"Buka QP01",d:"<span class='fp'>QP01</span>. Isi <span class='fp'>Material</span>, <span class='fp'>Plant</span>, <span class='fp'>Usage</span> (biasanya 5=Goods Receipt Insp)."},
+      {t:"Isi header plan",d:"<span class='fp'>Group Counter</span>. <span class='fp'>Status</span> (4=Released)."},
+      {t:"Isi operasi & karakteristik",d:"Tambah operation → assign <span class='fp'>Inspection Characteristic</span> (misal dimensi, berat, visual) beserta <span class='fp'>Tolerance</span> (upper/lower limit)."},
+      {t:"Simpan",d:"Ctrl+S. Inspection plan ini akan otomatis trigger inspection lot saat goods receipt."},
+    ]},
+    {code:"QA01",purpose:"Create Inspection Lot",desc:"Buat lot pemeriksaan manual",cls:"qm",steps:[
+      {t:"Buka QA01",d:"<span class='fp'>QA01</span>. Isi <span class='fp'>Material</span>, <span class='fp'>Plant</span>, <span class='fp'>Inspection Type</span> (01=GR Insp, 89=Stock Transfer, dll)."},
+      {t:"Isi quantity",d:"<span class='fp'>Inspection Lot Quantity</span> yang akan diperiksa."},
+      {t:"Simpan",d:"Ctrl+S → Inspection Lot Number tergenerate, siap diproses di QA32."},
+    ],note:"Biasanya inspection lot terbentuk otomatis dari MIGO (goods receipt) jika material di-set QM-relevant, bukan manual via QA01."},
+    {code:"QA32",purpose:"Inspection Lot Processing",desc:"Proses & catat hasil pemeriksaan",cls:"qm",steps:[
+      {t:"Buka QA32",d:"<span class='fp'>QA32</span>. Filter <span class='fp'>Material</span>, <span class='fp'>Plant</span>, <span class='fp'>Lot Status</span> (misal: belum ada usage decision)."},
+      {t:"Pilih lot",d:"Double-click inspection lot yang mau diproses."},
+      {t:"Input hasil karakteristik",d:"Isi hasil pengukuran tiap karakteristik. Sistem otomatis bandingkan dengan tolerance."},
+      {t:"Simpan",d:"Ctrl+S. Lanjutkan ke QA11 untuk membuat Usage Decision (accept/reject)."},
+    ]},
+    {code:"QA11",purpose:"Record Usage Decision",desc:"Putuskan lot diterima/ditolak",cls:"qm",steps:[
+      {t:"Buka QA11",d:"<span class='fp'>QA11</span>. Masukkan <span class='fp'>Inspection Lot</span> number."},
+      {t:"Pilih Usage Decision Code",d:"Pilih kode keputusan: A=Accepted (pindah ke unrestricted), R=Rejected (pindah ke blocked stock), dll."},
+      {t:"Isi quantity per keputusan",d:"Bisa split: sebagian accepted, sebagian rejected, sesuai hasil pemeriksaan aktual."},
+      {t:"Post",d:"Ctrl+S → stok otomatis berpindah dari Quality Inspection ke Unrestricted/Blocked sesuai keputusan."},
+    ],tip:"Usage Decision adalah titik kontrol krusial — pastikan hasil pemeriksaan sudah lengkap sebelum submit keputusan."},
+  ],
+  "Quality Notification":[
+    {code:"QM01",purpose:"Create Quality Notification",desc:"Catat komplain/masalah kualitas",cls:"qm",steps:[
+      {t:"Buka QM01",d:"<span class='fp'>QM01</span>. Pilih <span class='fp'>Notification Type</span> standar SAP: Q1=Customer Complaint (komplain dari customer), Q2=Complaint Against Vendor (komplain ke vendor), Q3=Internal Problem Report."},
+      {t:"Isi data referensi",d:"<span class='fp'>Material</span>. <span class='fp'>Vendor</span>/<span class='fp'>Customer</span> (jika relevan). <span class='fp'>Plant</span>. <span class='fp'>Short Text</span> deskripsi masalah."},
+      {t:"Isi detail masalah",d:"Tab Item: deskripsi lengkap defect, kode defect (jika ada catalog), <span class='fp'>Priority</span>."},
+      {t:"Simpan",d:"Ctrl+S → Notification Number tergenerate, siap ditugaskan ke tim terkait untuk investigasi."},
+    ]},
+    {code:"QM02",purpose:"Change Quality Notification",desc:"Update progress penanganan notifikasi",cls:"qm",steps:[
+      {t:"Buka QM02",d:"<span class='fp'>QM02</span> → masukkan <span class='fp'>Notification</span> number."},
+      {t:"Update tasks & tindakan",d:"Isi tab Tasks (rencana tindakan) dan Activities (tindakan yang sudah dilakukan). Update status jadi In Process."},
+      {t:"Simpan",d:"Ctrl+S."},
+    ]},
+    {code:"QM03",purpose:"Display Quality Notification",desc:"Lihat detail notifikasi kualitas",cls:"qm",steps:[
+      {t:"Buka QM03",d:"<span class='fp'>QM03</span> → <span class='fp'>Notification</span> → Enter."},
+      {t:"Review",d:"Lihat history lengkap: siapa yang menangani, tindakan apa saja, dan status penyelesaian (completed/closed)."},
+    ]},
+  ],
+},
+PM:{
+  "Equipment Master":[
+    {code:"IE01",purpose:"Create Equipment",desc:"Daftarkan mesin/aset fisik ke sistem",cls:"pm",steps:[
+      {t:"Buka IE01",d:"<span class='fp'>IE01</span>. Isi <span class='fp'>Equipment Category</span> (M=Machine, V=Vehicle, dll)."},
+      {t:"Isi General Data",d:"<span class='fp'>Description</span>. <span class='fp'>Manufacturer</span>. <span class='fp'>Model Number</span>. <span class='fp'>Serial Number</span>."},
+      {t:"Isi Location tab",d:"<span class='fp'>Plant</span>. <span class='fp'>Location</span>. <span class='fp'>Cost Center</span> penanggung jawab biaya maintenance."},
+      {t:"Isi Organization tab",d:"<span class='fp'>Planning Plant</span>. <span class='fp'>Maintenance Planner Group</span>. <span class='fp'>Work Center</span> default."},
+      {t:"Simpan",d:"Ctrl+S → Equipment Number tergenerate."},
+    ]},
+    {code:"IE02",purpose:"Change Equipment",desc:"Edit data equipment",cls:"pm",steps:[
+      {t:"Buka IE02",d:"<span class='fp'>IE02</span> → masukkan <span class='fp'>Equipment</span> number."},
+      {t:"Edit data",d:"Ubah lokasi, cost center, atau status equipment (misal saat pindah plant atau retire)."},
+      {t:"Simpan",d:"Ctrl+S."},
+    ]},
+    {code:"IE03",purpose:"Display Equipment",desc:"Lihat detail equipment (read only)",cls:"pm",steps:[
+      {t:"Buka IE03",d:"<span class='fp'>IE03</span> → <span class='fp'>Equipment</span> → Enter."},
+      {t:"Cek history",d:"Tab 'Structure' menampilkan hierarki equipment (parent-child), dan bisa lihat history maintenance order terkait."},
+    ]},
+  ],
+  "Maintenance Order":[
+    {code:"IW31",purpose:"Create Maintenance Order",desc:"Buat order perbaikan/perawatan",cls:"pm",steps:[
+      {t:"Buka IW31",d:"<span class='fp'>IW31</span>. Pilih <span class='fp'>Order Type</span> (PM01=Corrective, PM02=Preventive)."},
+      {t:"Isi objek referensi",d:"<span class='fp'>Equipment</span> atau <span class='fp'>Functional Location</span>. <span class='fp'>Planner Group</span>. <span class='fp'>Main Work Center</span>."},
+      {t:"Isi operasi",d:"Tambah baris operasi: <span class='fp'>Work Center</span> pelaksana. <span class='fp'>Description</span> pekerjaan. <span class='fp'>Duration</span>."},
+      {t:"Tambah komponen (jika perlu spare part)",d:"Tab Components: <span class='fp'>Material</span> spare part dan <span class='fp'>Quantity</span> yang dibutuhkan."},
+      {t:"Release & Simpan",d:"Klik <span class='fp'>Release</span> agar order bisa dieksekusi teknisi → Ctrl+S."},
+    ]},
+    {code:"IW32",purpose:"Change Maintenance Order",desc:"Edit order maintenance",cls:"pm",steps:[
+      {t:"Buka IW32",d:"<span class='fp'>IW32</span> → masukkan <span class='fp'>Order</span> number."},
+      {t:"Edit / Confirm",d:"Ubah operasi/komponen, atau lakukan Time Confirmation (jam kerja aktual teknisi) langsung dari sini."},
+      {t:"Simpan",d:"Ctrl+S."},
+    ]},
+    {code:"IW33",purpose:"Display Maintenance Order",desc:"Lihat detail order maintenance",cls:"pm",steps:[
+      {t:"Buka IW33",d:"<span class='fp'>IW33</span> → <span class='fp'>Order</span> → Enter."},
+      {t:"Cek biaya & status",d:"Tab Costs menampilkan actual cost (spare part + labor) vs planned cost. Cek status: Created, Released, Completed."},
+    ]},
+  ],
+  "Notification":[
+    {code:"IW21",purpose:"Create PM Notification",desc:"Laporkan kerusakan/gangguan mesin",cls:"pm",steps:[
+      {t:"Buka IW21",d:"<span class='fp'>IW21</span>. Pilih <span class='fp'>Notification Type</span> (M1=Malfunction Report, M2=Maintenance Request, M3=Activity Report)."},
+      {t:"Isi objek",d:"<span class='fp'>Equipment</span> atau <span class='fp'>Functional Location</span> yang bermasalah. <span class='fp'>Short Text</span> deskripsi gangguan."},
+      {t:"Isi detail",d:"<span class='fp'>Breakdown</span> (centang jika mesin berhenti total). <span class='fp'>Priority</span>. Tanggal & waktu kejadian."},
+      {t:"Simpan",d:"Ctrl+S → Notification Number tergenerate. Dari dalam notifikasi bisa langsung klik tombol <span class='fp'>Create Order</span> untuk konversi jadi Maintenance Order, atau proses massal via IW28."},
+    ]},
+    {code:"IW22",purpose:"Change PM Notification",desc:"Update status notifikasi kerusakan",cls:"pm",steps:[
+      {t:"Buka IW22",d:"<span class='fp'>IW22</span> → masukkan <span class='fp'>Notification</span> number."},
+      {t:"Update",d:"Tambah detail temuan, assign ke Maintenance Order, atau update status jadi completed."},
+      {t:"Simpan",d:"Ctrl+S."},
+    ]},
+  ],
+  "Preventive Maintenance":[
+    {code:"IP10",purpose:"Schedule Maintenance Plan",desc:"Jalankan penjadwalan maintenance preventif",cls:"pm",steps:[
+      {t:"Buka IP10",d:"<span class='fp'>IP10</span>. Masukkan <span class='fp'>Maintenance Plan</span> number (dibuat sebelumnya via IP41/IP42)."},
+      {t:"Set parameter scheduling",d:"<span class='fp'>Scheduling Period</span> (misal: bulanan). <span class='fp'>Start Date</span>."},
+      {t:"Execute",d:"F8 → sistem otomatis generate Maintenance Order atau Notification sesuai cycle yang ditentukan (misal servis tiap 3 bulan)."},
+    ],tip:"Preventive maintenance yang terjadwal rapi via IP10 membantu menurunkan breakdown mendadak dan downtime produksi."},
+  ],
+},
+HR:{
+  "Personnel Administration":[
+    {code:"PA20",purpose:"Display HR Master Data",desc:"Lihat data personalia karyawan",cls:"hr",steps:[
+      {t:"Buka PA20",d:"<span class='fp'>PA20</span>. Masukkan <span class='fp'>Personnel Number</span> (atau cari via nama)."},
+      {t:"Pilih infotype",d:"Pilih <span class='fp'>Infotype</span> yang mau dilihat: 0002 (Personal Data), 0006 (Addresses), 0008 (Basic Pay), 0001 (Org Assignment)."},
+      {t:"Display",d:"Klik kaca pembesar → data tampil read-only sesuai periode validitas."},
+    ]},
+    {code:"PA30",purpose:"Maintain HR Master Data",desc:"Edit/tambah data personalia karyawan",cls:"hr",steps:[
+      {t:"Buka PA30",d:"<span class='fp'>PA30</span>. Masukkan <span class='fp'>Personnel Number</span>."},
+      {t:"Pilih infotype & aksi",d:"Pilih <span class='fp'>Infotype</span> → klik Create (data baru dengan periode validitas baru) atau Change (edit record aktif)."},
+      {t:"Isi data",d:"Lengkapi field sesuai infotype, misal Infotype 0008 untuk gaji pokok, Infotype 0006 untuk alamat."},
+      {t:"Simpan",d:"Ctrl+S. Sistem otomatis mendelimit record lama jika ada perubahan bertanggal."},
+    ],note:"Perubahan data gaji (Infotype 0008) biasanya butuh approval terpisah sesuai kebijakan payroll perusahaan."},
+    {code:"PA40",purpose:"Personnel Action",desc:"Proses hiring, mutasi, promosi, resign",cls:"hr",steps:[
+      {t:"Buka PA40",d:"<span class='fp'>PA40</span>. Masukkan <span class='fp'>Personnel Number</span> (kosongkan untuk New Hire)."},
+      {t:"Pilih action type",d:"Pilih jenis aksi: <span class='fp'>Hiring</span>, <span class='fp'>Organizational Reassignment</span>, <span class='fp'>Termination</span>, dll. Isi <span class='fp'>Start Date</span>."},
+      {t:"Isi rangkaian infotype",d:"Sistem otomatis membawa ke serangkaian infotype terkait aksi tersebut (Org Assignment, Personal Data, Basic Pay, dll) — isi berurutan."},
+      {t:"Simpan",d:"Ctrl+S di infotype terakhir → seluruh rangkaian data tersimpan sekaligus."},
+    ],tip:"PA40 memastikan semua infotype terkait suatu event (misal hiring) terisi konsisten dalam satu alur, mengurangi risiko data tercecer."},
+  ],
+  "Organizational Management":[
+    {code:"PPOME",purpose:"Change Organizational Unit",desc:"Edit struktur organisasi",cls:"hr",steps:[
+      {t:"Buka PPOME",d:"<span class='fp'>PPOME</span>. Cari <span class='fp'>Organizational Unit</span> yang mau diedit."},
+      {t:"Edit struktur",d:"Tambah/hapus posisi (position), ubah relasi reporting line, atau pindahkan unit ke parent lain via drag-drop di struktur pohon."},
+      {t:"Simpan",d:"Ctrl+S."},
+    ]},
+    {code:"PPOSE",purpose:"Display Organizational Structure",desc:"Lihat struktur organisasi (read only)",cls:"hr",steps:[
+      {t:"Buka PPOSE",d:"<span class='fp'>PPOSE</span>. Masukkan <span class='fp'>Organizational Unit</span> root yang mau dilihat."},
+      {t:"Review hierarki",d:"Struktur pohon organisasi tampil lengkap dengan posisi dan pemegang jabatan (holder) di tiap posisi."},
+    ]},
+  ],
+  "Time Management":[
+    {code:"PA61",purpose:"Maintain Time Data",desc:"Input data waktu kerja/cuti karyawan",cls:"hr",steps:[
+      {t:"Buka PA61",d:"<span class='fp'>PA61</span>. Masukkan <span class='fp'>Personnel Number</span>."},
+      {t:"Pilih infotype waktu",d:"Pilih <span class='fp'>Infotype</span> 2001 (Absences) untuk cuti/izin, atau 2002 (Attendances) untuk kehadiran khusus."},
+      {t:"Isi data",d:"<span class='fp'>Absence Type</span> (cuti tahunan, sakit, dll). <span class='fp'>Start/End Date</span>."},
+      {t:"Simpan",d:"Ctrl+S. Data ini akan masuk ke perhitungan payroll dan sisa saldo cuti."},
+    ]},
+    {code:"PT01",purpose:"Create Work Schedule",desc:"Buat jadwal kerja/shift karyawan",cls:"hr",steps:[
+      {t:"Buka PT01",d:"<span class='fp'>PT01</span>. Isi <span class='fp'>Work Schedule Rule</span> code baru."},
+      {t:"Isi pola kerja",d:"Tentukan <span class='fp'>Daily Work Schedule</span> per hari (jam masuk-pulang) dan <span class='fp'>Period Work Schedule</span> untuk pola rotasi shift."},
+      {t:"Simpan",d:"Ctrl+S. Assign rule ini ke karyawan via Infotype 0007 (Planned Working Time) di PA30."},
+    ]},
+  ],
+  "Payroll":[
+    {code:"PC00_M99_CALC0",purpose:"Run Payroll",desc:"Jalankan proses penggajian",cls:"hr",steps:[
+      {t:"Buka PC00_M99_CALC0",d:"T-code payroll driver (kode negara berbeda-beda, cek dengan konsultan HR lokal)."},
+      {t:"Isi parameter",d:"<span class='fp'>Payroll Area</span>. <span class='fp'>Payroll Period</span>. Pilih <span class='fp'>Test Run</span> dulu sebelum live run."},
+      {t:"Test Run",d:"Jalankan Test Run → review hasil di log untuk cek error (misal data bank kosong, infotype tidak lengkap)."},
+      {t:"Live Run",d:"Setelah semua error di Test Run beres, jalankan tanpa centang Test Run untuk posting resmi."},
+    ],note:"Selalu jalankan Test Run dulu. Live Run mengunci periode payroll dan sulit dibatalkan setelah proses berikutnya berjalan."},
+    {code:"PC_PAYRESULT",purpose:"Display Payroll Results",desc:"Lihat hasil perhitungan gaji karyawan",cls:"hr",steps:[
+      {t:"Buka PC_PAYRESULT",d:"Masukkan <span class='fp'>Personnel Number</span> dan <span class='fp'>Payroll Period</span>."},
+      {t:"Review hasil",d:"Tampil rincian: Gross Pay, potongan (pajak, BPJS), Net Pay, dan wage type detail lainnya."},
+    ]},
+  ],
+  "Recruitment (Classic)":[
+    {code:"PB10",purpose:"Initial Entry of Applicant Data",desc:"Input data awal pelamar (basic data)",cls:"hr",steps:[
+      {t:"Buka PB10",d:"<span class='fp'>PB10</span>. Isi data dasar pelamar: <span class='fp'>Name</span>, <span class='fp'>Address</span>, <span class='fp'>Applicant Group</span> (misal: Internal/External), <span class='fp'>Applicant Range</span>."},
+      {t:"Isi Vacancy",d:"Kaitkan pelamar dengan <span class='fp'>Vacancy</span>/posisi yang dilamar jika sudah ada."},
+      {t:"Simpan",d:"Ctrl+S → Applicant Number tergenerate, siap diproses lebih lanjut di PB20/PB40."},
+    ],note:"Tcode dan proses recruitment klasik ini bisa berbeda tergantung apakah perusahaan pakai Classic Recruitment atau E-Recruiting (portal-based) — cek konfigurasi HR yang berlaku."},
+    {code:"PB20",purpose:"Maintain Applicant Master Data",desc:"Lengkapi data pelamar (CV, pendidikan, pengalaman)",cls:"hr",steps:[
+      {t:"Buka PB20",d:"Masukkan <span class='fp'>Applicant Number</span>. Pilih infotype pelamar (4000-range) yang mau dilengkapi."},
+      {t:"Lengkapi data",d:"Riwayat pendidikan, pengalaman kerja, hasil tes/interview, dll sesuai infotype yang tersedia."},
+      {t:"Simpan",d:"Ctrl+S."},
+    ]},
+    {code:"PB40",purpose:"Applicant Actions",desc:"Proses status pelamar: undang interview, terima, tolak, hire",cls:"hr",steps:[
+      {t:"Buka PB40",d:"Masukkan <span class='fp'>Applicant Number</span>. Pilih <span class='fp'>Action Type</span> sesuai tahapan: interview, offering, hired, atau rejected."},
+      {t:"Proses rangkaian infotype",d:"Sistem membawa ke infotype terkait aksi tersebut, isi berurutan."},
+      {t:"Jika Hired",d:"Jika status jadi 'Hired', data pelamar bisa dikonversi jadi Personnel Number karyawan baru via PA40 (Hiring)."},
+    ],tip:"PB40 adalah pusat kendali status pelamar — riwayat semua tahapan seleksi tercatat di sini untuk audit trail proses rekrutmen."},
+  ],
+  "Performance Management (OSA)":[
+    {code:"PHAP_CATALOG",purpose:"Maintain Appraisal Catalog",desc:"Buat template/kriteria penilaian kinerja",cls:"hr",steps:[
+      {t:"Buka PHAP_CATALOG",d:"Definisikan <span class='fp'>Appraisal Category Group</span> dan <span class='fp'>Appraisal Category</span> (misal: Penilaian Tahunan, Penilaian Probation)."},
+      {t:"Isi kriteria penilaian",d:"Tambahkan kolom penilaian (kompetensi, target KPI), skala nilai, dan bobot masing-masing kriteria."},
+      {t:"Simpan & release",d:"Ctrl+S → set status template menjadi released agar bisa dipakai membuat appraisal document."},
+    ]},
+    {code:"PHAP_ADMIN",purpose:"Administer Appraisal Documents",desc:"Kelola dokumen penilaian kinerja karyawan",cls:"hr",steps:[
+      {t:"Buka PHAP_ADMIN",d:"Cari appraisal document berdasarkan <span class='fp'>Appraisal Category</span>, <span class='fp'>Status</span>, atau <span class='fp'>Personnel Number</span>."},
+      {t:"Buat/monitor dokumen",d:"Buat appraisal document baru untuk karyawan, atau monitor status dokumen yang sudah berjalan (in process, completed, dll)."},
+      {t:"Forward/koreksi",d:"Bisa reassign appraiser, buka kembali dokumen yang sudah completed jika perlu koreksi (dengan otorisasi)."},
+    ],note:"T-code Performance Management/OSA ini cukup bervariasi tergantung versi SAP HCM dan konfigurasi appraisal template perusahaan — sesuaikan dengan setup HR yang aktif di sistemmu."},
+  ],
+},
+PS:{
+  "Struktur Proyek (WBS)":[
+    {code:"CJ01",purpose:"Create Project (WBS)",desc:"Buat struktur project dan Work Breakdown Structure",cls:"ps",steps:[
+      {t:"Buka CJ01",d:"Isi <span class='fp'>Project Definition</span> (kode unik project) dan <span class='fp'>Description</span>."},
+      {t:"Isi Basic Data",d:"<span class='fp'>Project Start/Finish Date</span>. <span class='fp'>Person Responsible</span>. <span class='fp'>Company Code</span>, <span class='fp'>Controlling Area</span>, <span class='fp'>Profit Center</span>."},
+      {t:"Buat struktur WBS",d:"Tambahkan level WBS Element (bisa berjenjang, misal: Project → Sub-Project → Paket Pekerjaan). Tiap WBS bisa jadi <span class='fp'>Account Assignment</span> untuk biaya."},
+      {t:"Simpan",d:"Ctrl+S. Project & WBS siap dipakai untuk perencanaan budget dan pengumpulan biaya (AUC)."},
+    ],tip:"CJ01/02/03 adalah cara klasik (tree-based sederhana) untuk kelola WBS. Untuk tampilan terintegrasi dengan Network/Activity, gunakan CJ20N (Project Builder)."},
+    {code:"CJ02",purpose:"Change Project (WBS)",desc:"Edit struktur project yang sudah ada",cls:"ps",steps:[
+      {t:"Buka CJ02",d:"Masukkan <span class='fp'>Project Definition</span> atau WBS Element."},
+      {t:"Edit struktur",d:"Tambah/hapus WBS Element, ubah tanggal, atau ubah Responsible Person."},
+      {t:"Simpan",d:"Ctrl+S."},
+    ],note:"WBS yang sudah punya transaksi biaya sebaiknya tidak dihapus — set status ke Closed/Technically Complete saja."},
+    {code:"CJ03",purpose:"Display Project (WBS)",desc:"Lihat struktur project (read only)",cls:"ps",steps:[
+      {t:"Buka CJ03",d:"Masukkan <span class='fp'>Project Definition</span> → Enter. Semua data tampil read-only."},
+    ]},
+    {code:"CJ20N",purpose:"Project Builder",desc:"Layar terintegrasi untuk kelola WBS, Network, dan Activity sekaligus",cls:"ps",steps:[
+      {t:"Buka CJ20N",d:"Tampilan tree di kiri untuk navigasi struktur project, detail di kanan."},
+      {t:"Buat/edit WBS & Network",d:"Bisa langsung tambah WBS Element, Network Activity (jika pakai network scheduling), dan assign Cost/Revenue Planning dari satu layar."},
+      {t:"Simpan",d:"Ctrl+S. Project Builder lebih efisien untuk project kompleks dibanding CJ01/02 terpisah."},
+    ],tip:"Untuk perencanaan RKAP Investasi seperti di modul PELINDO, CJ20N adalah entry point utamanya."},
+  ],
+  "Budgeting & Kontrol Biaya":[
+    {code:"CJ30",purpose:"Project Budgeting",desc:"Input dan kelola anggaran project (original, supplement, return, transfer)",cls:"ps",steps:[
+      {t:"Buka CJ30",d:"Masukkan <span class='fp'>Project Definition</span> atau WBS Element."},
+      {t:"Pilih jenis aksi budget",d:"Toolbar menyediakan: <span class='fp'>Original Budget</span> (anggaran awal), <span class='fp'>Supplement</span> (tambahan), <span class='fp'>Return</span> (pengembalian), <span class='fp'>Transfer</span> (pindah antar WBS)."},
+      {t:"Isi nilai per WBS",d:"Alokasikan nilai budget ke tiap WBS Element sesuai rencana kerja."},
+      {t:"Simpan",d:"Ctrl+S. Jika Availability Control aktif, sistem akan warning/block transaksi yang melebihi budget."},
+    ]},
+    {code:"CJI3",purpose:"Actual Cost Line Items (Project)",desc:"Lihat semua biaya aktual yang sudah terjadi di suatu project",cls:"ps",steps:[
+      {t:"Buka CJI3",d:"Masukkan <span class='fp'>Project</span> atau WBS Element (bisa range)."},
+      {t:"Execute",d:"F8 → tampil semua line item biaya aktual dari berbagai sumber (invoice, GR, jurnal manual) yang sudah ter-charge ke project ini."},
+      {t:"Bandingkan dengan budget",d:"Cross-check dengan CJ30 untuk lihat sisa budget yang tersedia."},
+    ],tip:"CJI3 adalah cara tercepat untuk cek 'sudah habis berapa' dari suatu budget project, sebelum approve pengeluaran baru."},
+  ],
+  "Settlement & Reporting":[
+    {code:"CJ88",purpose:"Settlement WBS (Individual Processing)",desc:"Pindahkan biaya terkumpul di WBS/AUC ke objek biaya akhir",cls:"ps",steps:[
+      {t:"Buka CJ88",d:"Masukkan <span class='fp'>Project</span> atau WBS Element yang mau di-settle."},
+      {t:"Cek settlement rule",d:"Pastikan <span class='fp'>Settlement Rule</span> sudah di-maintain (via AIAB untuk AUC, atau langsung di WBS) — menentukan ke mana biaya akan dipindahkan (Fixed Asset, Cost Center, atau G/L Account)."},
+      {t:"Test Run dulu",d:"Jalankan dalam mode Test Run untuk cek hasil sebelum posting resmi."},
+      {t:"Execute Settlement",d:"Jalankan settlement final → biaya berpindah dari project ke objek tujuan, tercatat sebagai jurnal akuntansi."},
+    ],note:"Ini prinsip yang sama dengan proses Settlement Biaya Proyek di modul PELINDO — CJ88 untuk single project, CJ8G untuk settlement banyak project sekaligus (mass processing)."},
+    {code:"CN41",purpose:"Project Info System — Structure Overview",desc:"Laporan struktur & status project secara keseluruhan",cls:"ps",steps:[
+      {t:"Buka CN41",d:"Isi filter: <span class='fp'>Project</span>, <span class='fp'>Person Responsible</span>, <span class='fp'>Status</span>."},
+      {t:"Execute",d:"F8 → tampil struktur project lengkap dengan status tiap WBS, tanggal, dan person responsible — cocok untuk monitoring project portfolio."},
+    ]},
+  ],
+},
+REFX:{
+  "Master Data & Kontrak":[
+    {code:"RE80",purpose:"Real Estate Navigator",desc:"Layar utama terintegrasi untuk kelola seluruh master data properti dan kontrak sewa",cls:"refx",steps:[
+      {t:"Buka RE80",d:"Layar tree navigator — satu pintu masuk untuk hampir semua transaksi RE-FX (Business Entity, Property, Building, Rental Unit, Contract)."},
+      {t:"Buat Business Entity",d:"Klik kanan pada node yang sesuai → Create → <span class='fp'>Business Entity</span> (representasi lokasi/kompleks, misal 1 area pelabuhan)."},
+      {t:"Buat Property/Building/Rental Unit",d:"Di bawah Business Entity, buat hierarki <span class='fp'>Property</span> (bidang tanah) → <span class='fp'>Building</span> → <span class='fp'>Rental Unit</span> (unit yang bisa disewakan, misal gudang/lahan tertentu)."},
+      {t:"Buat Contract",d:"Buat <span class='fp'>Rental Agreement/Contract</span>, kaitkan ke Rental Unit, isi <span class='fp'>Tenant</span> (penyewa/customer), <span class='fp'>Term</span> (periode sewa), dan <span class='fp'>Conditions</span> (nilai sewa periodik)."},
+      {t:"Simpan",d:"Ctrl+S di tiap level. Setelah kontrak aktif, sistem akan generate tagihan sewa periodik secara otomatis sesuai Conditions yang di-set."},
+    ],note:"T-code dan detail konfigurasi RE-FX cukup bervariasi tergantung implementasi tiap perusahaan — RE80 adalah entry point paling umum, tapi konfirmasikan ke tim FI/Real Estate perusahaanmu untuk proses spesifik seperti aplikasi pembayaran atau adjustment sewa."},
+  ],
+},
+};
+
+// ---------- glossary data ----------
+const GLOSSARY = [
+  // Umum SAP
+  {term:"T-Code",cat:"Umum SAP",def:"Transaction Code — kode singkat untuk membuka layar/fungsi tertentu di SAP, misal ME21N untuk create Purchase Order."},
+  {term:"Company Code",cat:"Umum SAP",def:"Unit organisasi legal entity di SAP yang bisa menghasilkan laporan keuangan lengkap (neraca & laba rugi) secara mandiri."},
+  {term:"Controlling Area",cat:"Umum SAP",def:"Unit organisasi untuk pelaporan biaya internal (Controlling/CO) — bisa menaungi satu atau lebih Company Code."},
+  {term:"Chart of Accounts",cat:"Umum SAP",def:"Daftar seluruh nomor dan nama G/L Account yang dipakai oleh satu atau beberapa Company Code."},
+  {term:"Fiscal Year Variant",cat:"Umum SAP",def:"Pengaturan periode tahun buku — menentukan berapa periode normal dan periode khusus (special period) dalam satu tahun."},
+  {term:"Posting Period",cat:"Umum SAP",def:"Periode akuntansi (biasanya bulanan) tempat suatu dokumen boleh diposting. Bisa dibuka/ditutup per Company Code."},
+  {term:"Document Type",cat:"Umum SAP",def:"Kode yang membedakan jenis dokumen transaksi (misal SA=jurnal GL, KR=invoice vendor) — tiap tipe punya nomor seri sendiri."},
+  {term:"Parked Document",cat:"Umum SAP",def:"Dokumen yang sudah diinput tapi belum diposting resmi — masih bisa direview/diubah/dibatalkan sebelum posting final."},
+  {term:"Open Item",cat:"Umum SAP",def:"Baris transaksi (invoice/payment) yang belum di-clear/dipasangkan dengan lawannya — misal invoice yang belum dibayar."},
+  {term:"Clearing",cat:"Umum SAP",def:"Proses mencocokkan/menutup dua atau lebih dokumen yang saling melunasi, misal invoice dengan payment-nya."},
+  {term:"Reconciliation Account",cat:"Umum SAP",def:"Akun G/L yang otomatis ter-update ketika ada transaksi vendor/customer/asset — menjembatani sub-ledger dengan General Ledger."},
+  {term:"Special G/L",cat:"Umum SAP",def:"Indikator khusus untuk transaksi vendor/customer non-standar seperti uang muka (down payment), jaminan, atau retensi, yang perlu tampil terpisah dari saldo normal."},
+  {term:"Batch Input",cat:"Umum SAP",def:"Metode input data massal ke SAP secara terprogram, biasa dipakai untuk posting jurnal recurring dalam jumlah banyak."},
+  {term:"ATP (Available to Promise)",cat:"Umum SAP",def:"Perhitungan sistem untuk memastikan stok tersedia sebelum janji tanggal kirim ke customer diberikan."},
+  {term:"FIORI",cat:"Umum SAP",def:"Antarmuka web/mobile modern dari SAP untuk approval dan transaksi ringan, sebagai pelengkap layar SAP GUI klasik."},
+  // MM
+  {term:"PR (Purchase Requisition)",cat:"MM",def:"Dokumen permintaan pembelian internal — belum mengikat ke vendor, masih perlu diproses jadi PO."},
+  {term:"PO (Purchase Order)",cat:"MM",def:"Dokumen pemesanan resmi ke vendor, berisi material/jasa, quantity, harga, dan tanggal kirim yang disepakati."},
+  {term:"GR (Goods Receipt)",cat:"MM",def:"Pencatatan penerimaan barang fisik dari vendor ke gudang, biasanya via MIGO dengan movement type 101."},
+  {term:"GI (Goods Issue)",cat:"MM",def:"Pencatatan pengeluaran barang dari gudang, misal ke cost center atau production order."},
+  {term:"Movement Type",cat:"MM",def:"Kode yang menentukan jenis pergerakan stok, misal 101 untuk GR dari PO, 261 untuk GI ke production order."},
+  {term:"3-Way Match",cat:"MM",def:"Kontrol otomatis SAP yang membandingkan PO, Goods Receipt, dan Invoice sebelum invoice bisa diproses pembayarannya."},
+  {term:"Valuation Class",cat:"MM",def:"Pengelompokan material yang menentukan akun G/L mana yang otomatis terpakai saat transaksi stok material tersebut."},
+  // FI/CO
+  {term:"Cost Center",cat:"FI/CO",def:"Unit organisasi tempat biaya dikumpulkan dan dipertanggungjawabkan, biasanya berbasis departemen/fungsi."},
+  {term:"Profit Center",cat:"FI/CO",def:"Unit organisasi untuk mengukur profitabilitas suatu area bisnis — bisa merepresentasikan divisi, produk, atau entitas regional."},
+  {term:"Internal Order",cat:"FI/CO",def:"Objek CO untuk mengumpulkan biaya suatu event/project sementara, yang nanti akan di-settle ke Cost Center atau Asset."},
+  {term:"Settlement",cat:"FI/CO",def:"Proses memindahkan/mengalokasikan biaya yang terkumpul di satu objek (project/internal order/AUC) ke objek tujuan akhir."},
+  {term:"AUC (Asset Under Construction)",cat:"FI/CO",def:"Aset yang masih dalam proses pembangunan/pengerjaan — biaya dikumpulkan dulu di sini sebelum di-settle jadi aset tetap final."},
+  {term:"Depresiasi",cat:"FI/CO",def:"Alokasi penyusutan nilai aset tetap secara periodik sepanjang masa manfaatnya."},
+  {term:"Down Payment",cat:"FI/CO",def:"Uang muka yang dibayar/diterima sebelum barang/jasa selesai — dicatat terpisah pakai Special G/L, bukan sebagai piutang/hutang biasa."},
+  {term:"Accrual",cat:"FI/CO",def:"Jurnal pengakuan biaya/pendapatan yang sudah terjadi secara ekonomis tapi dokumen resminya (invoice) belum diterima."},
+  {term:"Recurring Entry",cat:"FI/CO",def:"Template jurnal yang nilainya sama dan diposting berulang tiap periode, misal biaya asuransi bulanan."},
+  {term:"Financial Statement Version",cat:"FI/CO",def:"Struktur pengelompokan G/L Account untuk keperluan penyajian laporan keuangan (Neraca & Laba Rugi)."},
+  // SD/PP/QM/PM
+  {term:"Sales Order",cat:"SD/PP/QM/PM",def:"Dokumen pesanan penjualan dari customer, menjadi dasar untuk proses delivery dan billing."},
+  {term:"WBS (Work Breakdown Structure)",cat:"SD/PP/QM/PM",def:"Struktur hierarki pekerjaan dalam sebuah project, dipakai untuk mengumpulkan biaya per elemen kerja."},
+  {term:"BOM (Bill of Material)",cat:"SD/PP/QM/PM",def:"Daftar komponen/material penyusun suatu produk jadi, lengkap dengan quantity kebutuhannya."},
+  {term:"Routing",cat:"SD/PP/QM/PM",def:"Urutan operasi/langkah kerja produksi beserta waktu standar tiap operasinya."},
+  {term:"Inspection Lot",cat:"SD/PP/QM/PM",def:"Batch/lot material yang akan diperiksa kualitasnya sebelum diputuskan diterima atau ditolak."},
+  {term:"Usage Decision",cat:"SD/PP/QM/PM",def:"Keputusan hasil pemeriksaan kualitas: apakah suatu inspection lot diterima (masuk stok unrestricted) atau ditolak (blocked)."},
+  {term:"Notification (PM)",cat:"SD/PP/QM/PM",def:"Laporan gangguan/kerusakan mesin yang menjadi dasar dibuatnya Maintenance Order."},
+  // HR
+  {term:"Infotype",cat:"HR",def:"Kategori data personalia karyawan di modul HR, misal Infotype 0002 (Data Pribadi), 0008 (Gaji Pokok)."},
+  {term:"Personnel Action",cat:"HR",def:"Rangkaian event kepegawaian seperti hiring, mutasi, atau resign yang otomatis membawa user ke serangkaian infotype terkait."},
+  // Pelindo-specific
+  {term:"Uper (Uang Pertanggungan)",cat:"Pelindo",def:"Uang muka yang disetor customer sebelum nota tagihan resmi terbit, umum dipakai untuk transaksi pelayanan jasa properti Pelindo."},
+  {term:"Utip (Uang Titipan)",cat:"Pelindo",def:"Saldo dana customer yang 'dititipkan' di Pelindo dan bisa dipakai untuk clearing/pelunasan piutang tanpa perlu pembayaran kas baru."},
+  {term:"PJKO",cat:"Pelindo",def:"Pemegang/Penanggung Jawab Kas Operasional — pegawai yang mengelola kas kecil operasional cabang/unit."},
+  {term:"SSC (Shared Service Center)",cat:"Pelindo",def:"Unit terpusat yang memverifikasi kelengkapan dokumen tagihan/pembayaran sebelum diproses pembayarannya oleh Perbendaharaan."},
+  {term:"H2H (Host-to-Host)",cat:"Pelindo",def:"Koneksi sistem langsung antara SAP Pelindo dengan sistem bank untuk eksekusi pembayaran maupun collection otomatis."},
+  {term:"BAST",cat:"Pelindo",def:"Berita Acara Serah Terima — dokumen bukti serah terima pekerjaan/barang, jadi salah satu syarat sebelum invoice bisa diproses."},
+  {term:"RKAP",cat:"Pelindo",def:"Rencana Kerja dan Anggaran Perusahaan — dasar perencanaan investasi/proyek yang diinput di Project Planner (module PS)."},
+  {term:"KSO",cat:"Pelindo",def:"Kerja Sama Operasi — skema kerja sama investasi aset antara Pelindo dengan mitra, punya jalur akuntansi aset tersendiri."},
+  {term:"PNBP",cat:"Pelindo",def:"Penerimaan Negara Bukan Pajak — kewajiban pembayaran ke negara yang dibayarkan lewat proses hutang usaha non-PO."},
+  {term:"PIB",cat:"Pelindo",def:"Pemberitahuan Impor Barang — dokumen bea cukai untuk barang impor, terkait proses pembayaran ke Bea Cukai."},
+  {term:"TOS (Terminal Operating System)",cat:"Pelindo",def:"Aplikasi surrounding di luar SAP yang mencatat aktivitas pelayanan jasa pelabuhan, terintegrasi ke SAP untuk pengakuan pendapatan."},
+  {term:"INCO",cat:"Pelindo",def:"Aplikasi surrounding Pelindo untuk approval nota dan release locking piutang, terintegrasi dengan modul AR di SAP."},
+  {term:"BIOS",cat:"Pelindo",def:"Aplikasi surrounding untuk pengajuan dan pertanggungjawaban kas operasional (top up, realisasi PJKO)."},
+  {term:"Single ERP",cat:"Pelindo",def:"Program implementasi 1 sistem SAP terpusat untuk seluruh entitas Pelindo (1 Company Code 1000), menggantikan sistem yang sebelumnya terpisah per regional."},
+  {term:"Regional / Sub-Regional",cat:"Pelindo",def:"Tingkatan organisasi Pelindo di bawah Kantor Pusat — Regional membawahi beberapa cabang, sebagian Regional (R3) punya lapisan tambahan Sub-Regional."},
+];
+
+// ---------- end-to-end process flows (swimlane) ----------
+const PROCESS_FLOWS = [
+  {
+    id:'uang-muka',
+    title:'Uang Muka Non-Kas Operasional — Pengajuan sampai Realisasi',
+    desc:'Alur lengkap permintaan uang muka (UM) non-kas operasional di Pelindo: dari pengajuan unit fungsi terkait, verifikasi berjenjang, pembayaran, sampai realisasi dan clearing jurnalnya.',
+    lanes:['Unit Fungsi Terkait','Group Layanan Keuangan & Perpajakan','Dep. Perbendaharaan'],
+    stages:[
+      {lane:0, label:'Ajukan Permohonan UM', tcode:'FV60 / F-47'},
+      {lane:0, label:'Create DP Request / Parked Doc', tcode:'F-47 / ME2DP'},
+      {lane:0, label:'Submit DP Request ke SSC', tcode:'ZFI051'},
+      {lane:1, label:'Verifikasi Staff', tcode:'ZFI052'},
+      {lane:1, label:'Verifikasi Dept. Head', tcode:'ZFI052'},
+      {lane:1, label:'Verifikasi Group Head (nominal > 500 juta)', tcode:'FIORI'},
+      {lane:2, label:'Proses Pembayaran UM', tcode:'ZFI053'},
+      {lane:0, label:'UM Digunakan / Cek Outstanding', tcode:'FBL1N'},
+      {lane:0, label:'Entry Realisasi / PJUM', tcode:'FBV2'},
+      {lane:1, label:'Verifikasi Realisasi', tcode:'ZFI052'},
+      {lane:2, label:'Create Jurnal Clearing', tcode:'F-04'},
+      {lane:0, label:'Transfer Sisa Uang Muka (jika ada)', tcode:'F-53'},
+    ]
+  },
+  {
+    id:'pr-po-bayar',
+    title:'PR ke PO sampai Terbayar (Procure-to-Pay)',
+    desc:'Alur pengadaan Pelindo dari pembuatan Purchase Requisition, proses lelang/PO, penerimaan barang/jasa, sampai pembayaran ke vendor via H2H.',
+    lanes:['Unit Fungsi Terkait / Cabang','Procurement / Vendor','Dep. Perbendaharaan (KP)'],
+    stages:[
+      {lane:0, label:'Pembuatan PR', tcode:'ME51N'},
+      {lane:0, label:'Release PR', tcode:'ME54N / FIORI'},
+      {lane:0, label:'Submit PR ke Procurement', tcode:'ZMM6003'},
+      {lane:1, label:'Lelang / Pembuatan PO', tcode:'ZMM6003'},
+      {lane:0, label:'Penerimaan Barang & Jasa (GR/SES)', tcode:'MIGO / ML81N'},
+      {lane:0, label:'Submit Berkas Pembayaran ke SSC', tcode:'ZFI051'},
+      {lane:2, label:'Verifikasi Staff → Dept Head → Group Head', tcode:'ZFI052'},
+      {lane:2, label:'Payment Proposal & Approval (FIORI)', tcode:'ZFI053'},
+      {lane:2, label:'Perintah Bayar via H2H ke Bank', tcode:'ZFI053'},
+      {lane:2, label:'Auto-Clearing Journal', tcode:'SM35'},
+    ]
+  },
+  {
+    id:'penerima-cashin',
+    title:'Dari Sisi Penerima (Customer) sampai Jurnal Cash In (Order-to-Cash)',
+    desc:'Alur pendapatan pelayanan jasa Pelindo dari sisi customer: permohonan jasa, setor Uper, realisasi layanan di TOS, penerbitan nota, sampai pelunasan dan jurnal kas masuk.',
+    lanes:['Customer','Terminal / TOS','Dep. Perbendaharaan (Regional)'],
+    stages:[
+      {lane:0, label:'Permohonan Pelayanan Jasa', tcode:'Front-End / IBS'},
+      {lane:0, label:'Setor Uper (Uang Muka)', tcode:'F-29'},
+      {lane:2, label:'Penerimaan Uper & Create Incoming Journal', tcode:'F-29'},
+      {lane:1, label:'Realisasi Layanan di TOS', tcode:'TOS'},
+      {lane:2, label:'Dokumen Tagihan / Nota Terbentuk', tcode:'FBL5N'},
+      {lane:2, label:'Approval Nota', tcode:'Proses Approval Nota'},
+      {lane:0, label:'Customer Melakukan Pelunasan (H2H/Manual)', tcode:'H2H / F-29'},
+      {lane:2, label:'Jurnal Kas Masuk', tcode:'F-29'},
+      {lane:2, label:'Clearing Piutang (pakai Uper jika ada)', tcode:'F-32'},
+      {lane:0, label:'Notifikasi Pelunasan ke Customer', tcode:'Manual / INCO'},
+    ]
+  },
+];
+
+// ---------- business process map ----------
+const BUSINESS_PROCESSES = [
+  {id:'p2p', title:'Pengadaan Barang & Jasa', en:'Procure-to-Pay (P2P)', mods:['MM','FI'], cls:'mm',
+    desc:'Siklus dari "unit kerja butuh barang/jasa" sampai "vendor dibayar". Ini proses paling sering dipakai lintas departemen — hampir semua orang di perusahaan pernah bikin PR.',
+    acts:['Perencanaan kebutuhan barang/jasa oleh unit kerja','Pembuatan Purchase Requisition (PR) & approval berjenjang','Pemilihan vendor: lelang, tender, atau source list','Negosiasi harga, kontrak, dan penerbitan Purchase Order (PO)','Penerimaan barang (GR) atau jasa (Service Entry Sheet) di gudang','Verifikasi invoice vendor dengan 3-way match (PO–GR–Invoice)','Release invoice yang ter-block karena selisih harga/qty','Payment run massal & pelaporan hutang usaha'],
+    stages:['Buat & approve PR','Proses vendor & terbit PO','Goods Receipt / SES','Invoice verification (3-way match)','Payment run ke vendor'],
+    controls:["Release strategy: PR & PO wajib approval berjenjang sesuai nominal sebelum bisa diproses","3-way match otomatis: invoice hanya bisa diproses jika cocok dengan PO dan GR","Invoice block & tolerance: selisih harga/qty di luar toleransi otomatis mem-block invoice (release via MRBR)","Review proposal list WAJIB sebelum eksekusi payment run (F110)","Pemisahan tugas: pembuat PO, penerima barang, dan pemroses pembayaran adalah orang berbeda"],
+    tcodes:['ME51N','ME57','ME21N','MIGO','MIRO','MRBR','FBL1N','F110']},
+  {id:'o2c', title:'Penjualan & Pendapatan', en:'Order-to-Cash (O2C)', mods:['SD','FI'], cls:'sd',
+    desc:'Siklus dari "customer memesan" sampai "uang masuk ke rekening". Menghubungkan tim sales, gudang, dan finance dalam satu alur.',
+    acts:['Penawaran harga (quotation) & penerimaan sales order','Pengecekan ketersediaan stok dan janji tanggal kirim (ATP)','Penetapan harga jual, diskon, dan pricing per customer','Pengiriman: picking, packing, post goods issue','Penerbitan invoice/nota tagihan ke customer','Monitoring piutang jatuh tempo & dunning (surat teguran)','Penerimaan pembayaran dan clearing piutang'],
+    stages:['Terima Sales Order','Cek stok & jadwal kirim (ATP)','Delivery & Post Goods Issue','Terbit Billing/Invoice','Terima pembayaran & clearing AR'],
+    controls:["Credit limit check: order ter-block otomatis jika piutang customer melebihi limit","ATP check: sistem hanya menjanjikan tanggal kirim sesuai stok yang benar-benar tersedia","Post Goods Issue sebagai titik resmi barang keluar — baru setelah ini billing bisa terbit","Billing block untuk order yang perlu review harga/kredit sebelum invoice terbit","Invoice yang sudah posting ke FI tidak bisa dihapus — koreksi lewat cancel (VF11) atau credit memo"],
+    tcodes:['VD01','VA01','VA05','VL01N','VL06O','VF01','FBL5N','F-28','F-32']},
+  {id:'ptp', title:'Produksi', en:'Plan-to-Produce', mods:['PP','CO'], cls:'pp',
+    desc:'Siklus perencanaan sampai barang jadi masuk gudang. Master data kuncinya dua: BOM (resep produk) dan Routing (urutan proses).',
+    acts:['Peramalan permintaan & perencanaan produksi (S&OP)','Perhitungan kebutuhan material otomatis via MRP','Pemeliharaan BOM dan Routing','Pembuatan & release production order','Pengambilan bahan baku ke lini produksi (goods issue)','Konfirmasi hasil: yield, scrap, jam mesin & tenaga kerja','Penerimaan barang jadi ke gudang & analisis variance biaya'],
+    stages:['MRP run & planned order','Buat & release Production Order','Goods issue bahan baku','Konfirmasi hasil produksi','GR barang jadi & hitung variance'],
+    controls:["Production order harus di-release dulu sebelum goods issue dan konfirmasi bisa dilakukan","Availability check komponen saat create order — warning jika bahan baku kurang","Konfirmasi yield vs scrap jadi dasar perhitungan variance biaya produksi","Order ditutup bertahap: Confirmed → Technically Complete → Closed"],
+    tcodes:['MD04','MD01','CS01','CA01','CO01','CO11N','COHV','CM01','MIGO']},
+  {id:'wh', title:'Pergudangan & Inventori', en:'Inventory Management', mods:['MM'], cls:'mm',
+    desc:'Kegiatan harian gudang: semua pergerakan fisik barang tercatat sebagai movement type, dan tiap movement otomatis membentuk jurnal akuntansi.',
+    acts:['Penerimaan, penyimpanan, dan pengeluaran barang harian','Transfer stok antar gudang, antar plant, antar storage location','Stock opname (physical inventory) & posting selisih','Monitoring stok minimum, slow moving, dan kedaluwarsa','Pengelolaan batch, serial number, dan barang konsinyasi'],
+    stages:['Goods movement harian (GR/GI/Transfer)','Monitoring saldo stok','Buat dokumen stock opname','Input hasil hitung fisik','Post selisih opname'],
+    controls:["Movement type menentukan jurnal akuntansi yang terbentuk — salah movement type = salah jurnal","Freeze book inventory saat stock opname agar stok tidak bergerak selama penghitungan","Posting selisih opname (MI07) butuh approval supervisor, selisih besar wajib investigasi","Otorisasi dibatasi per plant/storage location sesuai penugasan user"],
+    tcodes:['MIGO','MB1A','MB52','MB5B','MI01','MI04','MI07']},
+  {id:'r2r', title:'Keuangan & Akuntansi', en:'Record-to-Report (R2R)', mods:['FI'], cls:'fi',
+    desc:'Jantung pembukuan perusahaan: dari posting jurnal harian sampai laporan keuangan terbit. Sebagian besar jurnal justru terbentuk otomatis dari modul lain.',
+    acts:['Pemeliharaan chart of accounts & master data akun GL','Posting jurnal manual dan monitoring jurnal otomatis','Pengelolaan hutang dagang (AP) & piutang dagang (AR)','Rekonsiliasi bank & pengelolaan kas','Jurnal accrual, recurring, dan penyesuaian periode','Tutup buku bulanan/tahunan (open/close posting period)','Penyusunan neraca, laba rugi, dan pelaporan pajak'],
+    stages:['Transaksi harian ter-posting','Rekonsiliasi bank & sub-ledger','Jurnal adjustment & accrual','Tutup periode (closing)','Generate laporan keuangan'],
+    controls:["Open/close posting period (OB52): dokumen hanya bisa diposting di periode yang dibuka","Alur park → review → post: jurnal manual diinput sebagai parked document lalu direview orang berbeda","Simulate sebelum post untuk verifikasi debit-kredit seimbang","Rekonsiliasi rutin sub-ledger (AP/AR/AA) vs GL via reconciliation account"],
+    tcodes:['FS00','FB50','FBL3N','FAGLB03','FBL1N','FBL5N','FF67','OB52','F.01']},
+  {id:'co', title:'Pengendalian Biaya & Anggaran', en:'Cost Controlling', mods:['CO'], cls:'fi',
+    desc:'Melihat biaya dari kacamata internal: siapa yang menghabiskan, untuk apa, dan apakah sesuai anggaran — basisnya cost center dan profit center.',
+    acts:['Perencanaan anggaran per departemen/cost center','Monitoring biaya aktual vs anggaran (plan vs actual)','Alokasi biaya antar departemen (assessment/distribution)','Perhitungan harga pokok produk (product costing)','Analisis profitabilitas per produk/customer/segmen','Internal order untuk event, proyek kecil, atau capex'],
+    stages:['Susun budget di cost center','Transaksi membebani cost center','Review biaya aktual bulanan','Alokasi biaya antar unit','Analisis plan vs actual'],
+    controls:["Review plan vs actual bulanan per cost center sebagai kontrol anggaran departemen","Cost center/profit center tidak aktif harus di-lock agar tidak bisa dibebani biaya","Internal order dibatasi status: hanya status Released yang bisa menerima posting"],
+    tcodes:['KS01','KSB1','KP06','KO01','KE51']},
+  {id:'a2r', title:'Aset Tetap', en:'Acquire-to-Retire', mods:['FI-AA','PS'], cls:'fi',
+    desc:'Siklus hidup aset dari dibeli/dibangun, disusutkan tiap bulan, sampai dijual atau dihapus buku. Aset besar biasanya lahir dari proyek (AUC → settlement).',
+    acts:['Perencanaan investasi/capex & pengadaan aset','Kapitalisasi: pembelian langsung atau settlement dari AUC','Perhitungan & posting depresiasi bulanan otomatis','Transfer/relokasi aset antar lokasi atau cost center','Revaluasi dan impairment (penurunan nilai)','Penghapusan aset: dijual, scrap, atau hilang','Inventarisasi fisik & rekonsiliasi nilai buku dengan GL'],
+    stages:['Create asset master','Kapitalisasi (beli / settlement AUC)','Depresiasi bulanan otomatis','Monitoring nilai buku','Retirement (jual/scrap)'],
+    controls:["Kapitalisasi & retirement aset butuh approval — retirement bersifat permanen, tidak bisa di-undo","Depreciation run terjadwal tiap bulan dan wajib selesai sebelum tutup periode","Rekonsiliasi nilai buku aset vs GL (AW01N) minimal tiap akhir tahun","Settlement AUC ke aset final hanya berdasarkan BAST/serah terima yang sah"],
+    tcodes:['AS01','AS02','AW01N','ABAON','CJ88']},
+  {id:'h2r', title:'SDM / Kepegawaian', en:'Hire-to-Retire', mods:['HR'], cls:'hr',
+    desc:'Perjalanan karyawan dari pelamar sampai pensiun. Semua data personalia tersimpan dalam infotype, dan tiap event kepegawaian diproses lewat personnel action.',
+    acts:['Rekrutmen: input pelamar, seleksi, offering, hiring','Administrasi data karyawan (kontrak, jabatan, gaji)','Pemeliharaan struktur organisasi & posisi','Manajemen waktu: absensi, shift, lembur, cuti','Penggajian: gaji, tunjangan, potongan pajak & BPJS','Penilaian kinerja (performance appraisal)','Mutasi, promosi, hingga terminasi/pensiun'],
+    stages:['Proses pelamar (recruitment)','Hiring via personnel action','Kelola data & waktu kerja','Payroll run bulanan','Appraisal / mutasi / terminasi'],
+    controls:["Perubahan data gaji (Infotype 0008) butuh approval terpisah sesuai kebijakan payroll","Payroll WAJIB test run dulu — live run mengunci periode dan sulit dibatalkan","Otorisasi HR dibatasi per infotype dan per area personalia (data gaji hanya untuk yang berwenang)","Personnel action memastikan semua infotype terkait satu event terisi konsisten"],
+    tcodes:['PB10','PB40','PA40','PA30','PA20','PA61','PT01','PC00_M99_CALC0','PPOME','PHAP_ADMIN']},
+  {id:'pm', title:'Pemeliharaan Mesin & Fasilitas', en:'Plant Maintenance', mods:['PM'], cls:'pm',
+    desc:'Menjaga mesin dan fasilitas tetap jalan: dari laporan kerusakan, perbaikan, sampai pemeliharaan preventif terjadwal untuk menekan downtime.',
+    acts:['Pendataan equipment & functional location','Pelaporan kerusakan mesin (notification)','Perbaikan korektif: work order, spare part, jam teknisi','Pemeliharaan preventif terjadwal (maintenance plan)','Kalibrasi alat & inspeksi berkala','Analisis biaya maintenance dan downtime per mesin'],
+    stages:['Lapor kerusakan (notification)','Buat & release maintenance order','Eksekusi perbaikan + spare part','Konfirmasi jam kerja & selesai','Analisis biaya & downtime'],
+    controls:["Maintenance order harus di-release sebelum teknisi bisa ambil spare part dan konfirmasi jam kerja","Pengambilan spare part hanya bisa dengan referensi order (biaya tercatat ke order)","Order ditutup setelah konfirmasi lengkap: biaya aktual vs planned ter-review"],
+    tcodes:['IE01','IE03','IW21','IW31','IW32','IW33','IP10']},
+  {id:'qm', title:'Manajemen Kualitas', en:'Quality Management', mods:['QM'], cls:'qm',
+    desc:'Memastikan barang masuk, proses produksi, dan barang jadi sesuai standar mutu — dengan titik kontrol utama di usage decision.',
+    acts:['Perencanaan inspeksi: karakteristik & toleransi per material','Pemeriksaan barang masuk, in-process, dan barang jadi','Input hasil pemeriksaan & keputusan terima/tolak','Penanganan komplain customer & komplain ke vendor','Manajemen sertifikat mutu dan audit'],
+    stages:['Buat inspection plan','Inspection lot terbentuk saat GR','Input hasil pemeriksaan','Usage decision: terima/tolak','Quality notification jika bermasalah'],
+    controls:["Usage decision adalah gate: stok Quality Inspection tidak bisa dipakai sebelum diputuskan terima/tolak","Hasil pemeriksaan otomatis dibandingkan dengan toleransi karakteristik di inspection plan","Stok reject otomatis pindah ke blocked stock — tidak bisa terpakai produksi/penjualan"],
+    tcodes:['QP01','QA01','QA32','QA11','QM01','QM02']},
+  {id:'ps', title:'Manajemen Proyek', en:'Project System', mods:['PS','CO'], cls:'ps',
+    desc:'Mengelola proyek dari struktur pekerjaan (WBS), anggaran, pengumpulan biaya, sampai settlement — jalur utama lahirnya aset investasi.',
+    acts:['Perencanaan proyek & struktur WBS','Penganggaran proyek dengan availability control','Pengumpulan biaya aktual: material, jasa, tenaga kerja','Monitoring progres, milestone, dan penjadwalan','Settlement biaya proyek ke aset tetap atau cost center'],
+    stages:['Buat project & WBS','Alokasi budget per WBS','Biaya aktual terkumpul','Monitoring budget vs realisasi','Settlement ke aset/cost center'],
+    controls:["Availability control: transaksi yang melebihi budget WBS otomatis kena warning/block","WBS harus di-release sebelum bisa dibebani biaya","Settlement wajib test run dulu, dan settlement rule harus di-maintain sebelum eksekusi"],
+    tcodes:['CJ20N','CJ01','CJ30','CJI3','CJ88','CN41']},
+  {id:'try', title:'Treasury & Pendanaan', en:'Treasury Management', mods:['TRM','FI'], cls:'pel',
+    desc:'Mengelola uang perusahaan: kas harian, likuiditas, pooling dana antar rekening, sampai risiko kurs. Di Pelindo, sebagian proses ini pakai Z-transaction custom (ZFF_5, ZCASHPOOL).',
+    acts:['Pengelolaan kas harian & proyeksi likuiditas','Cash pooling / auto-sweeping antar rekening','Rekonsiliasi bank otomatis (MT940/H2H)','Pengelolaan pinjaman, deposito, dan investasi','Manajemen risiko kurs & revaluasi mata uang asing','Credit management: limit kredit customer'],
+    stages:['Monitoring saldo & proyeksi kas','Sweeping / cash pooling','Rekonsiliasi rekening koran','Eksekusi pembayaran & penerimaan','Revaluasi kurs akhir periode'],
+    controls:["Payment proposal approval berjenjang sesuai nominal (Dep. Head → Group Head → Direksi)","Rejection report dari bank wajib dicek — dokumen ditolak harus di-reset & reverse (FBRA)","Rekonsiliasi bank otomatis: transaksi tanpa pasangan harus di-clearing manual dan ditindaklanjuti"],
+    tcodes:['FF67','F110','F-28','F-29']},
+  {id:'re', title:'Real Estate / Properti', en:'Real Estate Management', mods:['RE-FX'], cls:'refx',
+    desc:'Mengelola aset properti yang disewakan: dari master data tanah/gedung/unit sewa sampai kontrak dan penagihan sewa periodik otomatis.',
+    acts:['Master data properti: business entity, tanah, gedung, unit sewa','Kontrak sewa-menyewa dengan tenant','Penagihan sewa periodik otomatis sesuai conditions','Penyesuaian tarif sewa & perpanjangan kontrak'],
+    stages:['Buat hierarki properti','Buat kontrak sewa + conditions','Sistem generate tagihan periodik','Penerimaan pembayaran sewa','Adjustment / perpanjangan kontrak'],
+    controls:["Kontrak sewa aktif hanya setelah approval — tagihan periodik terbit otomatis sesuai conditions","Perubahan tarif/perpanjangan tercatat sebagai adjustment kontrak dengan periode validitas"],
+    tcodes:['RE80']},
+  {id:'f2s', title:'Perencanaan Permintaan & Supply', en:'Forecast-to-Stock (S&OP)', mods:['IBP','PP'], cls:'pp',
+    desc:'Lapisan di hulu produksi: meramalkan permintaan pasar dan menyepakati rencana supply lintas fungsi (S&OP) sebelum MRP dijalankan. Di SAP modern pakai IBP (dulu APO).',
+    acts:['Peramalan permintaan berbasis histori penjualan & event pasar','Konsensus S&OP lintas fungsi: sales, produksi, finance','Perencanaan supply & kapasitas jangka menengah','Transfer demand plan ke MRP sebagai independent requirement','Monitoring akurasi forecast (misal MAPE) dan revisi berkala'],
+    controls:['Versi forecast dikunci setelah konsensus S&OP — perubahan besar harus lewat siklus S&OP berikutnya','Review akurasi forecast bulanan sebagai KPI planner','Demand plan yang masuk MRP harus versi yang sudah disetujui'],
+    stages:['Kumpulkan histori & input pasar','Buat statistical forecast','Konsensus S&OP lintas fungsi','Transfer demand ke MRP','Monitor akurasi & revisi'],
+    tcodes:['MD04','MD01']},
+  {id:'i2m', title:'Pengembangan Produk Baru', en:'Idea-to-Market (PLM)', mods:['PLM','PP'], cls:'pp',
+    desc:'Perjalanan produk dari ide sampai siap diproduksi massal: desain, dokumen teknik, prototype, dan pengendalian perubahan engineering.',
+    acts:['Pengelolaan ide & portofolio proyek R&D','Desain produk & pengelolaan dokumen teknik (DMS)','Prototype, pengujian, dan iterasi desain','Engineering Change Management (ECN) untuk setiap perubahan','Handover ke produksi: release BOM & Routing final'],
+    controls:['Setiap perubahan desain wajib lewat Engineering Change Number (ECN) dengan approval','Dokumen teknik terversi dan terkontrol aksesnya','BOM & Routing hanya berlaku di produksi setelah status Released'],
+    stages:['Ide & studi kelayakan','Desain & dokumen teknik','Prototype & pengujian','Engineering change & finalisasi','Release BOM + Routing ke produksi'],
+    tcodes:['CS01','CS02','CA01']},
+  {id:'tne', title:'Perjalanan Dinas & Reimbursement', en:'Travel & Expense', mods:['FI','HR'], cls:'hr',
+    desc:'Siklus perjalanan dinas karyawan: pengajuan, uang muka, klaim biaya, sampai settlement ke payroll/AP. Di banyak perusahaan sekarang via SAP Concur.',
+    acts:['Pengajuan perjalanan dinas & approval atasan','Pencairan uang muka perjalanan (jika ada)','Pelaksanaan perjalanan & pengumpulan bukti biaya','Klaim reimbursement & verifikasi bukti','Settlement: potong uang muka, bayar selisih, bebankan ke cost center'],
+    controls:['Approval wajib sebelum keberangkatan, bukan sesudahnya','Plafon biaya per grade/jabatan (hotel, transport, uang harian)','Bukti wajib untuk klaim di atas nominal tertentu','Uang muka lama wajib di-settle sebelum pengajuan baru'],
+    stages:['Pengajuan & approval trip','Pencairan uang muka','Perjalanan & kumpul bukti','Klaim & verifikasi','Settlement & pembebanan biaya'],
+    tcodes:['FV60','FBL1N']},
+  {id:'ewmtm', title:'Logistik Lanjutan: Gudang & Transportasi', en:'Extended Warehouse & Transportation', mods:['EWM','TM'], cls:'mm',
+    desc:'Level lanjutan dari inventory biasa: pengelolaan gudang sampai level bin/rak (EWM) dan perencanaan pengiriman, rute, serta biaya angkut (TM) — dua kotak putus-putus di Peta Modul.',
+    acts:['Putaway: penempatan barang ke bin berdasarkan strategi','Picking bergelombang (wave picking) & konfirmasi per task','Slotting & cycle counting per bin','Perencanaan rute, pemilihan carrier, dan konsolidasi muatan','Freight cost calculation & settlement ke vendor angkutan','Track & trace status pengiriman'],
+    controls:['Konfirmasi task per bin (umumnya via scan barcode/RF) — stok sistem = fisik per lokasi','Cycle counting rutin per bin menggantikan opname besar tahunan','Tender/pemilihan carrier dan approval freight cost sebelum eksekusi'],
+    stages:['Inbound: GR & putaway ke bin','Penyimpanan & cycle counting','Outbound: wave picking','Perencanaan rute & carrier','Kirim & freight settlement'],
+    tcodes:['MIGO','VL01N','VL06O']},
+  {id:'grc', title:'Tata Kelola Akses & Kepatuhan', en:'Governance, Risk & Compliance (GRC)', mods:['GRC'], cls:'pel',
+    desc:'Lapisan pengawasan di atas semua modul: siapa boleh mengakses apa, dan memastikan tidak ada satu orang yang memegang kombinasi akses berbahaya. Ini "kakaknya" titik kontrol transaksi.',
+    acts:['Provisioning user & role sesuai jabatan','Analisis Segregation of Duties (SoD) — deteksi kombinasi akses berisiko','Emergency access (firefighter) untuk kondisi darurat, tercatat penuh','User Access Review (UAR) periodik oleh atasan/pemilik proses','Audit trail & change log untuk transaksi sensitif'],
+    controls:['Role dirancang least privilege — hanya akses yang benar-benar dibutuhkan','Konflik SoD (misal: bisa buat vendor DAN bayar vendor) wajib dimitigasi atau di-approve risk owner','Penggunaan firefighter otomatis tercatat dan wajib direview','Akses user yang mutasi/resign segera dicabut'],
+    stages:['Permintaan akses user','Cek konflik SoD','Approval & provisioning role','Monitoring & firefighter log','Review akses periodik'],
+    tcodes:[]},
+  {id:'mdg', title:'Tata Kelola Master Data', en:'Master Data Governance (MDG)', mods:['MDG'], cls:'qm',
+    desc:'Alur terpusat untuk membuat/mengubah master data (material, vendor, customer, cost center) lewat workflow approval — persis pola create cost center Pelindo yang lewat Dept. Perencanaan Keuangan.',
+    acts:['Permintaan create/change master data via workflow (bukan input langsung)','Validasi otomatis & pengecekan duplikat','Approval oleh data steward/pemilik data','Aktivasi & distribusi data ke sistem terkait','Monitoring kualitas dan kelengkapan master data'],
+    controls:['Master data hanya lahir lewat workflow ber-approval, tidak diinput langsung oleh sembarang user','Duplicate check otomatis mencegah vendor/material ganda','Data steward sebagai satu-satunya pemberi approval per domain data','Setiap perubahan master data ter-audit (siapa, kapan, apa)'],
+    stages:['Request master data baru/ubah','Validasi & cek duplikat','Approval data steward','Aktivasi & distribusi','Monitoring kualitas data'],
+    tcodes:['MM01','XK01','XD01','KS01','KE51','FS00']},
+  {id:'tax', title:'Perpajakan & Kepatuhan Regulasi', en:'Tax & Statutory Compliance', mods:['FI'], cls:'fi',
+    desc:'Memastikan setiap transaksi membawa perlakuan pajak yang benar sejak awal, sampai rekonsiliasi dan pelaporan SPT — e-Faktur, PPN, dan withholding tax (PPh).',
+    acts:['Penentuan pajak otomatis via tax code di setiap transaksi','Penerbitan & validasi e-Faktur PPN','Pemotongan withholding tax (PPh 21/23/4(2)) saat pembayaran','Rekonsiliasi pajak masukan vs keluaran','Penyusunan & pelaporan SPT ke regulator'],
+    controls:['Tax code wajib terisi di transaksi kena pajak — sistem block jika kosong','Faktur pajak tervalidasi sebelum invoice vendor bisa diproses','Rekonsiliasi GL pajak vs SPT sebelum pelaporan','Kalender kepatuhan: batas waktu lapor termonitor'],
+    stages:['Transaksi dengan tax code','Faktur pajak terbit/tervalidasi','Withholding saat pembayaran','Rekonsiliasi pajak bulanan','Pelaporan SPT'],
+    tcodes:['MIRO','FB50','FBL3N','F.01']},
+  {id:'ehs', title:'K3 & Keberlanjutan', en:'EHS & Sustainability', mods:['EHS'], cls:'ps',
+    desc:'Keselamatan kerja dan lingkungan: dari identifikasi risiko, izin kerja, penanganan insiden, sampai pelaporan emisi dan ESG — makin penting untuk BUMN dan perusahaan publik.',
+    acts:['Identifikasi bahaya & penilaian risiko K3','Pengelolaan izin kerja (work permit) & APD','Pelaporan dan investigasi insiden/near-miss','Pemantauan emisi, limbah, dan penggunaan energi','Pelaporan keberlanjutan (ESG) ke regulator/publik'],
+    controls:['Pekerjaan berisiko tinggi wajib izin kerja yang disetujui sebelum mulai','Insiden wajib dilaporkan & diinvestigasi dalam batas waktu (SLA)','Ambang emisi/limbah termonitor dengan alert otomatis'],
+    stages:['Identifikasi risiko','Kontrol & izin kerja','Operasi & pemantauan','Insiden: lapor & investigasi','Pelaporan ESG/regulator'],
+    tcodes:[]},
+];
+
+// ---------- siklus khas industri ----------
+const INDUSTRY_CYCLES = [
+  {ind:'Utilitas (listrik, air, gas)', ex:'PLN, PDAM, PGN', cyc:'Meter-to-Cash', sol:'SAP IS-U', cls:'qm',
+    desc:'Pasang meteran → baca meter → hitung tagihan → tagih jutaan pelanggan → kelola tunggakan & pemutusan. Beda dari O2C biasa karena volume pelanggan masif dan billing berbasis konsumsi.'},
+  {ind:'Migas & Energi', ex:'Pertamina, SKK Migas', cyc:'Hydrocarbon Supply Chain & JVA', sol:'SAP IS-Oil', cls:'pm',
+    desc:'Pengelolaan stok BBM yang menyusut/menguap (gain/loss), dan Joint Venture Accounting: bagi hasil biaya eksplorasi antar mitra kontrak kerja sama.'},
+  {ind:'Perbankan & Asuransi', ex:'Bank BUMN, asuransi', cyc:'Loan Cycle & Claim-to-Settlement', sol:'SAP Banking / FS-CM', cls:'fi',
+    desc:'Siklus kredit: pengajuan → analisis → pencairan → angsuran → kolektibilitas. Untuk asuransi: polis → premi → klaim → pembayaran klaim.'},
+  {ind:'Retail', ex:'Alfamart, MAP', cyc:'Merchandising & POS Integration', sol:'SAP Retail / CAR', cls:'sd',
+    desc:'Assortment planning per toko, integrasi transaksi ribuan kasir (POS) ke SAP, manajemen promo, dan markdown harga.'},
+  {ind:'Telekomunikasi', ex:'Telkom, operator seluler', cyc:'Subscription Order-to-Cash', sol:'SAP BRIM', cls:'sd',
+    desc:'Billing berlangganan bulanan, charging berbasis pemakaian (usage-based), dan revenue recognition untuk layanan berjangka.'},
+  {ind:'Farmasi & Life Science', ex:'Kimia Farma, Bio Farma', cyc:'Batch Traceability & GMP', sol:'QM + Batch Mgmt ketat', cls:'qm',
+    desc:'Tiap batch obat harus terlacak dari bahan baku sampai apotek (recall management), validasi GMP, dan serialisasi anti-pemalsuan.'},
+  {ind:'Konstruksi / EPC', ex:'WIKA, Waskita, ADHI', cyc:'Engineer-to-Order', sol:'SAP PS sebagai pusat', cls:'ps',
+    desc:'Seluruh bisnis berputar di proyek: progress billing berdasar persentase penyelesaian, retensi, dan uang muka proyek. Kebalikan manufaktur yang berpusat di PP.'},
+  {ind:'Manufaktur Proses', ex:'Semen Indonesia, Pupuk', cyc:'Recipe-based Production', sol:'SAP PP-PI', cls:'pp',
+    desc:'Produksi berbasis resep (master recipe, bukan BOM diskrit), batch record, serta co-product dan by-product dari satu proses.'},
+  {ind:'Otomotif', ex:'Grup Astra, pemasok OEM', cyc:'Just-in-Time / Just-in-Sequence', sol:'SAP JIT / DBM', cls:'pp',
+    desc:'Komponen dikirim vendor persis sesuai urutan unit di lini perakitan, ditambah dealer management untuk jaringan penjualan.'},
+  {ind:'Perkebunan & Agro', ex:'PTPN, sawit swasta', cyc:'Harvest-to-Mill', sol:'SAP + weighbridge', cls:'ps',
+    desc:'Timbangan TBS (weighbridge) terintegrasi ke SAP, perhitungan rendemen pabrik, dan skema plasma-inti dengan petani.'},
+  {ind:'Rumah Sakit', ex:'RS BUMN/swasta besar', cyc:'Patient-to-Cash', sol:'SAP IS-H', cls:'hr',
+    desc:'Admisi pasien → tindakan & obat tercatat per pasien → billing → klaim BPJS/asuransi → pelunasan.'},
+  {ind:'Sektor Publik / BUMN dana APBN', ex:'Kementerian, BLU', cyc:'Fund Management', sol:'SAP PSM/FM', cls:'pel',
+    desc:'Anggaran per mata anggaran bersifat mengikat: commitment accounting, dan transaksi otomatis ter-block jika pagu terlampaui.'},
+];
+let activeMod = 'MM';
+let activeSub = Object.keys(DB['MM'])[0];
+let searchQuery = '';
+let showFavoritesOnly = false;
+let processOpen = false;
+let modmapOpen = false;
+let bookmarks = new Set();
+let glossaryOpen = false;
+let glossaryQuery = '';
+let glossaryCat = 'Semua';
+let flowsOpen = false;
+const STORAGE_KEY = 'sap_tcode_bookmarks';
+
+// ---------- storage ----------
+async function loadBookmarks(){
+  try{
+    if(window.storage){
+      const res = await window.storage.get(STORAGE_KEY, false);
+      if(res && res.value){
+        bookmarks = new Set(JSON.parse(res.value));
+      }
+    }
+  }catch(e){ /* key not found or storage unavailable, start empty */ }
+  updateFavCount();
+}
+async function saveBookmarks(){
+  try{
+    if(window.storage){
+      await window.storage.set(STORAGE_KEY, JSON.stringify([...bookmarks]), false);
+    }
+  }catch(e){ console.error('Gagal menyimpan favorit', e); }
+}
+function updateFavCount(){
+  const el = document.getElementById('fav-count');
+  if(el) el.textContent = bookmarks.size;
+}
+async function toggleBookmark(code, ev){
+  if(ev) ev.stopPropagation();
+  if(bookmarks.has(code)) bookmarks.delete(code); else bookmarks.add(code);
+  updateFavCount();
+  await saveBookmarks();
+  render();
+}
+
+// ---------- search index ----------
+function buildIndex(){
+  const idx = [];
+  Object.keys(DB).forEach(mod=>{
+    Object.keys(DB[mod]).forEach(cat=>{
+      DB[mod][cat].forEach(tc=>{
+        idx.push({mod, cat, tc});
+      });
+    });
+  });
+  return idx;
+}
+const SEARCH_INDEX = buildIndex();
+
+function matchesQuery(entry, q){
+  const hay = (entry.tc.code+' '+entry.tc.purpose+' '+entry.tc.desc+' '+entry.cat).toLowerCase();
+  return hay.includes(q);
+}
+
+// ---------- flow diagram generator ----------
+function escapeXML(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function wrapLines(text, max){
+  if(text.length<=max) return [text];
+  const words=text.split(' ');
+  let l1='',l2='';
+  for(const w of words){
+    if((l1+' '+w).trim().length<=max && !l2) l1=(l1+' '+w).trim();
+    else l2=(l2+' '+w).trim();
+  }
+  return l2 ? [l1,l2] : [l1];
+}
+let __svgUid = 0;
+function svgDefs(uid){
+  return `<defs>
+    <linearGradient id="gnum${uid}" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3B82F6"/><stop offset="1" stop-color="#8B5CF6"/>
+    </linearGradient>
+    <filter id="gsh${uid}" x="-30%" y="-30%" width="160%" height="180%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#505AA0" flood-opacity="0.16"/>
+    </filter>
+  </defs>`;
+}
+
+function generateFlowSVG(steps){
+  const uid = ++__svgUid;
+  const boxW=262, boxH=56, gapY=32, marginX=36, marginY=16;
+  const n=steps.length;
+  const totalH = marginY*2 + n*boxH + (n-1)*gapY;
+  const totalW = boxW+marginX*2;
+  let svg=`<svg viewBox="0 0 ${totalW} ${totalH}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:480px;display:block;margin:0 auto;font-family:Inter,sans-serif">`;
+  svg += svgDefs(uid);
+  steps.forEach((s,i)=>{
+    const y=marginY+i*(boxH+gapY);
+    const x=marginX;
+    const midX=x+boxW/2;
+    if(i<n-1){
+      svg+=`<line x1="${midX}" y1="${y+boxH}" x2="${midX}" y2="${y+boxH+gapY-7}" stroke="rgba(99,102,241,.45)" stroke-width="1.8"/>`;
+      svg+=`<polygon points="${midX-5},${y+boxH+gapY-10} ${midX+5},${y+boxH+gapY-10} ${midX},${y+boxH+gapY-1}" fill="rgba(99,102,241,.6)"/>`;
+    }
+    const lines=wrapLines(s.t,30);
+    svg+=`<rect x="${x}" y="${y}" width="${boxW}" height="${boxH}" rx="13" fill="rgba(255,255,255,.96)" stroke="rgba(120,130,175,.3)" stroke-width="1.2" filter="url(#gsh${uid})"/>`;
+    svg+=`<text x="${x+boxW/2}" y="${y+boxH/2 + (lines.length>1?-3:5)}" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--ink)">`;
+    lines.forEach((line,li)=>{ svg+=`<tspan x="${x+boxW/2}" dy="${li===0?0:16}">${escapeXML(line)}</tspan>`; });
+    svg+=`</text>`;
+    svg+=`<circle cx="${x-8}" cy="${y+boxH/2}" r="13" fill="url(#gnum${uid})" filter="url(#gsh${uid})"/><text x="${x-8}" y="${y+boxH/2+4}" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">${i+1}</text>`;
+  });
+  svg+=`</svg>`;
+  return svg;
+}
+
+// ---------- swimlane flow diagram generator ----------
+function generateSwimlaneSVG(lanes, stages){
+  const uid = ++__svgUid;
+  const laneW=216, gapX=22, boxH=60, rowGapY=82, headerH=40, pad=24;
+  const totalW = pad*2 + lanes.length*laneW + (lanes.length-1)*gapX;
+  const totalH = pad + headerH + 30 + stages.length*rowGapY + 6;
+  const laneX = i => pad+i*(laneW+gapX);
+  const laneCX = i => laneX(i)+laneW/2;
+  let svg = `<svg viewBox="0 0 ${totalW} ${totalH}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:860px;display:block;margin:0 auto;font-family:Inter,sans-serif">`;
+  svg += svgDefs(uid);
+  // lane background columns + headers
+  lanes.forEach((lane,i)=>{
+    const x = laneX(i);
+    svg += `<rect x="${x-6}" y="${pad-8}" width="${laneW+12}" height="${totalH-pad-2}" rx="16" fill="rgba(99,102,241,${i%2? .035 : .06})"/>`;
+    svg += `<rect x="${x}" y="${pad}" width="${laneW}" height="${headerH}" rx="12" fill="var(--pel-soft)" stroke="rgba(29,78,216,.22)" stroke-width="1"/>`;
+    const lines = wrapLines(lane, 26);
+    svg += `<text x="${laneCX(i)}" y="${pad+headerH/2 + (lines.length>1?-3:4)}" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--pel)">`;
+    lines.forEach((l,li)=>{ svg += `<tspan x="${laneCX(i)}" dy="${li===0?0:13}">${escapeXML(l)}</tspan>`; });
+    svg += `</text>`;
+  });
+  // connectors first (behind boxes)
+  let conns = '', boxes = '';
+  let prev = null;
+  stages.forEach((s,j)=>{
+    const x = laneX(s.lane);
+    const y = pad+headerH+30+j*rowGapY;
+    const cx = laneCX(s.lane);
+    if(prev){
+      if(prev.lane === s.lane){
+        conns += `<line x1="${cx}" y1="${prev.by}" x2="${cx}" y2="${y-8}" stroke="rgba(99,102,241,.45)" stroke-width="1.8"/>`;
+      }else{
+        const midY = y - 13;
+        conns += `<path d="M ${prev.cx} ${prev.by} L ${prev.cx} ${midY} L ${cx} ${midY} L ${cx} ${y-8}" fill="none" stroke="rgba(99,102,241,.45)" stroke-width="1.8" stroke-linejoin="round"/>`;
+      }
+      conns += `<polygon points="${cx-5},${y-10} ${cx+5},${y-10} ${cx},${y-1}" fill="rgba(99,102,241,.6)"/>`;
+    }
+    boxes += `<rect x="${x}" y="${y}" width="${laneW}" height="${boxH}" rx="13" fill="rgba(255,255,255,.97)" stroke="rgba(120,130,175,.3)" stroke-width="1.2" filter="url(#gsh${uid})"/>`;
+    boxes += `<text x="${cx}" y="${y+21}" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--pel)" font-family="'JetBrains Mono', monospace" letter-spacing=".02em">${escapeXML(s.tcode)}</text>`;
+    const lines = wrapLines(s.label, 28);
+    boxes += `<text x="${cx}" y="${y+37}" text-anchor="middle" font-size="11" font-weight="600" fill="var(--ink)">`;
+    lines.forEach((l,li)=>{ boxes += `<tspan x="${cx}" dy="${li===0?0:13}">${escapeXML(l)}</tspan>`; });
+    boxes += `</text>`;
+    boxes += `<circle cx="${x-2}" cy="${y+boxH/2}" r="12" fill="url(#gnum${uid})" filter="url(#gsh${uid})"/><text x="${x-2}" y="${y+boxH/2+3.5}" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">${j+1}</text>`;
+    prev = {lane:s.lane, cx, by:y+boxH};
+  });
+  svg += conns + boxes;
+  svg += `</svg>`;
+  return svg;
+}
+
+// ---------- process flow panel ----------
+function renderProcessFlows(){
+  const panel = document.getElementById('flows-panel');
+  panel.innerHTML = `
+    <div class="glossary-head">
+      <h3>🔗 Alur Proses End-to-End Pelindo</h3>
+      <button class="glossary-close" id="flows-close">Tutup ✕</button>
+    </div>
+    ${PROCESS_FLOWS.map(f=>{
+      const tcodes = [...new Set(f.stages.flatMap(s=>s.tcode.split(' / ')))];
+      return `
+      <div class="flow-card">
+        <div class="flow-title">${escapeXML(f.title)}</div>
+        <div class="flow-desc">${escapeXML(f.desc)}</div>
+        <div class="flow-legend">${tcodes.map(t=>`<span>${escapeXML(t)}</span>`).join('')}</div>
+        <button class="diagram-toggle" id="ft-${f.id}">🔀 Lihat Diagram Alur</button>
+        <div class="flow-diagram-box" id="fd-${f.id}">${generateSwimlaneSVG(f.lanes, f.stages)}</div>
+      </div>`;
+    }).join('')}
+  `;
+  document.getElementById('flows-close').addEventListener('click',()=>{
+    flowsOpen=false; panel.style.display='none';
+  });
+  PROCESS_FLOWS.forEach(f=>{
+    document.getElementById('ft-'+f.id).addEventListener('click',(e)=>{
+      const box=document.getElementById('fd-'+f.id);
+      const open=box.classList.toggle('open');
+      e.currentTarget.textContent = open ? '🔀 Sembunyikan Diagram Alur' : '🔀 Lihat Diagram Alur';
+    });
+  });
+}
+
+// ---------- module map (hierarki modul fungsional) ----------
+function jumpToModule(mod, sub){
+  if(!DB[mod]) return;
+  activeMod = mod;
+  activeSub = (sub && DB[mod][sub]) ? sub : Object.keys(DB[mod])[0];
+  searchQuery = '';
+  const input = document.getElementById('search-input');
+  input.value = ''; document.getElementById('clear-search').style.display = 'none';
+  showFavoritesOnly = false;
+  document.getElementById('fav-toggle').classList.remove('active');
+  render();
+  document.getElementById('top-tabs').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function buildModuleMapSVG(){
+  const nodes = [];
+  const lines = [];
+  function box(x,y,w,h,label,cls,act,dashed){
+    nodes.push({x,y,w,h,label,cls,act,dashed});
+    return {cx:x+w/2, top:y, bot:y+h, left:x, right:x+w, cy:y+h/2};
+  }
+  function vline(x,y1,y2){ lines.push(`<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}"/>`); }
+  function hline(x1,x2,y){ lines.push(`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}"/>`); }
+  function arrow(x,y){ lines.push(`<polygon points="${x-4},${y-7} ${x+4},${y-7} ${x},${y}" class="mmap-arr"/>`); }
+  function arrowR(x,y){ lines.push(`<polygon points="${x-7},${y-4} ${x-7},${y+4} ${x},${y}" class="mmap-arr"/>`); }
+
+  // Root
+  const root = box(340,16,300,44,'SAP FUNCTIONAL MODULES','root',null);
+  // Level 1
+  const fico = box(150,110,110,40,'FICO','fi','mod:FI');
+  const hr   = box(435,110,110,40,'HR','hr','mod:HR');
+  const oth  = box(725,108,210,44,'Other Functional Modules','root',null);
+  vline(root.cx, root.bot, 85);
+  hline(fico.cx, oth.cx, 85);
+  [fico,hr,oth].forEach(n=>{ vline(n.cx,85,n.top); arrow(n.cx,n.top); });
+  // FI & CO
+  const fi = box(60,190,100,40,'FI','fi','mod:FI');
+  const co = box(310,190,100,40,'CO','fi','sub:FI|Controlling (CO)');
+  vline(fico.cx, fico.bot, 168);
+  hline(fi.cx, co.cx, 168);
+  [fi,co].forEach(n=>{ vline(n.cx,168,n.top); arrow(n.cx,n.top); });
+  // CO children
+  const om   = box(204,272,92,38,'OM','fi','sub:FI|Controlling (CO)');
+  const pc   = box(314,272,92,38,'PC','fi','sub:FI|Controlling (CO)');
+  const copa = box(424,272,92,38,'COPA','fi','sub:FI|Controlling (CO)');
+  const pca  = box(534,272,92,38,'PCA','fi','sub:FI|Profit Center Accounting');
+  vline(co.cx, co.bot, 250);
+  hline(om.cx, pca.cx, 250);
+  [om,pc,copa,pca].forEach(n=>{ vline(n.cx,250,n.top); arrow(n.cx,n.top); });
+  // OM children
+  const ce  = box(134,352,92,38,'CE','fi','sub:FI|Controlling (CO)');
+  const cca = box(254,352,92,38,'CCA','fi','sub:FI|Controlling (CO)');
+  const io  = box(374,352,92,38,'IO','fi','sub:FI|Controlling (CO)');
+  vline(om.cx, om.bot, 330);
+  hline(ce.cx, io.cx, 330);
+  [ce,cca,io].forEach(n=>{ vline(n.cx,330,n.top); arrow(n.cx,n.top); });
+  // FI children (bottom)
+  const gl = box(64,545,92,40,'GL','fi','sub:FI|General Ledger');
+  const ap = box(194,545,92,40,'AP','fi','sub:FI|Accounts Payable');
+  const ar = box(324,545,92,40,'AR','fi','sub:FI|Accounts Receivable');
+  const aa = box(454,545,92,40,'AA','fi','sub:FI|Asset Accounting');
+  vline(fi.cx, fi.bot, 523);
+  hline(gl.cx, aa.cx, 523);
+  [gl,ap,ar,aa].forEach(n=>{ vline(n.cx,523,n.top); arrow(n.cx,n.top); });
+  // Right column
+  const rightMods = [
+    ['MM','mm','mod:MM'],['SD','sd','mod:SD'],['PP','pp','mod:PP'],
+    ['PM','pm','mod:PM'],['QM','qm','mod:QM'],
+    ['WM','dead',null,true],['TM','dead',null,true]
+  ];
+  const railX = 792;
+  vline(oth.cx, oth.bot, 164);
+  hline(railX, oth.cx, 164);
+  let lastY = 164;
+  rightMods.forEach((m,i)=>{
+    const y = 184 + i*52;
+    const b = box(812,y,110,38,m[0],m[1],m[2],m[3]);
+    lastY = b.cy;
+    hline(railX, b.left, b.cy);
+    arrowR(b.left, b.cy);
+  });
+  vline(railX,164,lastY);
+
+  const colorOf = c => c==='root' ? 'var(--ink)' : c==='dead' ? 'var(--ink-faint)' : `var(--${c})`;
+  const fillOf  = c => c==='root' ? 'rgba(255,255,255,.9)' : c==='dead' ? 'rgba(255,255,255,.55)' : `var(--${c}-soft)`;
+  let svg = `<svg viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;font-family:Inter,sans-serif">`;
+  svg += `<g stroke="var(--ink-faint)" stroke-width="1.4">${lines.filter(l=>l.startsWith('<line')).join('')}</g>`;
+  svg += `<g fill="var(--ink-faint)" stroke="none">${lines.filter(l=>l.startsWith('<polygon')).join('')}</g>`;
+  nodes.forEach(n=>{
+    const clickable = !!n.act;
+    const stroke = colorOf(n.cls);
+    const fill = fillOf(n.cls);
+    const textFill = n.cls==='root' ? 'var(--ink)' : n.cls==='dead' ? 'var(--ink-soft)' : `var(--${n.cls})`;
+    const words = n.label.length>18 ? [n.label.slice(0,n.label.lastIndexOf(' ',18)), n.label.slice(n.label.lastIndexOf(' ',18)+1)] : [n.label];
+    svg += `<g class="${clickable?'mmap-node':''}" ${clickable?`data-act="${n.act}"`:''}>`;
+    svg += `<rect x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="9" fill="${fill}" stroke="${stroke}" stroke-width="1.6" ${n.dashed?'stroke-dasharray="5,4"':''}/>`;
+    svg += `<text x="${n.x+n.w/2}" y="${n.y+n.h/2+(words.length>1?-3:4.5)}" text-anchor="middle" font-size="${n.cls==='root'?13:13}" font-weight="700" fill="${textFill}" letter-spacing="${n.cls==='root'?'.04em':'.02em'}">`;
+    words.forEach((w2,i)=>{ svg += `<tspan x="${n.x+n.w/2}" dy="${i===0?0:14}">${escapeXML(w2)}</tspan>`; });
+    svg += `</text></g>`;
+  });
+  svg += `</svg>`;
+  return svg;
+}
+
+function renderModuleMap(){
+  const panel = document.getElementById('modmap-panel');
+  panel.innerHTML = `
+    <div class="glossary-head">
+      <h3>🗺️ Peta Hierarki Modul Fungsional SAP</h3>
+      <button class="glossary-close" id="modmap-close">Tutup ✕</button>
+    </div>
+    <div class="flow-desc" style="margin-bottom:6px">Struktur modul fungsional SAP dan submodulnya. <b>Klik kotak manapun</b> untuk langsung membuka modul/submodul tersebut di hub. Kotak putus-putus (WM, TM) belum tercakup di hub ini.</div>
+    <div class="mmap-scroll">${buildModuleMapSVG()}</div>
+    <div class="mmap-legend">
+      <div><b>FICO</b> — Finance & Controlling (gabungan FI + CO)</div>
+      <div><b>GL</b> — General Ledger (buku besar)</div>
+      <div><b>AP</b> — Accounts Payable (hutang usaha)</div>
+      <div><b>AR</b> — Accounts Receivable (piutang usaha)</div>
+      <div><b>AA</b> — Asset Accounting (akuntansi aset tetap)</div>
+      <div><b>OM</b> — Overhead Cost Management</div>
+      <div><b>CE</b> — Cost Element Accounting (elemen biaya)</div>
+      <div><b>CCA</b> — Cost Center Accounting (akuntansi cost center)</div>
+      <div><b>IO</b> — Internal Order (order internal)</div>
+      <div><b>PC</b> — Product Costing (harga pokok produk)</div>
+      <div><b>COPA</b> — Profitability Analysis (analisis profitabilitas)</div>
+      <div><b>PCA</b> — Profit Center Accounting</div>
+      <div><b>MM</b> — Material Management &nbsp;·&nbsp; <b>SD</b> — Sales & Distribution</div>
+      <div><b>PP</b> — Production Planning &nbsp;·&nbsp; <b>PM</b> — Plant Maintenance</div>
+      <div><b>QM</b> — Quality Management &nbsp;·&nbsp; <b>HR</b> — Human Resources</div>
+      <div><b>WM</b> — Warehouse Management &nbsp;·&nbsp; <b>TM</b> — Transportation Management</div>
+    </div>`;
+  document.getElementById('modmap-close').addEventListener('click',()=>{
+    modmapOpen = false; panel.style.display = 'none';
+  });
+  panel.querySelectorAll('.mmap-node').forEach(g=>g.addEventListener('click',()=>{
+    const act = g.dataset.act;
+    if(!act) return;
+    if(act.startsWith('mod:')) jumpToModule(act.slice(4));
+    else if(act.startsWith('sub:')){
+      const [mod, sub] = act.slice(4).split('|');
+      jumpToModule(mod, sub);
+    }
+  }));
+}
+
+// ---------- business process panel ----------
+function jumpToTcode(code){
+  const input = document.getElementById('search-input');
+  input.value = code;
+  searchQuery = code.toLowerCase();
+  document.getElementById('clear-search').style.display = 'block';
+  showFavoritesOnly = false;
+  document.getElementById('fav-toggle').classList.remove('active');
+  render();
+  document.getElementById('grid').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function renderBusinessProcesses(){
+  const panel = document.getElementById('process-panel');
+  panel.innerHTML = `
+    <div class="glossary-head">
+      <h3>🏢 Peta Proses Bisnis Perusahaan di SAP</h3>
+      <button class="glossary-close" id="process-close">Tutup ✕</button>
+    </div>
+    <div class="flow-desc" style="margin-bottom:14px">SAP dibangun mengikuti siklus proses bisnis end-to-end, bukan sekadar kumpulan modul. Klik tiap proses untuk lihat kegiatan detailnya, alur ringkas, dan T-code terkait — klik T-code untuk langsung mencarinya di hub.</div>
+    <div class="bp-grid">
+    ${BUSINESS_PROCESSES.map((p,i)=>`
+      <div class="bp-card" id="bpc-${p.id}">
+        <div class="bp-head" id="bph-${p.id}">
+          <span class="bp-num" style="background:var(--${p.cls}-soft);color:var(--${p.cls})">${i+1}</span>
+          <div class="bp-titles">
+            <div class="bp-title">${escapeXML(p.title)}</div>
+            <div class="bp-en">${escapeXML(p.en)}</div>
+          </div>
+          <div class="bp-mods">
+            ${p.mods.map(m=>`<span class="bp-mod" style="background:var(--${p.cls}-soft);color:var(--${p.cls})">${m}</span>`).join('')}
+            <span class="arr" id="bpa-${p.id}">▶</span>
+          </div>
+        </div>
+        <div class="bp-body" id="bpb-${p.id}">
+          <div class="bp-desc">${escapeXML(p.desc)}</div>
+          <div class="bp-section-label">Kegiatan dalam siklus ini</div>
+          <ul class="bp-acts">${p.acts.map(a=>`<li>${escapeXML(a)}</li>`).join('')}</ul>
+          <div class="bp-section-label">Alur ringkas</div>
+          ${generateFlowSVG(p.stages.map(s=>({t:s})))}
+          <div class="bp-section-label">Titik kontrol transaksi (internal control)</div>
+          <ul class="bp-acts bp-ctrl">${p.controls.map(c=>`<li>${escapeXML(c)}</li>`).join('')}</ul>
+          ${p.tcodes.length ? `<div class="bp-section-label">T-code terkait — klik untuk cari</div>
+          <div class="bp-tcodes">${p.tcodes.map(t=>`<button class="bp-tc" data-tc="${t}" style="background:var(--${p.cls}-soft);color:var(--${p.cls})">${t}</button>`).join('')}</div>` : `<div class="bp-section-label">T-code</div>
+          <div class="flow-desc" style="margin-bottom:0">T-code modul ${p.mods.join('/')} berada di luar cakupan hub ini — konsep prosesnya tetap penting dipahami.</div>`}
+          <div class="bp-note-int"><strong>Integrasi:</strong> transaksi di siklus ini otomatis membentuk dokumen/jurnal di modul lain — itulah nilai utama SAP sebagai sistem terintegrasi.</div>
+        </div>
+      </div>`).join('')}
+    </div>
+    <div class="bp-section-label" style="margin-top:24px;font-size:12px">Siklus khas industri — SAP Industry Solutions</div>
+    <div class="flow-desc" style="margin-bottom:12px">Semua industri berdiri di atas fondasi yang sama (FI, CO, MM, HR), lalu menambahkan siklus khasnya sendiri. Pelindo contohnya: fondasi standar + siklus khas pelabuhan (Uper/Utip, TOS-to-billing, KSO).</div>
+    <div class="ind-grid">
+    ${INDUSTRY_CYCLES.map(c=>`
+      <div class="ind-card">
+        <div class="ind-top">
+          <div class="ind-name">${escapeXML(c.ind)}</div>
+          <span class="ind-sol" style="background:var(--${c.cls}-soft);color:var(--${c.cls})">${escapeXML(c.sol)}</span>
+        </div>
+        <div class="ind-cyc" style="color:var(--${c.cls})">${escapeXML(c.cyc)}</div>
+        <div class="ind-desc">${escapeXML(c.desc)}</div>
+        <div class="ind-ex">Contoh: ${escapeXML(c.ex)}</div>
+      </div>`).join('')}
+    </div>`;
+  document.getElementById('process-close').addEventListener('click',()=>{
+    processOpen = false; panel.style.display = 'none';
+  });
+  BUSINESS_PROCESSES.forEach(p=>{
+    document.getElementById('bph-'+p.id).addEventListener('click',()=>{
+      const body = document.getElementById('bpb-'+p.id);
+      const card = document.getElementById('bpc-'+p.id);
+      const arr = document.getElementById('bpa-'+p.id);
+      const open = body.classList.toggle('open');
+      card.classList.toggle('expanded', open);
+      arr.classList.toggle('open', open);
+    });
+  });
+  panel.querySelectorAll('.bp-tc').forEach(b=>b.addEventListener('click',(e)=>{
+    e.stopPropagation();
+    jumpToTcode(b.dataset.tc);
+  }));
+}
+
+// ---------- glossary ----------
+function renderGlossary(){
+  const panel = document.getElementById('glossary-panel');
+  const cats = ['Semua', ...Array.from(new Set(GLOSSARY.map(g=>g.cat)))];
+  const q = glossaryQuery.toLowerCase();
+  const filtered = GLOSSARY.filter(g=>{
+    const matchCat = glossaryCat==='Semua' || g.cat===glossaryCat;
+    const matchQ = !q || (g.term+' '+g.def).toLowerCase().includes(q);
+    return matchCat && matchQ;
+  }).sort((a,b)=>a.term.localeCompare(b.term));
+  panel.innerHTML = `
+    <div class="glossary-head">
+      <h3>📖 Glosarium Istilah SAP & Pelindo</h3>
+      <input class="glossary-search" id="glossary-search" type="text" placeholder="Cari istilah (misal: 'PO', 'Uper', 'Cost Center')..." value="${glossaryQuery.replace(/"/g,'&quot;')}">
+      <button class="glossary-close" id="glossary-close">Tutup ✕</button>
+    </div>
+    <div class="glossary-cats">${cats.map(c=>`<button class="gcat-chip ${c===glossaryCat?'active':''}" data-cat="${c}">${c}</button>`).join('')}</div>
+    <div class="glossary-list">${filtered.length ? filtered.map(g=>`
+      <div class="gterm">
+        <div class="gterm-head"><span class="gterm-name">${g.term}</span><span class="gterm-cat ${g.cat==='Pelindo'?'pel':''}">${g.cat}</span></div>
+        <div class="gterm-def">${g.def}</div>
+      </div>`).join('') : `<div class="empty-state" style="grid-column:1/-1"><div class="es-emoji">🔍</div><div class="es-title">Istilah tidak ditemukan</div><div class="es-desc">Coba kata kunci lain.</div></div>`}
+    </div>`;
+  const searchEl = document.getElementById('glossary-search');
+  searchEl.addEventListener('input',(e)=>{ glossaryQuery=e.target.value; renderGlossary(); });
+  searchEl.focus();
+  const v = searchEl.value; searchEl.setSelectionRange(v.length, v.length);
+  document.getElementById('glossary-close').addEventListener('click',()=>{
+    glossaryOpen=false; panel.style.display='none';
+  });
+  panel.querySelectorAll('.gcat-chip').forEach(b=>b.addEventListener('click',()=>{ glossaryCat=b.dataset.cat; renderGlossary(); }));
+}
+
+// ---------- rendering ----------
+function renderCard(tc, opts){
+  opts = opts || {};
+  const stepsHTML = tc.steps.map((s,n)=>`<div class='step'><div class='sn'>${n+1}</div><div><div class='st'>${s.t}</div><div class='sd-text'>${s.d}</div></div></div>`).join('');
+  const noteHTML = tc.note?`<div class='note'><strong>Perhatian:</strong> ${tc.note}</div>`:'';
+  const tipHTML = tc.tip?`<div class='tip'><strong>Tips:</strong> ${tc.tip}</div>`:'';
+  const modTagHTML = opts.showModCat ? `<div class='mod-tag'>${MODULE_META[opts.mod].label.split(' — ')[0]} · ${opts.cat}</div>` : '';
+  const id = tc.code.replace(/[^A-Za-z0-9]/g,'_');
+  const isFav = bookmarks.has(tc.code);
+  const card = document.createElement('div');
+  card.className = 'tc';
+  card.innerHTML = `
+    <div class='tc-head'>
+      <span class='badge ${tc.cls}'>${tc.code}</span>
+      <div class='tc-info'><div class='tc-purpose'>${tc.purpose}</div><div class='tc-desc'>${tc.desc}</div>${modTagHTML}</div>
+      <div class='tc-actions'>
+        <button class='star-btn ${isFav?'on':''}' id='star-${id}' title='Simpan ke favorit'>${isFav?'★':'☆'}</button>
+        <span class='arr' id='a-${id}'>▶</span>
+      </div>
+    </div>
+    <div class='tc-body' id='b-${id}'>
+      <div class='steps'>${stepsHTML}</div>
+      ${noteHTML}${tipHTML}
+      <button class='diagram-toggle' id='dg-${id}'>🔀 Lihat Diagram Alur</button>
+      <div class='diagram-box' id='db-${id}'>${generateFlowSVG(tc.steps)}</div>
+      <button class='ask-btn'>Pelajari lebih dalam ${tc.code} ↗</button>
+    </div>`;
+  card.querySelector('.tc-head').addEventListener('click',(e)=>{
+    if(e.target.closest('.star-btn')) return;
+    const b=card.querySelector('.tc-body'), a=card.querySelector('.arr');
+    const open=b.classList.toggle('open');
+    a.classList.toggle('open',open);
+  });
+  card.querySelector('.star-btn').addEventListener('click',(e)=>toggleBookmark(tc.code,e));
+  card.querySelector('.diagram-toggle').addEventListener('click',(e)=>{
+    const box=card.querySelector('.diagram-box');
+    const open=box.classList.toggle('open');
+    e.currentTarget.textContent = open ? '🔀 Sembunyikan Diagram Alur' : '🔀 Lihat Diagram Alur';
+  });
+  card.querySelector('.ask-btn').addEventListener('click',()=>sendPrompt('Jelaskan lebih dalam T-code '+tc.code+' di SAP: contoh kasus nyata, error umum, dan tips advanced'));
+  return card;
+}
+
+function renderTopTabs(){
+  const el = document.getElementById('top-tabs');
+  el.innerHTML = '';
+  Object.keys(DB).forEach(mod=>{
+    const b = document.createElement('button');
+    b.className = 'top-tab '+MODULE_META[mod].cls+(mod===activeMod && !searchQuery && !showFavoritesOnly ? ' active':'');
+    b.textContent = MODULE_META[mod].label;
+    b.onclick = ()=>{
+      activeMod = mod; activeSub = Object.keys(DB[mod])[0];
+      searchQuery=''; document.getElementById('search-input').value='';
+      showFavoritesOnly=false; document.getElementById('fav-toggle').classList.remove('active');
+      render();
+    };
+    el.appendChild(b);
+  });
+}
+
+function renderSubTabs(){
+  const el = document.getElementById('sub-tabs');
+  el.innerHTML = '';
+  Object.keys(DB[activeMod]).forEach(cat=>{
+    const cnt = DB[activeMod][cat].length;
+    const b = document.createElement('button');
+    b.className='sub-tab'+(cat===activeSub?' active':'');
+    b.innerHTML=`${cat}<span class='count-badge'>${cnt}</span>`;
+    b.onclick=()=>{activeSub=cat;render();};
+    el.appendChild(b);
+  });
+}
+
+function renderEmpty(title, desc, emoji){
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  const div = document.createElement('div');
+  div.className = 'empty-state';
+  div.style.gridColumn = '1/-1';
+  div.innerHTML = `<div class='es-emoji'>${emoji}</div><div class='es-title'>${title}</div><div class='es-desc'>${desc}</div>`;
+  grid.appendChild(div);
+}
+
+function render(){
+  const subTabsEl = document.getElementById('sub-tabs');
+  const topTabsEl = document.getElementById('top-tabs');
+  const headingEl = document.getElementById('result-heading-wrap');
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  headingEl.innerHTML = '';
+
+  renderTopTabs();
+
+  if(searchQuery){
+    subTabsEl.innerHTML = '';
+    const results = SEARCH_INDEX.filter(e=>matchesQuery(e, searchQuery));
+    headingEl.innerHTML = `<div class='result-heading'>Ditemukan <b>${results.length}</b> T-code untuk "<b>${searchQuery}</b>"</div>`;
+    if(results.length===0){
+      renderEmpty('Tidak ada hasil', 'Coba kata kunci lain, misal nama T-code atau fungsi (contoh: "vendor", "invoice", "MIGO").', '🔍');
+      return;
+    }
+    results.forEach(e=>grid.appendChild(renderCard(e.tc,{showModCat:true, mod:e.mod, cat:e.cat})));
+    return;
+  }
+
+  if(showFavoritesOnly){
+    subTabsEl.innerHTML = '';
+    const favEntries = SEARCH_INDEX.filter(e=>bookmarks.has(e.tc.code));
+    headingEl.innerHTML = `<div class='result-heading'><b>${favEntries.length}</b> T-code tersimpan di favorit</div>`;
+    if(favEntries.length===0){
+      renderEmpty('Belum ada favorit', 'Klik ikon ☆ di kartu T-code manapun untuk menyimpannya ke sini.', '⭐');
+      return;
+    }
+    favEntries.forEach(e=>grid.appendChild(renderCard(e.tc,{showModCat:true, mod:e.mod, cat:e.cat})));
+    return;
+  }
+
+  renderSubTabs();
+  const tcodes = DB[activeMod][activeSub]||[];
+  tcodes.forEach(tc=>grid.appendChild(renderCard(tc,{showModCat:false})));
+}
+
+document.getElementById('modmap-toggle').addEventListener('click',()=>{
+  modmapOpen = !modmapOpen;
+  const panel = document.getElementById('modmap-panel');
+  panel.style.display = modmapOpen ? 'block' : 'none';
+  if(modmapOpen) renderModuleMap();
+});
+document.getElementById('process-toggle').addEventListener('click',()=>{
+  processOpen = !processOpen;
+  const panel = document.getElementById('process-panel');
+  panel.style.display = processOpen ? 'block' : 'none';
+  if(processOpen) renderBusinessProcesses();
+});
+document.getElementById('glossary-toggle').addEventListener('click',()=>{
+  glossaryOpen = !glossaryOpen;
+  const panel = document.getElementById('glossary-panel');
+  panel.style.display = glossaryOpen ? 'block' : 'none';
+  if(glossaryOpen) renderGlossary();
+});
+document.getElementById('flows-toggle').addEventListener('click',()=>{
+  flowsOpen = !flowsOpen;
+  const panel = document.getElementById('flows-panel');
+  panel.style.display = flowsOpen ? 'block' : 'none';
+  if(flowsOpen) renderProcessFlows();
+});
+
+// ---------- events ----------
+const searchInput = document.getElementById('search-input');
+const clearBtn = document.getElementById('clear-search');
+searchInput.addEventListener('input',(e)=>{
+  searchQuery = e.target.value.trim().toLowerCase();
+  clearBtn.style.display = searchQuery ? 'block' : 'none';
+  if(searchQuery){ showFavoritesOnly=false; document.getElementById('fav-toggle').classList.remove('active'); }
+  render();
+});
+clearBtn.addEventListener('click',()=>{
+  searchInput.value=''; searchQuery=''; clearBtn.style.display='none'; render();
+});
+document.getElementById('fav-toggle').addEventListener('click',(e)=>{
+  showFavoritesOnly = !showFavoritesOnly;
+  e.currentTarget.classList.toggle('active', showFavoritesOnly);
+  if(showFavoritesOnly){ searchQuery=''; searchInput.value=''; clearBtn.style.display='none'; }
+  render();
+});
+
+// ---------- init ----------
+(async function init(){
+  await loadBookmarks();
+  render();
+})();
+</script>
+</body>
+</html>
