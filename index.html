@@ -1088,6 +1088,30 @@
         background: rgba(13, 148, 136, 0.13);
         color: var(--ps);
       }
+      .fin-level.fondasi {
+        background: rgba(13, 148, 136, 0.13);
+        color: var(--ps);
+      }
+      .fin-level.risiko {
+        background: rgba(217, 119, 6, 0.14);
+        color: #b45309;
+      }
+      .fin-level.audit {
+        background: rgba(37, 99, 235, 0.12);
+        color: var(--mm);
+      }
+      .fin-level.sap {
+        background: rgba(71, 85, 105, 0.13);
+        color: var(--bs);
+      }
+      .fin-level.fraud {
+        background: rgba(190, 18, 60, 0.11);
+        color: var(--ab);
+      }
+      .fin-level.icofr {
+        background: rgba(29, 78, 216, 0.12);
+        color: var(--pel);
+      }
       .fin-formula {
         font-family: "JetBrains Mono", ui-monospace, monospace;
         font-size: 12px;
@@ -1205,6 +1229,130 @@
         color: var(--ink-faint);
         margin-top: 7px;
         font-weight: 500;
+      }
+
+      /* ---------- ISO audit checklist ---------- */
+      .ck-bar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin: 4px 0 12px;
+      }
+      .ck-progress {
+        flex: 1;
+        min-width: 220px;
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(15, 18, 34, 0.08);
+        overflow: hidden;
+        display: flex;
+      }
+      .ck-progress .ok {
+        background: linear-gradient(90deg, #10b981, #059669);
+        height: 100%;
+      }
+      .ck-progress .no {
+        background: linear-gradient(90deg, #f87171, #dc2626);
+        height: 100%;
+      }
+      .ck-stats {
+        font-size: 12px;
+        color: var(--ink-soft);
+        white-space: nowrap;
+      }
+      .ck-reset {
+        border: 1px solid var(--glass-brd-soft);
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 999px;
+        padding: 6px 14px;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--ink-soft);
+        cursor: pointer;
+      }
+      .ck-reset:hover {
+        color: var(--ab);
+        border-color: rgba(190, 18, 60, 0.4);
+      }
+      .ck-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .ck-item {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        background: rgba(255, 255, 255, 0.45);
+        border: 1px solid var(--glass-brd-soft);
+        border-radius: var(--radius-sm);
+        padding: 12px 14px;
+      }
+      .ck-item.st1 {
+        border-color: rgba(5, 150, 105, 0.4);
+        background: rgba(16, 185, 129, 0.07);
+      }
+      .ck-item.st2 {
+        border-color: rgba(220, 38, 38, 0.35);
+        background: rgba(248, 113, 113, 0.07);
+      }
+      .ck-cl {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--pel);
+        background: var(--pel-soft);
+        border-radius: 8px;
+        padding: 4px 8px;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .ck-q {
+        font-size: 13px;
+        color: var(--ink-soft);
+        line-height: 1.6;
+        flex: 1;
+      }
+      .ck-btns {
+        display: flex;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+      .ck-btn {
+        border: 1px solid var(--glass-brd-soft);
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 9px;
+        padding: 6px 11px;
+        font-family: inherit;
+        font-size: 11.5px;
+        font-weight: 700;
+        cursor: pointer;
+        color: var(--ink-faint);
+        transition: 0.15s;
+      }
+      .ck-btn.ok.on {
+        background: #059669;
+        border-color: #059669;
+        color: #fff;
+      }
+      .ck-btn.no.on {
+        background: #dc2626;
+        border-color: #dc2626;
+        color: #fff;
+      }
+      .ck-btn:hover {
+        color: var(--ink);
+      }
+      @media (max-width: 768px) {
+        .ck-item {
+          flex-wrap: wrap;
+        }
+        .ck-btns {
+          width: 100%;
+          justify-content: flex-end;
+        }
       }
 
       /* ---------- Business process cards ---------- */
@@ -1438,12 +1586,14 @@
         <button class="fav-chip" id="modmap-toggle">🗺️ Peta Modul</button>
         <button class="fav-chip" id="docs-toggle">📄 Dokumen & Nomor</button>
         <button class="fav-chip" id="fin-toggle">🎓 Akademi Keuangan</button>
+        <button class="fav-chip" id="audit-toggle">🛡️ Audit & Risiko</button>
         <button class="fav-chip" id="process-toggle">🏢 Proses Bisnis</button>
         <button class="fav-chip" id="glossary-toggle">📖 Glosarium</button>
         <button class="fav-chip" id="flows-toggle">
           🔗 Alur Proses End-to-End
         </button>
       </div>
+      <div id="audit-panel" class="glossary-panel" style="display: none"></div>
       <div id="fin-panel" class="glossary-panel" style="display: none"></div>
       <div id="docs-panel" class="glossary-panel" style="display: none"></div>
       <div id="modmap-panel" class="glossary-panel" style="display: none"></div>
@@ -5949,6 +6099,12 @@
       let docsOpen = false;
       let finOpen = false;
       let finLevel = "Semua";
+      let auditOpen = false;
+      let auditLevel = "Semua";
+      let ckSheet = "smmki";
+      let ckClause = "Semua";
+      let ckStates = {};
+      let ckLoaded = false;
       let finMetCat = "Semua";
       let docsCat = "Semua";
       let docsQuery = "";
@@ -5998,6 +6154,1216 @@
         await saveBookmarks();
         render();
       }
+
+      const ISO_CHECKLIST = {
+        smmki: [
+          {
+            c: "4.1",
+            q: "Apakah isu internal dan eksternal yang relevan dengan tujuan organisasi (mutu & keamanan informasi) telah ditetapkan dan didokumentasikan? Tunjukkan buktinya.",
+          },
+          {
+            c: "4.2",
+            q: "Apakah pihak berkepentingan yang relevan beserta persyaratannya (pelanggan, regulator, tenant, vendor) telah diidentifikasi?",
+          },
+          {
+            c: "4.3",
+            q: "Apakah ruang lingkup penerapan sistem manajemen telah ditetapkan, terdokumentasi, dan mencakup batasan yang jelas (unit, lokasi, layanan)?",
+          },
+          {
+            c: "4.4",
+            q: "Apakah proses-proses sistem manajemen beserta interaksinya telah ditetapkan (peta proses) dan dipelihara?",
+          },
+          {
+            c: "5.1",
+            q: "Apakah manajemen puncak menunjukkan kepemimpinan & komitmen (kebijakan disahkan, sumber daya dialokasikan, tinjauan manajemen dijalankan)? Tunjukkan buktinya.",
+          },
+          {
+            c: "5.2",
+            q: "Apakah Kebijakan Mutu dan Kebijakan Keamanan Informasi telah ditetapkan, disetujui manajemen puncak, dikomunikasikan, dan tersedia bagi pihak berkepentingan?",
+          },
+          {
+            c: "5.2",
+            q: "Apakah kebijakan ditinjau pada interval terencana atau saat terjadi perubahan signifikan?",
+          },
+          {
+            c: "5.3",
+            q: "Apakah peran, tanggung jawab, dan wewenang terkait sistem manajemen telah ditetapkan dan dikomunikasikan (struktur organisasi, job desc, SK penunjukan)?",
+          },
+          {
+            c: "6.1",
+            q: "Apakah risiko dan peluang yang perlu ditangani telah ditetapkan, beserta rencana tindakan dan cara evaluasi efektivitasnya?",
+          },
+          {
+            c: "6.1.2",
+            q: "(27001) Apakah proses penilaian risiko keamanan informasi ditetapkan: kriteria risiko, identifikasi, analisis, evaluasi — dan dijalankan pada interval terencana? Tunjukkan risk register-nya.",
+          },
+          {
+            c: "6.1.3",
+            q: "(27001) Apakah proses perlakuan risiko ditetapkan dan menghasilkan Statement of Applicability (SoA) yang memuat kontrol Annex A yang diterapkan beserta justifikasi pengecualian?",
+          },
+          {
+            c: "6.2",
+            q: "Apakah sasaran mutu & keamanan informasi ditetapkan pada fungsi/level relevan, terukur, dikomunikasikan, dan dipantau pencapaiannya?",
+          },
+          {
+            c: "6.3",
+            q: "Apakah perubahan terhadap sistem manajemen direncanakan secara terkendali (change planning)?",
+          },
+          {
+            c: "7.1",
+            q: "Apakah sumber daya (orang, infrastruktur, lingkungan proses, alat ukur) yang dibutuhkan telah ditetapkan dan disediakan?",
+          },
+          {
+            c: "7.2",
+            q: "Apakah kompetensi personel yang mempengaruhi kinerja mutu & keamanan informasi ditetapkan, dipenuhi (pelatihan/sertifikasi), dan buktinya disimpan?",
+          },
+          {
+            c: "7.3",
+            q: "Apakah personel sadar akan kebijakan, kontribusinya, dan konsekuensi ketidakpatuhan (awareness program, bukti sosialisasi)?",
+          },
+          {
+            c: "7.4",
+            q: "Apakah komunikasi internal & eksternal yang relevan ditetapkan: apa, kapan, kepada siapa, oleh siapa?",
+          },
+          {
+            c: "7.5",
+            q: "Apakah informasi terdokumentasi dikendalikan: identifikasi, format, review-approval, distribusi, akses, versi, retensi, dan perlindungan dari perubahan tak sah?",
+          },
+          {
+            c: "8.1",
+            q: "Apakah perencanaan dan pengendalian operasional ditetapkan untuk memenuhi persyaratan (kriteria proses, sumber daya, bukti pelaksanaan), termasuk pengendalian atas proses yang dialihdayakan?",
+          },
+          {
+            c: "8.2",
+            q: "(9001) Apakah persyaratan produk/jasa ditetapkan dan ditinjau sebelum komitmen ke pelanggan (review kontrak/order)?",
+          },
+          {
+            c: "8.4",
+            q: "(9001) Apakah penyedia eksternal dievaluasi, dipilih, dipantau kinerjanya, dan dievaluasi ulang berdasarkan kriteria yang ditetapkan?",
+          },
+          {
+            c: "8.5",
+            q: "(9001) Apakah produksi/penyediaan jasa dikendalikan: instruksi kerja tersedia, alat sesuai, identifikasi & mampu telusur terjaga, properti pelanggan dijaga?",
+          },
+          {
+            c: "8.6",
+            q: "(9001) Apakah pelepasan produk/jasa hanya dilakukan setelah verifikasi persyaratan terpenuhi, oleh personel berwenang (usage decision, approval rilis)?",
+          },
+          {
+            c: "8.7",
+            q: "(9001) Apakah output tidak sesuai dikendalikan: diidentifikasi, dipisahkan, dikoreksi, dan keputusannya terdokumentasi?",
+          },
+          {
+            c: "8.2 (ISMS)",
+            q: "(27001) Apakah penilaian risiko keamanan informasi dijalankan sesuai interval terencana atau saat perubahan signifikan, dan hasilnya terdokumentasi?",
+          },
+          {
+            c: "8.3 (ISMS)",
+            q: "(27001) Apakah rencana perlakuan risiko diimplementasikan dan hasilnya terdokumentasi?",
+          },
+          {
+            c: "9.1",
+            q: "Apakah kinerja sistem dipantau, diukur, dianalisis, dan dievaluasi (KPI mutu, metrik keamanan, kepuasan pelanggan)? Tunjukkan hasilnya.",
+          },
+          {
+            c: "9.2",
+            q: "Apakah audit internal dilaksanakan pada interval terencana dengan program audit berbasis risiko, auditor objektif (tidak mengaudit pekerjaannya sendiri), dan hasilnya dilaporkan ke manajemen?",
+          },
+          {
+            c: "9.2",
+            q: "Apakah temuan audit internal sebelumnya telah ditindaklanjuti tuntas dengan tindakan korektif yang terverifikasi?",
+          },
+          {
+            c: "9.3",
+            q: "Apakah tinjauan manajemen dilaksanakan pada interval terencana dengan input lengkap (hasil audit, kinerja, risiko, peluang perbaikan) dan output keputusan yang terdokumentasi?",
+          },
+          {
+            c: "10.1",
+            q: "Apakah ketidaksesuaian ditangani: koreksi, analisis akar masalah, tindakan korektif, dan evaluasi efektivitas tindakan?",
+          },
+          {
+            c: "10.2",
+            q: "Apakah organisasi menjalankan perbaikan berkelanjutan atas kesesuaian, kecukupan, dan efektivitas sistem manajemen?",
+          },
+        ],
+        annex: [
+          {
+            c: "5.1",
+            q: "[Organizational] Apakah kontrol 5.1 — Kebijakan keamanan informasi ditetapkan, disetujui, dipublikasikan, dan ditinjau berkala? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.2",
+            q: "[Organizational] Apakah kontrol 5.2 — Peran & tanggung jawab keamanan informasi ditetapkan dan dialokasikan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.3",
+            q: "[Organizational] Apakah kontrol 5.3 — Pemisahan tugas (segregation of duties) diterapkan untuk fungsi yang berbenturan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.4",
+            q: "[Organizational] Apakah kontrol 5.4 — Manajemen mewajibkan seluruh personel menerapkan keamanan informasi (management responsibilities)? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.5",
+            q: "[Organizational] Apakah kontrol 5.5 — Kontak dengan pihak berwenang (regulator, penegak hukum) ditetapkan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.6",
+            q: "[Organizational] Apakah kontrol 5.6 — Kontak dengan kelompok minat khusus/komunitas keamanan dipelihara? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.7",
+            q: "[Organizational] Apakah kontrol 5.7 — Threat intelligence: informasi ancaman dikumpulkan dan dianalisis? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.8",
+            q: "[Organizational] Apakah kontrol 5.8 — Keamanan informasi diintegrasikan ke manajemen proyek? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.9",
+            q: "[Organizational] Apakah kontrol 5.9 — Inventarisasi informasi & aset terkait dipelihara beserta pemiliknya? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.10",
+            q: "[Organizational] Apakah kontrol 5.10 — Aturan penggunaan yang dapat diterima (acceptable use) atas informasi & aset ditetapkan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.11",
+            q: "[Organizational] Apakah kontrol 5.11 — Pengembalian aset saat personel/pihak ketiga berakhir hubungan kerjanya? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.12",
+            q: "[Organizational] Apakah kontrol 5.12 — Klasifikasi informasi ditetapkan sesuai kebutuhan perlindungan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.13",
+            q: "[Organizational] Apakah kontrol 5.13 — Pelabelan informasi sesuai skema klasifikasi? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.14",
+            q: "[Organizational] Apakah kontrol 5.14 — Transfer informasi (internal & eksternal) diatur aturannya? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.15",
+            q: "[Organizational] Apakah kontrol 5.15 — Kontrol akses: aturan akses fisik & logis ditetapkan berdasarkan kebutuhan bisnis? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.16",
+            q: "[Organizational] Apakah kontrol 5.16 — Manajemen identitas: siklus hidup identitas dikelola penuh? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.17",
+            q: "[Organizational] Apakah kontrol 5.17 — Informasi otentikasi (password dsb) dikelola dan dijaga kerahasiaannya? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.18",
+            q: "[Organizational] Apakah kontrol 5.18 — Hak akses diberikan, ditinjau, diubah, dan dicabut sesuai kebijakan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.19",
+            q: "[Organizational] Apakah kontrol 5.19 — Keamanan informasi dalam hubungan dengan pemasok diatur? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.20",
+            q: "[Organizational] Apakah kontrol 5.20 — Persyaratan keamanan dicantumkan dalam perjanjian dengan pemasok? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.21",
+            q: "[Organizational] Apakah kontrol 5.21 — Keamanan rantai pasok TIK (ICT supply chain) dikelola? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.22",
+            q: "[Organizational] Apakah kontrol 5.22 — Layanan pemasok dipantau, ditinjau, dan perubahan dikelola? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.23",
+            q: "[Organizational] Apakah kontrol 5.23 — Keamanan informasi untuk penggunaan layanan cloud ditetapkan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.24",
+            q: "[Organizational] Apakah kontrol 5.24 — Perencanaan & persiapan manajemen insiden keamanan informasi? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.25",
+            q: "[Organizational] Apakah kontrol 5.25 — Penilaian dan keputusan atas peristiwa keamanan informasi? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.26",
+            q: "[Organizational] Apakah kontrol 5.26 — Respons terhadap insiden keamanan informasi sesuai prosedur? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.27",
+            q: "[Organizational] Apakah kontrol 5.27 — Pembelajaran dari insiden untuk memperkuat kontrol? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.28",
+            q: "[Organizational] Apakah kontrol 5.28 — Pengumpulan bukti (forensik) atas insiden dilakukan sesuai prosedur? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.29",
+            q: "[Organizational] Apakah kontrol 5.29 — Keamanan informasi selama disrupsi dipertahankan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.30",
+            q: "[Organizational] Apakah kontrol 5.30 — Kesiapan TIK untuk kelangsungan bisnis (ICT readiness for BC) direncanakan & diuji? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.31",
+            q: "[Organizational] Apakah kontrol 5.31 — Persyaratan hukum, statuta, regulasi, dan kontraktual diidentifikasi & dipenuhi? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.32",
+            q: "[Organizational] Apakah kontrol 5.32 — Hak kekayaan intelektual dilindungi? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.33",
+            q: "[Organizational] Apakah kontrol 5.33 — Rekaman (records) dilindungi dari kehilangan, perusakan, pemalsuan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.34",
+            q: "[Organizational] Apakah kontrol 5.34 — Privasi & perlindungan data pribadi (PII) dipenuhi sesuai regulasi (UU PDP)? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.35",
+            q: "[Organizational] Apakah kontrol 5.35 — Tinjauan independen atas keamanan informasi dilakukan berkala? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.36",
+            q: "[Organizational] Apakah kontrol 5.36 — Kepatuhan terhadap kebijakan & standar keamanan ditinjau? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "5.37",
+            q: "[Organizational] Apakah kontrol 5.37 — Prosedur operasi terdokumentasi dan tersedia bagi yang membutuhkan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "6.1",
+            q: "[People] Apakah kontrol 6.1 — Screening/verifikasi latar belakang calon personel sesuai risiko? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "6.2",
+            q: "[People] Apakah kontrol 6.2 — Syarat keamanan informasi tercantum dalam perjanjian kerja? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "6.3",
+            q: "[People] Apakah kontrol 6.3 — Awareness, pendidikan & pelatihan keamanan informasi berkala? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "6.4",
+            q: "[People] Apakah kontrol 6.4 — Proses disipliner untuk pelanggaran keamanan informasi? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "6.5",
+            q: "[People] Apakah kontrol 6.5 — Tanggung jawab keamanan setelah berakhir/berubahnya hubungan kerja? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "6.6",
+            q: "[People] Apakah kontrol 6.6 — Perjanjian kerahasiaan (NDA) diidentifikasi & ditinjau? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "6.7",
+            q: "[People] Apakah kontrol 6.7 — Keamanan untuk kerja jarak jauh (remote working) diatur? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "6.8",
+            q: "[People] Apakah kontrol 6.8 — Mekanisme pelaporan peristiwa keamanan informasi oleh personel? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "7.1",
+            q: "[Physical] Apakah kontrol 7.1 — Perimeter keamanan fisik ditetapkan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "7.2",
+            q: "[Physical] Apakah kontrol 7.2 — Entri fisik dikendalikan (akses kartu, tamu tercatat)? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "7.3",
+            q: "[Physical] Apakah kontrol 7.3 — Pengamanan kantor, ruangan, dan fasilitas? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "7.4",
+            q: "[Physical] Apakah kontrol 7.4 — Pemantauan keamanan fisik (CCTV, alarm)? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "7.5",
+            q: "[Physical] Apakah kontrol 7.5 — Perlindungan dari ancaman fisik & lingkungan (banjir, kebakaran)? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "7.6",
+            q: "[Physical] Apakah kontrol 7.6 — Bekerja di area aman diatur? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "7.7",
+            q: "[Physical] Apakah kontrol 7.7 — Clear desk & clear screen diterapkan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "7.8",
+            q: "[Physical] Apakah kontrol 7.8 — Penempatan & perlindungan peralatan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "7.9",
+            q: "[Physical] Apakah kontrol 7.9 — Keamanan aset di luar lokasi (off-premises)? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "7.10",
+            q: "[Physical] Apakah kontrol 7.10 — Media penyimpanan dikelola siklus hidupnya (storage media)? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "7.11",
+            q: "[Physical] Apakah kontrol 7.11 — Utilitas pendukung (listrik, pendingin) dilindungi dari gangguan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "7.12",
+            q: "[Physical] Apakah kontrol 7.12 — Keamanan pengkabelan (cabling security)? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "7.13",
+            q: "[Physical] Apakah kontrol 7.13 — Pemeliharaan peralatan dilakukan benar? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "7.14",
+            q: "[Physical] Apakah kontrol 7.14 — Penghapusan aman / pemusnahan peralatan sebelum dibuang atau digunakan ulang? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.1",
+            q: "[Technological] Apakah kontrol 8.1 — Perangkat endpoint pengguna diamankan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.2",
+            q: "[Technological] Apakah kontrol 8.2 — Hak akses istimewa (privileged access) dibatasi & dikelola? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.3",
+            q: "[Technological] Apakah kontrol 8.3 — Pembatasan akses informasi sesuai kebijakan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.4",
+            q: "[Technological] Apakah kontrol 8.4 — Akses ke source code dibatasi? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.5",
+            q: "[Technological] Apakah kontrol 8.5 — Otentikasi aman (secure authentication) diterapkan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.6",
+            q: "[Technological] Apakah kontrol 8.6 — Manajemen kapasitas dipantau? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.7",
+            q: "[Technological] Apakah kontrol 8.7 — Perlindungan terhadap malware? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.8",
+            q: "[Technological] Apakah kontrol 8.8 — Kerentanan teknis dikelola (vulnerability management & patching)? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.9",
+            q: "[Technological] Apakah kontrol 8.9 — Manajemen konfigurasi (hardening, baseline config)? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.10",
+            q: "[Technological] Apakah kontrol 8.10 — Penghapusan informasi saat tidak lagi diperlukan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.11",
+            q: "[Technological] Apakah kontrol 8.11 — Data masking sesuai kebijakan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.12",
+            q: "[Technological] Apakah kontrol 8.12 — Pencegahan kebocoran data (DLP) diterapkan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.13",
+            q: "[Technological] Apakah kontrol 8.13 — Backup informasi dilakukan & DIUJI restore-nya berkala? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.14",
+            q: "[Technological] Apakah kontrol 8.14 — Redundansi fasilitas pemrosesan untuk ketersediaan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.15",
+            q: "[Technological] Apakah kontrol 8.15 — Logging: log aktivitas dihasilkan, dilindungi, dan ditinjau? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.16",
+            q: "[Technological] Apakah kontrol 8.16 — Aktivitas pemantauan (monitoring) anomali jaringan/sistem? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.17",
+            q: "[Technological] Apakah kontrol 8.17 — Sinkronisasi waktu (clock synchronization)? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.18",
+            q: "[Technological] Apakah kontrol 8.18 — Penggunaan program utilitas istimewa dibatasi? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.19",
+            q: "[Technological] Apakah kontrol 8.19 — Instalasi perangkat lunak pada sistem operasional dikendalikan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.20",
+            q: "[Technological] Apakah kontrol 8.20 — Keamanan jaringan dikelola? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.21",
+            q: "[Technological] Apakah kontrol 8.21 — Keamanan layanan jaringan ditetapkan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.22",
+            q: "[Technological] Apakah kontrol 8.22 — Segregasi jaringan (network segmentation)? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.23",
+            q: "[Technological] Apakah kontrol 8.23 — Web filtering diterapkan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.24",
+            q: "[Technological] Apakah kontrol 8.24 — Kriptografi digunakan sesuai kebijakan & manajemen kunci? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.25",
+            q: "[Technological] Apakah kontrol 8.25 — Siklus pengembangan aman (secure development lifecycle)? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.26",
+            q: "[Technological] Apakah kontrol 8.26 — Persyaratan keamanan aplikasi ditetapkan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.27",
+            q: "[Technological] Apakah kontrol 8.27 — Prinsip arsitektur & rekayasa sistem aman diterapkan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.28",
+            q: "[Technological] Apakah kontrol 8.28 — Secure coding diterapkan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.29",
+            q: "[Technological] Apakah kontrol 8.29 — Pengujian keamanan dalam pengembangan & penerimaan? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.30",
+            q: "[Technological] Apakah kontrol 8.30 — Pengembangan yang dialihdayakan diawasi? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.31",
+            q: "[Technological] Apakah kontrol 8.31 — Pemisahan lingkungan development, testing, dan production? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.32",
+            q: "[Technological] Apakah kontrol 8.32 — Manajemen perubahan (change management) atas sistem & aplikasi? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.33",
+            q: "[Technological] Apakah kontrol 8.33 — Informasi untuk pengujian dipilih & dilindungi (test data)? Tunjukkan bukti penerapannya.",
+          },
+          {
+            c: "8.34",
+            q: "[Technological] Apakah kontrol 8.34 — Perlindungan sistem selama pengujian audit? Tunjukkan bukti penerapannya.",
+          },
+        ],
+      };
+
+      const AUDIT_ACADEMY = [
+        {
+          id: "a3l",
+          title: "Three Lines Model (IIA 2020)",
+          en: "Governance: The Three Lines Model",
+          level: "Fondasi",
+          summary:
+            "Siapa mengelola risiko, siapa mengawasi, siapa memberi keyakinan independen — peta peran paling fundamental.",
+          sections: [
+            {
+              h: "Modelnya",
+              b: "<b>Lini 1</b>: manajemen operasional — pemilik risiko sesungguhnya, menjalankan kontrol sehari-hari (yang approve PO, yang GR barang). <b>Lini 2</b>: fungsi risiko, kepatuhan, pengendalian internal — membangun kerangka, memantau, menantang lini 1. <b>Lini 3</b>: audit internal — satu-satunya yang INDEPENDEN dari manajemen, memberi keyakinan objektif kepada Dewan/Komite Audit atas efektivitas lini 1 dan 2.",
+            },
+            {
+              h: "Update penting 2020",
+              b: "IIA memperbarui model lama 'Three Lines of <i>Defense</i>' menjadi 'Three Lines <i>Model</i>' — bukan sekadar ganti nama: penekanannya bergeser dari 'bertahan dari risiko' ke 'penciptaan & perlindungan nilai', garis antar lini dibuat lebih kolaboratif (bukan tembok), dan peran governing body dipertegas sebagai pemilik akuntabilitas tertinggi.",
+            },
+            {
+              h: "Kesalahan umum penerapan",
+              b: "Lini kabur: auditor internal ikut MENJALANKAN kontrol (jadi lini 1) lalu mengaudit pekerjaannya sendiri — independensi runtuh. Atau lini 2 dianggap pemilik risiko sehingga lini 1 merasa 'risiko itu urusan divisi risiko'. Kepemilikan risiko TIDAK PERNAH pindah dari lini 1.",
+            },
+            {
+              h: "Di konteks SAP",
+              b: "Lini 1 = user transaksional & atasannya (release strategy); Lini 2 = tim GRC yang menjaga SoD & memantau akses (SUIM); Lini 3 = auditor yang menguji keduanya memakai jejak sistem (SM20, CDHDR).",
+            },
+          ],
+          tcodes: ["SUIM", "SM20", "PFCG"],
+        },
+        {
+          id: "acoso",
+          title: "Pengendalian Internal — COSO ICIF",
+          en: "COSO Internal Control (2013): 5 Komponen, 17 Prinsip",
+          level: "Fondasi",
+          summary:
+            "Kerangka pengendalian internal paling dipakai di dunia — bahasa bersama auditor, manajemen, dan regulator.",
+          sections: [
+            {
+              h: "Lima komponen",
+              b: "(1) <b>Control Environment</b> — tone at the top, integritas, struktur & akuntabilitas: fondasi segalanya; (2) <b>Risk Assessment</b> — identifikasi & analisis risiko terhadap tujuan, termasuk risiko fraud; (3) <b>Control Activities</b> — kebijakan & prosedur yang memitigasi: approval, rekonsiliasi, pemisahan tugas; (4) <b>Information & Communication</b> — informasi berkualitas mengalir ke yang membutuhkan; (5) <b>Monitoring</b> — evaluasi berkelanjutan & terpisah bahwa kontrol tetap bekerja. Kelimanya dijabarkan jadi 17 prinsip yang harus 'present and functioning'.",
+            },
+            {
+              h: "Kontrol yang efektif itu sistemik",
+              b: "Satu komponen lemah melemahkan semuanya: kontrol aktivitas secanggih apapun (3-way match, release strategy) tumbang kalau control environment buruk — atasan yang biasa menyuruh 'proses saja dulu, dokumen menyusul' mengajarkan seluruh tim bahwa kontrol boleh dilewati.",
+            },
+            {
+              h: "Kaitannya dengan yang sudah kamu pelajari",
+              b: "Panel Proses Bisnis di aplikasi ini mendokumentasikan <i>control activities</i> per siklus (titik kontrol transaksi). COSO memberi kerangka besarnya: kontrol-kontrol itu harus lahir dari risk assessment, didukung lingkungan yang sehat, dan dimonitor terus — bukan daftar statis.",
+            },
+          ],
+          tcodes: ["OB52", "MRBR", "SUIM"],
+        },
+        {
+          id: "actrl",
+          title: "Anatomi Kontrol: Jenis & Desain",
+          en: "Control Types & Design",
+          level: "Fondasi",
+          summary:
+            "Preventive vs detective, manual vs otomatis — dan kenapa auditor terobsesi pada 'key control'.",
+          sections: [
+            {
+              h: "Taksonomi kontrol",
+              b: "<b>Preventive</b> mencegah kesalahan terjadi (release strategy PO, validasi tax code, SoD); <b>Detective</b> menemukannya setelah terjadi (rekonsiliasi bank, review MB51, opname); <b>Corrective</b> memperbaiki (prosedur reversal & eskalasi). Dimensi kedua: <b>otomatis</b> (sistem menegakkan — 3-way match, availability control) vs <b>manual</b> (manusia menjalankan — review & tanda tangan). Kontrol otomatis lebih andal & murah diuji: cukup uji konfigurasi + satu sampel, versus puluhan sampel untuk kontrol manual.",
+            },
+            {
+              h: "Key control",
+              b: "Dari ratusan kontrol, auditor memetakan mana yang KEY: kontrol yang jika gagal, salah saji/kerugian material bisa lolos tanpa tertangkap kontrol lain. Pengujian difokuskan ke sana — ini inti efisiensi audit modern. Contoh key control P2P: 3-way match otomatis + review payment proposal F110.",
+            },
+            {
+              h: "Atribut desain yang diuji auditor",
+              b: "Siapa pelaksananya (kompeten & independen dari yang dikontrol?), frekuensi, presisi (review 'sekilas' vs rekonsiliasi angka per angka), bukti pelaksanaan (tanpa jejak = dianggap tidak dilakukan), dan penanganan exception. Kontrol yang tidak meninggalkan bukti adalah mimpi buruk audit.",
+            },
+            {
+              h: "Di SAP",
+              b: "Kontrol otomatis hidup di konfigurasi: tolerance MIRO, release strategy, OB52, availability control — mengauditnya = membaca konfigurasi (SPRO/SE16N) + menguji dengan transaksi. Bukti kontrol manual sering berupa status & log di sistem: siapa me-release (CDHDR), kapan (timestamp dokumen).",
+            },
+          ],
+          tcodes: ["MRBR", "F110", "OB52", "SE16N"],
+        },
+        {
+          id: "ariso",
+          title: "Kerangka Manajemen Risiko: ISO 31000 & COSO ERM",
+          en: "ISO 31000:2018 & COSO ERM 2017",
+          level: "Risiko",
+          summary:
+            "Dua kerangka besar pengelolaan risiko — filosofinya sama, penekanannya berbeda.",
+          sections: [
+            {
+              h: "ISO 31000:2018",
+              b: "Sederhana & universal: <b>prinsip</b> (risiko dikelola untuk menciptakan & melindungi nilai, terintegrasi ke semua proses, berbasis informasi terbaik), <b>kerangka</b> (kepemimpinan & komitmen sebagai pusat), dan <b>proses</b>: komunikasi & konsultasi → penetapan konteks → identifikasi → analisis → evaluasi → perlakuan risiko → pemantauan. Kekuatannya: bisa dipakai organisasi apa pun, dari BUMN sampai UMKM.",
+            },
+            {
+              h: "COSO ERM 2017",
+              b: "'Enterprise Risk Management — Integrating with Strategy and Performance': penekanannya risiko TIDAK dikelola terpisah dari strategi — pemilihan strategi itu sendiri keputusan risiko. 5 komponen & 20 prinsip, dari governance & culture sampai review & revision. Cocok untuk organisasi yang ingin ERM menyatu dengan perencanaan korporat & KPI.",
+            },
+            {
+              h: "Konteks BUMN Indonesia",
+              b: "Kementerian BUMN mewajibkan penerapan manajemen risiko terstruktur (antara lain lewat Permen BUMN PER-2/MBU/03/2023): organ pengelola risiko, penilaian tingkat maturitas risiko (Risk Maturity Index), risk appetite statement yang disahkan, sampai keterkaitan profil risiko dengan RKAP. Untuk kariermu di lingkungan BUMN, memahami terjemahan lokal ini sama pentingnya dengan kerangka globalnya.",
+            },
+            {
+              h: "Praktisnya",
+              b: "Jangan terjebak perang kerangka: keduanya bermuara pada siklus yang sama — kenali risikonya, ukur, tentukan respons, pantau. Pilih satu bahasa, terapkan konsisten, dan buat terhubung ke keputusan nyata (anggaran, proyek, KPI) — ERM yang hidup di PowerPoint saja adalah ERM gagal.",
+            },
+          ],
+          tcodes: ["FMRP_RW_BUDCON", "CJ30"],
+        },
+        {
+          id: "areg",
+          title: "Risk Assessment & Risk Register",
+          en: "Risk Identification, Analysis & the Risk Register",
+          level: "Risiko",
+          summary:
+            "Jantung ERM: mengubah 'perasaan tidak enak' jadi daftar risiko terukur yang bisa dikelola.",
+          sections: [
+            {
+              h: "Identifikasi & analisis",
+              b: "Identifikasi lewat workshop per proses, data insiden/kerugian historis, dan analisis skenario. Tiap risiko dianalisis dua dimensi: <b>likelihood</b> (kemungkinan) × <b>impact</b> (dampak — finansial, operasional, reputasi, keselamatan), umumnya skala 1–5, divisualkan di <b>heat map</b> 5×5. Risiko merah (tinggi×tinggi) = prioritas perlakuan & perhatian direksi.",
+            },
+            {
+              h: "Inherent vs residual, dan risk appetite",
+              b: "<div class='fin-formula'>Inherent Risk  = risiko SEBELUM kontrol\nResidual Risk  = risiko SETELAH kontrol berjalan\nGap keduanya   = nilai yang diberikan kontrol</div>Residual dibandingkan dengan <b>risk appetite</b> (tingkat risiko yang bersedia diterima organisasi, ditetapkan direksi): residual > appetite → wajib perlakuan tambahan; jauh di bawah appetite → mungkin kontrolnya berlebihan (over-controlled juga mahal).",
+            },
+            {
+              h: "Risk register yang baik",
+              b: "Kolom minimum: deskripsi risiko (sebab → peristiwa → dampak, bukan sekadar 'risiko IT'), kategori, pemilik risiko (lini 1, satu nama — bukan departemen), skor inherent, kontrol existing, skor residual, rencana perlakuan + tenggat, dan KRI. Register direview berkala — risiko yang tidak pernah berubah skornya bertahun-tahun biasanya tanda register mati.",
+            },
+            {
+              h: "Di SAP",
+              b: "Sumber data penilaian: frekuensi & nilai insiden dari sistem (selisih opname MI07, invoice blocked MRBR, dokumen reversal FB08, downtime PM) — risk assessment berbasis data sistem jauh lebih kredibel daripada persepsi workshop semata.",
+            },
+          ],
+          tcodes: ["MI07", "MRBR", "FMAVCR01"],
+        },
+        {
+          id: "atreat",
+          title: "Perlakuan Risiko & KRI",
+          en: "Risk Treatment & Key Risk Indicators",
+          level: "Risiko",
+          summary:
+            "Empat pilihan menghadapi risiko — dan indikator dini sebelum risiko benar-benar meledak.",
+          sections: [
+            {
+              h: "Empat opsi perlakuan (4T)",
+              b: "<b>Terminate/Avoid</b>: hentikan aktivitasnya (keluar dari bisnis/lokasi berisiko); <b>Treat/Reduce</b>: tambah kontrol untuk menurunkan likelihood atau impact — pilihan paling umum; <b>Transfer</b>: alihkan sebagian dampak (asuransi, outsourcing, klausul kontrak) — ingat: yang berpindah dampak finansialnya, reputasi tidak bisa diasuransikan; <b>Tolerate/Accept</b>: terima secara sadar & terdokumentasi (residual sudah ≤ appetite, atau biaya mitigasi > manfaat). Menerima risiko secara SADAR itu sah; menerima karena tidak tahu itu kelalaian.",
+            },
+            {
+              h: "Key Risk Indicator (KRI)",
+              b: "Metrik pemantau yang bergerak SEBELUM risikonya terwujud — bedakan dari KPI (mengukur kinerja) : KRI mengukur eksposur. Contoh: % invoice blocked naik = KRI risiko proses pembayaran; turnover staf kunci = KRI risiko operasional; umur piutang memburuk (FBL5N) = KRI risiko kredit; jumlah user dengan konflik SoD = KRI risiko fraud. KRI yang baik punya threshold (hijau/kuning/merah) dan pemilik yang wajib bereaksi saat menyala.",
+            },
+            {
+              h: "Praktik pelaporan",
+              b: "Dashboard risiko direksi yang sehat: top risks + pergerakan skornya, KRI yang menyala, status rencana perlakuan yang lewat tenggat, dan insiden/kerugian aktual vs estimasi. Risiko adalah cerita dinamis, bukan lampiran statis RKAP.",
+            },
+          ],
+          tcodes: ["FBL5N", "MRBR", "SUIM", "SM20"],
+        },
+        {
+          id: "agias",
+          title: "Standar Baru: IIA Global Internal Audit Standards",
+          en: "Global Internal Audit Standards (2024)",
+          level: "Audit",
+          summary:
+            "Perombakan terbesar standar profesi audit internal dalam beberapa dekade — berlaku efektif Januari 2025.",
+          sections: [
+            {
+              h: "Apa yang berubah",
+              b: "IIA mengganti kerangka lama (IPPF dengan Attribute & Performance Standards) menjadi <b>Global Internal Audit Standards</b>: 5 domain, 15 prinsip, 52 standar. Domainnya: (I) Purpose of Internal Auditing; (II) <b>Ethics & Professionalism</b> (integritas, objektivitas, kompetensi, due professional care, kerahasiaan); (III) <b>Governing the IA Function</b> — domain BARU yang mengatur peran Dewan/Komite Audit terhadap fungsi audit: mandat, charter, supervisi CAE; (IV) <b>Managing</b> the IA function (perencanaan berbasis risiko, sumber daya, komunikasi); (V) <b>Performing</b> (perencanaan penugasan, pelaksanaan, komunikasi hasil & monitoring tindak lanjut).",
+            },
+            {
+              h: "Penekanan baru yang penting",
+              b: "Kualitas & pengukuran kinerja fungsi audit dipertegas (external quality assessment minimal tiap 5 tahun tetap, plus ekspektasi performance measurement berkelanjutan); peran board dieksplisitkan (independensi bukan hanya klaim auditor, tapi tanggung jawab governance); dan dorongan kuat penggunaan teknologi & data dalam seluruh siklus audit.",
+            },
+            {
+              h: "Untuk kamu",
+              b: "Kalau serius ke arah audit internal, ini kerangka yang akan ditanyakan ke depan (juga di ujian CIA yang menyesuaikan). Terjemahan praktisnya sederhana: audit yang independen, berbasis risiko, berbukti kuat, dikomunikasikan jelas, dan ditindaklanjuti sampai tuntas.",
+            },
+          ],
+          tcodes: ["SUIM", "SM20"],
+        },
+        {
+          id: "acycle",
+          title: "Siklus Audit: Perencanaan sampai Tindak Lanjut",
+          en: "The Audit Engagement Lifecycle",
+          level: "Audit",
+          summary:
+            "Perjalanan satu penugasan audit dari pemilihan objek sampai temuan benar-benar diperbaiki.",
+          sections: [
+            {
+              h: "Perencanaan tahunan berbasis risiko",
+              b: "Mulai dari <b>audit universe</b> (semua entitas/proses yang bisa diaudit) → skor risiko tiap objek (materialitas, kompleksitas, hasil audit lalu, perubahan sistem/orang, red flag) → alokasikan jam audit terbatas ke risiko tertinggi. Proses berisiko tinggi diaudit tiap tahun; rendah bisa 3 tahun sekali. Rencana disetujui Komite Audit.",
+            },
+            {
+              h: "Penugasan: planning & fieldwork",
+              b: "Planning penugasan: pahami proses (walkthrough satu transaksi ujung-ke-ujung!), petakan risiko & key control, susun program audit. Fieldwork: uji desain kontrol (apakah kontrolnya, jika berjalan, efektif?) lalu uji operasi (apakah benar berjalan konsisten? — sampling atau full-population dengan data analytics). Semua tertuang di <b>kertas kerja</b>: cukup rinci agar auditor lain sampai pada kesimpulan yang sama.",
+            },
+            {
+              h: "Temuan yang baik: 5C",
+              b: "<b>Condition</b> (faktanya apa), <b>Criteria</b> (seharusnya bagaimana — SOP/kontrak/regulasi), <b>Cause</b> (akar sebab — bukan 'human error', gali kenapa bisa), <b>Consequence</b> (dampak/eksposur, dikuantifikasi bila bisa), <b>Corrective action</b> (rekomendasi yang menyasar akar sebab, disepakati manajemen dengan PIC & tenggat). Temuan tanpa akar sebab menghasilkan rekomendasi tambal sulam yang kambuh tahun depan.",
+            },
+            {
+              h: "Reporting & follow-up",
+              b: "Laporan berperingkat (temuan kritikal → minor), dibahas dengan auditee (no surprise!), dilaporkan ke Komite Audit. Lalu bagian yang paling sering lemah: <b>monitoring tindak lanjut</b> — temuan berstatus open melewati tenggat harus dieskalasi; audit yang temuannya tidak pernah ditutup hanyalah ritual.",
+            },
+          ],
+          tcodes: ["MB51", "FBL1N", "CDHDR"],
+        },
+        {
+          id: "arba",
+          title: "Materialitas, Sampling & Bukti Audit",
+          en: "Evidence, Sampling & Professional Judgment",
+          level: "Audit",
+          summary:
+            "Seberapa yakin itu 'cukup yakin'? Seni dan disiplin di balik kesimpulan audit.",
+          sections: [
+            {
+              h: "Hierarki kualitas bukti",
+              b: "Dari terkuat: bukti yang auditor hasilkan sendiri (reperformance — hitung ulang, tarik data langsung via SE16N) > bukti eksternal independen (konfirmasi bank/vendor) > bukti internal dari sistem dengan kontrol baik (log SAP) > keterangan lisan. Prinsip: bukti dokumenter > lisan, eksternal > internal, langsung > turunan. Wawancara memberi arah, bukan kesimpulan.",
+            },
+            {
+              h: "Sampling vs full population",
+              b: "Sampling statistik klasik: tentukan populasi, confidence level, tolerable error → jumlah sampel. Tapi era data analytics mengubah permainan: untuk data di SAP, auditor kini bisa menguji <b>100% populasi</b> (semua PO setahun, semua pembayaran) dengan query — sampling hanya untuk pengujian yang butuh dokumen fisik/judgment. Full population menghilangkan risiko sampling sekaligus menemukan SEMUA anomali, bukan perkiraan.",
+            },
+            {
+              h: "Skeptisisme profesional",
+              b: "Sikap dasar auditor: tidak berasumsi manajemen jujur ATAU tidak jujur — semua klaim diverifikasi. Waspadai bias: terlalu percaya auditee yang kooperatif, anchoring pada hasil audit lalu, dan tekanan menutup temuan demi relasi. Independensi in fact DAN in appearance.",
+            },
+            {
+              h: "Dokumentasi",
+              b: "Aturan emas kertas kerja: 'not documented = not done'. Setiap kesimpulan tertelusur ke bukti; setiap bukti jelas sumber, tanggal pengambilan, dan siapa mengambil (untuk data SAP: screenshot parameter query + hash/jumlah baris agar tidak bisa dibantah 'datanya beda').",
+            },
+          ],
+          tcodes: ["SE16N", "MB51", "FBL3N", "SM37"],
+        },
+        {
+          id: "asod",
+          title: "Audit Akses & Segregation of Duties",
+          en: "Auditing Access & SoD in SAP",
+          level: "SAP",
+          summary:
+            "Audit paling berdampak di lingkungan SAP: siapa bisa apa, dan kombinasi maut yang harus dipisah.",
+          sections: [
+            {
+              h: "Konflik SoD klasik yang dicari",
+              b: "Satu orang yang bisa: <b>create vendor + memproses pembayaran</b> (vendor fiktif!), <b>ubah rekening bank vendor + release payment</b>, <b>create PO + GR sendiri</b>, <b>maintain master harga + billing</b>, <b>posting jurnal + rekonsiliasi</b>. Uji nyata: tarik user per transaksi via SUIM (Users by Transaction), silangkan matriks konflik — jangan hanya percaya matriks role di atas kertas, uji juga <i>siapa benar-benar melakukan</i> (dari dokumen: created by di tabel via SE16N).",
+            },
+            {
+              h: "Pengujian akses standar",
+              b: "(1) User aktif yang sudah resign/mutasi (bandingkan SU01 vs data HR); (2) akses super: profil SAP_ALL/SAP_NEW, user DDIC/SAP* yang tidak terkunci; (3) firefighter: setiap penggunaan harus ada tiket & review log-nya (SM20); (4) developer punya akses production?; (5) otorisasi tabel & SE16N yang terlalu luas; (6) review akses periodik benar dijalankan (bukti approval, bukan sekadar dikirim email).",
+            },
+            {
+              h: "Kompensasi kontrol",
+              b: "Konflik SoD tak selalu bisa dihilangkan (tim kecil di cabang). Yang wajib: <b>compensating control</b> terdokumentasi — misal review bulanan seluruh pembayaran oleh atasan independen, dengan bukti. Auditor menguji kompensasinya benar berjalan, bukan sekadar tercantum di kebijakan.",
+            },
+            {
+              h: "Alat di hub ini",
+              b: "SUIM (query akses), SU53 (diagnosa), PFCG (isi role), SM20 (audit log), SCU3 (log tabel), SU01 (status user) — semuanya sudah ada kartunya di tab BASIS.",
+            },
+          ],
+          tcodes: ["SUIM", "SU01", "PFCG", "SM20", "SCU3", "SU53"],
+        },
+        {
+          id: "aitgc",
+          title: "ITGC vs Kontrol Aplikasi",
+          en: "IT General Controls & Application Controls",
+          level: "SAP",
+          summary:
+            "Dua lapis kontrol sistem yang diuji auditor — dan kenapa ITGC rusak meruntuhkan semua kontrol otomatis.",
+          sections: [
+            {
+              h: "ITGC — fondasinya",
+              b: "IT General Controls melindungi integritas sistem itu sendiri: (1) <b>change management</b> — semua perubahan program/konfigurasi lewat jalur DEV→QAS→PRD dengan approval & testing (transport request adalah jejak auditnya; perubahan langsung di production = temuan besar); (2) <b>access management</b> (topik SoD); (3) <b>IT operations</b> — job terjadwal termonitor (SM37: job kritikal gagal ditindak?), backup & recovery teruji, insiden tercatat. Logika auditnya: kalau orang bisa mengubah program/konfigurasi tanpa kontrol, maka 3-way match yang 'otomatis' pun tidak bisa dipercaya — ITGC lemah = kontrol aplikasi tidak bisa diandalkan.",
+            },
+            {
+              h: "Kontrol aplikasi — di dalam proses",
+              b: "Kontrol otomatis yang menempel di transaksi: 3-way match & tolerance (konfigurasi!), release strategy, validasi field wajib, OB52 posting period, availability control, duplicate invoice check. Cara mengujinya dua arah: baca konfigurasinya (via SPRO/SE16N ke tabel config) DAN uji perilakunya (coba posting yang seharusnya ditolak — di sistem test).",
+            },
+            {
+              h: "Interface & pemrosesan data",
+              b: "Jalur data antar sistem adalah titik rawan yang sering luput: IDoc gagal (WE02 status 51) yang menumpuk tanpa tindak lanjut = transaksi 'hilang' antara TOS/bank dan SAP; batch input session error (SM35); antrian qRFC macet (SMQ1). Auditor menguji ADA-nya monitoring rutin + bukti penyelesaiannya.",
+            },
+            {
+              h: "Konfigurasi berisiko yang dicek cepat",
+              b: "Toleransi MIRO terlalu longgar; posting period dibuka lebar semua user; number range external tanpa alasan; parameter password lemah (RZ11: login/min_password_lng dkk); logging tabel (rec/client) mati.",
+            },
+          ],
+          tcodes: ["SM37", "WE02", "SM35", "SMQ1", "OB52", "SE16N", "RZ10"],
+        },
+        {
+          id: "acaat",
+          title: "Audit Berbasis Data & Continuous Auditing",
+          en: "Data Analytics & CAATs in SAP",
+          level: "SAP",
+          summary:
+            "Meninggalkan sampling: menguji seluruh populasi transaksi dengan analitik — masa kini profesi audit.",
+          sections: [
+            {
+              h: "Pola uji analitik klasik di data SAP",
+              b: "(1) <b>Pembayaran ganda</b>: invoice dengan vendor+amount+reference sama (kelemahan duplicate check standar: beda satu spasi lolos); (2) <b>split transaksi</b>: beberapa PO/pembayaran ke vendor sama, nilai masing-masing tepat di bawah ambang approval, tanggal berdekatan; (3) <b>posting tak lazim</b>: jurnal manual di akhir pekan/tengah malam, posting oleh user IT ke akun keuangan, dokumen dengan tanggal mundur; (4) <b>Benford's Law</b>: distribusi digit pertama nilai transaksi yang menyimpang dari pola alami = indikasi angka karangan; (5) master data: vendor dengan rekening sama tapi nama beda, vendor beralamat sama dengan karyawan (silang data HR); (6) harga beli item sama yang variansinya ekstrem antar PO.",
+            },
+            {
+              h: "Sumber datanya",
+              b: "Tabel inti yang ditarik (SE16N/ekstraksi): BKPF/BSEG (dokumen FI), EKKO/EKPO (PO), RBKP/RSEG (invoice), LFA1/LFBK (vendor & rekening bank!), CDHDR/CDPOS (perubahan), MSEG/MKPF (pergerakan barang), plus log SM20. Diolah di alat analitik (dulu ACL/IDEA, kini banyak pakai SQL/Python/Power BI).",
+            },
+            {
+              h: "Continuous auditing",
+              b: "Naik kelas dari audit tahunan: skrip uji berjalan OTOMATIS tiap hari/minggu, exception dikirim ke reviewer — pembayaran ganda tertangkap minggu ini, bukan di audit tahun depan. Mulai kecil: 3–5 uji berisiko tertinggi (rekening vendor berubah menjelang pembayaran besar adalah kandidat pertama yang bagus), matangkan alur tindak lanjutnya, baru perluas.",
+            },
+            {
+              h: "Peringatan integritas",
+              b: "Analitik hanya sekuat datanya: dokumentasikan parameter ekstraksi, jumlah baris, dan periode — dan jangan pernah menguji di data yang bisa diubah pihak yang diuji.",
+            },
+          ],
+          tcodes: ["SE16N", "CDHDR", "MB51", "FBL1N", "SM20", "WE02"],
+        },
+        {
+          id: "afraud",
+          title: "Memahami Fraud: Teori & Skema",
+          en: "Fraud Theory & Common Schemes",
+          level: "Fraud",
+          summary:
+            "Kenapa orang baik melakukan fraud — dan tiga keluarga besar skemanya.",
+          sections: [
+            {
+              h: "Fraud triangle (dan diamond)",
+              b: "Fraud butuh tiga unsur bertemu: <b>Pressure</b> (tekanan — hutang, target mustahil, gaya hidup), <b>Opportunity</b> (peluang — kontrol lemah, akses berlebih; SATU-SATUNYA sisi yang bisa dikendalikan organisasi), <b>Rationalization</b> (pembenaran — 'cuma pinjam', 'perusahaan tidak akan rugi', 'saya digaji kurang'). Versi diamond menambah <b>Capability</b>: posisi & kecakapan untuk mengeksekusi. Implikasi desain kontrol: fokus mempersempit opportunity, sambil memantau red flag pressure (gaya hidup) dan menjaga keadilan (rationalization).",
+            },
+            {
+              h: "Tiga keluarga skema (taksonomi ACFE)",
+              b: "(1) <b>Asset misappropriation</b> — paling sering, kerugian per kasus relatif kecil: penggelapan kas, vendor/karyawan fiktif, penggelembungan reimbursement, pencurian persediaan; (2) <b>Corruption</b>: suap & kickback pengadaan, benturan kepentingan, pemerasan — sering tak terlihat di pembukuan sendiri (uangnya mengalir di luar); (3) <b>Financial statement fraud</b> — paling jarang tapi kerugian terbesar: pendapatan fiktif, menggeser beban antar periode, menyembunyikan liabilitas. Survei global ACFE (Report to the Nations) konsisten memperkirakan organisasi kehilangan ~5% pendapatan per tahun karena fraud, dan kanal deteksi #1 sejak lama adalah <b>tips/whistleblower</b> — jauh mengalahkan audit; maka saluran pelaporan yang dipercaya adalah kontrol anti-fraud terbaik.",
+            },
+            {
+              h: "Respons saat ada indikasi",
+              b: "Jangan gegabah: amankan bukti (jangan alert pelaku — log & dokumen bisa raib), eskalasi sesuai protokol (komite audit/unit investigasi, bukan atasan pelaku), pisahkan investigasi dari audit reguler, jaga asas praduga & kerahasiaan. Salah penanganan bisa menghancurkan kasus yang benar sekalipun.",
+            },
+          ],
+          tcodes: ["CDHDR", "SM20", "FBL1N"],
+        },
+        {
+          id: "aflag",
+          title: "Red Flags Fraud di Data SAP",
+          en: "Fraud Red Flags in SAP Data",
+          level: "Fraud",
+          summary:
+            "Terjemahan skema fraud ke jejak spesifik yang bisa kamu cari di sistem.",
+          sections: [
+            {
+              h: "Skema vendor & pembayaran",
+              b: "<b>Vendor fiktif</b>: vendor baru langsung bertransaksi besar, alamat/rekening cocok dengan data karyawan, hanya dilayani satu user (create PO, GR, dan input invoice orang yang sama — cek created by di dokumen). <b>Pembelokan pembayaran</b>: rekening bank vendor diubah (CDHDR/CDPOS pada LFBK) berdekatan dengan pembayaran besar, lalu diubah kembali. <b>Kickback</b>: satu vendor selalu menang dengan harga di atas pasar, spesifikasi PO yang 'dijahit', pemecahan nilai menghindari tender.",
+            },
+            {
+              h: "Skema persediaan & penjualan",
+              b: "Barang keluar dengan movement scrap (551) yang frekuensinya tak wajar di satu lokasi/user; selisih opname yang selalu minus di gudang yang sama; penjualan ke customer terafiliasi dengan harga di bawah pricing standar (override kondisi harga — cek log perubahan di dokumen); kredit memo (VF11/FB75) berulang ke customer sama pasca tutup periode.",
+            },
+            {
+              h: "Skema pembukuan",
+              b: "Jurnal manual (SA/FB50) bernilai bulat besar di hari-hari terakhir periode, terutama ke akun pendapatan/beban akrual; dokumen reversal berpasangan yang polanya 'angkat laba di kuartal ini, balikkan di kuartal depan'; parked document yang di-post orang yang sama dengan pembuatnya (park-post oleh satu tangan = review-nya fiksi).",
+            },
+            {
+              h: "Cara kerjanya",
+              b: "Setiap red flag di atas adalah query yang bisa dibangun dari tabel di topik CAAT — mulai dari perubahan rekening vendor (uji paling tinggi rasio nilai/effort), otomasikan, dan setiap exception WAJIB berujung disposisi tertulis: bukan semua anomali = fraud, tapi semua anomali harus terjawab.",
+            },
+          ],
+          tcodes: ["CDHDR", "XK02", "MB51", "MI07", "FB50", "SM20"],
+        },
+        {
+          id: "aiso9001",
+          title: "ISO 9001 — Sistem Manajemen Mutu",
+          en: "ISO 9001:2015 (Amd 1:2024) — Quality Management Systems",
+          level: "Risiko",
+          summary:
+            "Standar sertifikasi paling populer di dunia: mutu dikelola sebagai sistem, dengan risiko sebagai cara berpikirnya.",
+          sections: [
+            {
+              h: "Inti standarnya",
+              b: "ISO 9001 bukan standar mutu PRODUK — dia standar mutu SISTEM: apakah organisasi punya proses yang konsisten menghasilkan output sesuai persyaratan pelanggan & regulasi, dan terus membaik. Tujuh prinsipnya: fokus pelanggan, kepemimpinan, keterlibatan orang, pendekatan proses, improvement, pengambilan keputusan berbasis bukti, dan manajemen relasi. Semuanya berputar dalam siklus <b>PDCA</b> (Plan-Do-Check-Act).",
+            },
+            {
+              h: "Struktur 10 klausul & risk-based thinking",
+              b: "Memakai struktur harmonisasi (sama dengan ISO 27001/14001/45001 — memudahkan sertifikasi terintegrasi): klausul 4 Konteks organisasi, 5 Kepemimpinan, 6 <b>Perencanaan (di sinilah risk-based thinking: risiko & peluang tiap proses wajib diidentifikasi & ditindak)</b>, 7 Dukungan (kompetensi, dokumentasi), 8 Operasi, 9 <b>Evaluasi kinerja — termasuk kewajiban AUDIT INTERNAL (9.2) dan tinjauan manajemen (9.3)</b>, 10 Improvement (ketidaksesuaian & tindakan korektif). Sejak 2015, 'preventive action' dihapus — digantikan risk-based thinking di seluruh sistem. Update terbaru: <b>Amendment 1:2024</b> menambahkan pertimbangan isu perubahan iklim ke dalam konteks organisasi (klausul 4).",
+            },
+            {
+              h: "Kaitannya dengan audit & risiko",
+              b: "ISO 9001 mewajibkan organisasi MENGAUDIT DIRINYA (audit internal SMM) — auditor mutu memakai teknik yang sama dengan topik Siklus Audit: program berbasis risiko, bukti objektif, temuan ketidaksesuaian (major/minor/observasi), tindakan korektif dengan analisis akar masalah (persis pola 5C). Ketidaksesuaian yang berulang di audit sertifikasi = indikasi CAPA-nya tambal sulam.",
+            },
+            {
+              h: "Di SAP",
+              b: "Modul QM adalah mesin operasional klausul 8: inspection plan (QP01) = pengendalian mutu terencana, hasil pemeriksaan & usage decision (QE51N, QA11) = bukti objektif keputusan mutu, quality notification (QM01) = pencatatan ketidaksesuaian & CAPA yang tertelusur. Auditor SMM di perusahaan ber-SAP menguji: apakah keputusan release stok benar-benar lewat QA11 (bukan dipindah manual via movement type), dan apakah notifikasi mutu ditutup dengan akar masalah — bukan sekadar status closed.",
+            },
+          ],
+          tcodes: ["QP01", "QE51N", "QA11", "QA32", "QM01", "QM02"],
+        },
+        {
+          id: "aiso27001",
+          title: "ISO/IEC 27001 — Keamanan Informasi",
+          en: "ISO/IEC 27001:2022 — Information Security Management Systems",
+          level: "Risiko",
+          summary:
+            "Melindungi tiga hal: kerahasiaan, integritas, dan ketersediaan informasi — dengan pendekatan risiko formal.",
+          sections: [
+            {
+              h: "Inti standarnya",
+              b: "ISMS (Information Security Management System) dibangun untuk menjaga <b>C-I-A</b>: <b>Confidentiality</b> (informasi hanya untuk yang berhak), <b>Integrity</b> (akurat & tidak diubah tanpa otorisasi — perhatikan: ini alasan yang sama kenapa jejak audit SAP penting), <b>Availability</b> (tersedia saat dibutuhkan). Struktur klausulnya harmonis dengan ISO 9001 (4–10), jadi organisasi yang sudah punya SMM tinggal memperluas sistemnya.",
+            },
+            {
+              h: "Mesin utamanya: risk assessment → SoA",
+              b: "Alur khas 27001: inventarisasi aset informasi → identifikasi ancaman & kerentanan → nilai risiko → pilih perlakuan → petakan ke kontrol <b>Annex A</b> → dokumentasikan di <b>Statement of Applicability (SoA)</b>: kontrol mana diterapkan, mana tidak relevan beserta justifikasinya. SoA adalah dokumen paling diperiksa auditor sertifikasi — dia kontrak antara profil risikomu dan kontrolmu.",
+            },
+            {
+              h: "Update besar versi 2022",
+              b: "Annex A dirombak: dari 114 kontrol/14 domain (versi 2013) menjadi <b>93 kontrol dalam 4 tema</b> — Organizational (37), People (8), Physical (14), Technological (34) — plus 11 kontrol BARU yang mencerminkan zaman: threat intelligence, keamanan layanan cloud, ICT readiness for business continuity, data masking, <b>data leakage prevention</b>, monitoring activities, web filtering, dan <b>secure coding</b>. Organisasi yang tersertifikasi versi 2013 wajib transisi ke 2022 dengan tenggat akhir Oktober 2025 — sekarang semua sertifikasi berjalan di versi 2022.",
+            },
+            {
+              h: "Di SAP — ISMS dalam praktik",
+              b: "Sistem ERP adalah aset informasi paling kritis perusahaan, jadi banyak kontrol Annex A mendarat persis di hal-hal yang sudah ada di hub ini: manajemen akses & privileged access (SU01, PFCG, SUIM — kontrol akses berbasis least privilege), logging & monitoring (SM20, SCU3), pemisahan lingkungan development-production & change management (jalur transport, topik ITGC), penghapusan akses saat mutasi/resign, dan backup/recovery teruji. Audit ISMS dan audit ITGC banyak beririsan — perbedaannya: 27001 menuntut semuanya lahir dari risk assessment yang terdokumentasi, bukan sekadar praktik baik.",
+            },
+            {
+              h: "Bonus konteks Indonesia",
+              b: "UU Perlindungan Data Pribadi (UU 27/2022) mewajibkan pengamanan data pribadi — sertifikasi/kepatuhan 27001 (plus ekstensi privasi ISO 27701) adalah jalur paling umum membuktikannya. Untuk BUMN yang mengelola data pelanggan & logistik nasional, ini bukan lagi opsional secara praktis.",
+            },
+          ],
+          tcodes: ["SU01", "PFCG", "SUIM", "SM20", "SCU3", "SM37"],
+        },
+        {
+          id: "ic1",
+          ref: "Bab I Pendahuluan — prinsip dasar & limitasi ICOFR, kerangka COSO ICIF dan COBIT 2019.",
+          title: "ICOFR: Konsep & Regulasi BUMN",
+          en: "Internal Control over Financial Reporting — SK-5/DKU.MBU/11/2024",
+          level: "ICOFR",
+          summary:
+            "Pengendalian internal khusus untuk satu tujuan: laporan keuangan bebas salah saji material — kini diwajibkan untuk seluruh BUMN.",
+          sections: [
+            {
+              h: "Apa itu ICOFR",
+              b: "ICOFR adalah subset pengendalian internal yang fokusnya spesifik: memberikan <b>keyakinan memadai</b> (reasonable assurance — BUKAN absolut) bahwa laporan keuangan disusun andal dan bebas salah saji material, baik karena <b>error</b> maupun <b>fraud</b>. Lahir dari skandal akuntansi besar (Enron, WorldCom — dan di Indonesia: kasus manipulasi laba BUMN asuransi) yang membuktikan laporan audited pun bisa bohong bila pengendaliannya jebol.",
+            },
+            {
+              h: "Dasar regulasi",
+              b: "Untuk BUMN: Permen BUMN PER-2/MBU/03/2023 (Pasal 69: sistem pengendalian intern mencakup pengendalian atas pelaporan keuangan) yang dioperasionalkan lewat <b>Juknis SK-5/DKU.MBU/11/2024</b> — wajib untuk seluruh BUMN dan anak perusahaannya. Kerangka rujukannya COSO ICIF 2013 (5 komponen, 17 prinsip — lihat topik COSO) dan untuk sisi TI: COBIT 2019. Padanan globalnya: SOX Section 404 di AS.",
+            },
+            {
+              h: "Limitasi bawaan — kenapa 'memadai' bukan 'mutlak'",
+              b: "Empat keterbatasan yang melekat: (1) <b>judgement</b> — kontrol dijalankan berdasarkan pertimbangan manusia yang bisa keliru; (2) <b>human error</b> — pelaksana salah paham atau lalai; (3) <b>kolusi</b> — beberapa orang bersekongkol mengalahkan kontrol yang dirancang untuk satu orang; (4) <b>management override</b> — manajemen yang seharusnya menjaga kontrol justru melangkahinya. Dua terakhir ini alasan kenapa ICOFR tidak pernah menggantikan skeptisisme audit.",
+            },
+            {
+              h: "Kaitannya dengan yang sudah kamu pelajari",
+              b: "ICOFR adalah 'proyeksi' dari semua materi audit di panel ini ke satu tujuan (laporan keuangan): Three Lines menentukan siapa berperan apa, COSO memberi kerangkanya, titik kontrol di Proses Bisnis adalah kandidat kontrolnya, dan jejak SAP adalah buktinya.",
+            },
+          ],
+          tcodes: ["FBL3N", "F.01", "MRBR", "OB52"],
+        },
+        {
+          id: "ic2",
+          ref: "Bab II — Partisipasi & Peran Tiga Lini dalam Implementasi ICOFR; enam tahapnya dijabarkan di Bab III–VIII.",
+          title: "Lifecycle ICOFR: 6 Tahap & Peran Tiga Lini",
+          en: "The ICOFR Lifecycle",
+          level: "ICOFR",
+          summary:
+            "Dari perancangan sampai asurans eksternal — siklus tahunan yang berulang sebagai continuous improvement.",
+          sections: [
+            {
+              h: "Enam tahap",
+              b: "(1) <b>Perancangan</b>: penentuan ruang lingkup (scoping akun & proses signifikan), identifikasi risiko-pengendalian, dokumentasi BPM & RCM; (2) <b>Implementasi & pemantauan berkelanjutan</b>: kontrol dijalankan, <b>Control Self Assessment (CSA)</b> oleh lini pertama, pemutakhiran BPM/RCM saat proses berubah; (3) <b>Evaluasi</b>: pengujian independen — <b>Test of Design (TOD)</b>: apakah rancangan kontrolnya, bila dijalankan, mampu memitigasi risiko? dan <b>Test of Operating Effectiveness (TOE)</b>: apakah benar berjalan konsisten sepanjang periode?; (4) <b>Remediasi</b>: perbaikan defisiensi rancangan maupun operasi; (5) <b>Pelaporan</b>: penentuan tingkat defisiensi (Degree of Deficiency) dan asesmen manajemen — CEO & CFO menandatangani pernyataan efektivitas; (6) <b>Asurans oleh praktisi eksternal</b>.",
+            },
+            {
+              h: "Pembagian peran per lini",
+              b: "<b>Lini 1</b> (pemilik proses): menyusun & memutakhirkan BPM/RCM, menjalankan kontrol, melaksanakan CSA. <b>Lini 2</b> (fungsi ICOFR): menetapkan lingkup, memvalidasi rancangan (termasuk <b>Test of One</b> — uji satu transaksi untuk membuktikan desain jalan), mengevaluasi hasil CSA. <b>Lini 3</b> (audit internal): pengujian independen TOD/TOE dan masukan perhitungan defisiensi. Pola pentingnya: yang MEMBUAT kontrol bukan yang MENGUJI kontrol.",
+            },
+            {
+              h: "Realita implementasi",
+              b: "Implementasi pertama kali tipikal memakan <b>±14 bulan</b> — scoping & desain (±6 bulan), CSA, TOD/TOE (±4 bulan), remediasi + uji ulang, baru pelaporan. Fase kritisnya di tengah: remediasi jangan menunggu seluruh testing selesai — mulai begitu temuan bisa disimpulkan. Common pitfalls: pelatihan kurang (orang tidak paham perannya), dokumentasi buruk, risiko signifikan terlewat saat scoping, terlalu banyak proses manual, dan kualitas data yang memaksa cleansing manual.",
+            },
+            {
+              h: "Di SAP",
+              b: "Tahap evaluasi sangat terbantu sistem: TOE kontrol otomatis cukup uji konfigurasi + satu sampel per jenis (bukan 25+ sampel seperti kontrol manual), bukti pelaksanaan kontrol manual diambil dari jejak dokumen (siapa release, kapan — CDHDR), dan populasi pengujian ditarik via SE16N.",
+            },
+          ],
+          tcodes: ["SE16N", "CDHDR", "MRBR", "SM37"],
+        },
+        {
+          id: "ic3",
+          ref: "Bab III.3.1 — Dokumentasi Proses Bisnis dalam Diagram Alur; Lampiran 3 (legenda template BPM) & Lampiran 4 (ilustrasi dokumentasi proses bisnis TLC).",
+          title: "BPM: Memetakan Proses untuk ICOFR",
+          en: "Business Process Mapping (Level 0–3)",
+          level: "ICOFR",
+          summary:
+            "Dokumentasi alur proses berjenjang yang menunjukkan di titik mana risiko dan kontrol berada.",
+          sections: [
+            {
+              h: "Berangkat dari laporan keuangan",
+              b: "BPM ICOFR TIDAK dimulai dari proses — dia dimulai dari <b>akun signifikan</b>: pos laporan keuangan dipetakan ke siklus proses yang membentuknya (Piutang & Pendapatan → Order-to-Cash; Hutang → Procure-to-Payment; Persediaan, Aset Tetap, Payroll, Perpajakan, Treasury, Financial Closing). Logikanya: salah saji lahir di proses, maka proses yang membentuk akun material itulah yang dipetakan.",
+            },
+            {
+              h: "Empat level pemetaan",
+              b: "<b>Level 0</b>: siklus besar (Pendapatan, Pengadaan...); <b>Level 1</b>: proses (Pelayanan Jasa Kapal); <b>Level 2</b>: sub-proses (Kedatangan Kapal, Billing); <b>Level 3</b>: aktivitas/transaksi — diagram alir detail per swimlane departemen yang menunjukkan bagaimana transaksi <b>diinisiasi, diotorisasi, dicatat, diproses, dan dilaporkan</b>, lengkap dengan sistem yang dipakai, dokumen input-output, serta penanda risiko (R) dan kontrol (C) di titik kejadiannya. Alat bantu identifikasi menyeluruh: <b>SIPOC</b> (Supplier-Input-Process-Output-Customer).",
+            },
+            {
+              h: "Metode penyusunan",
+              b: "Jangan menyusun BPM dari SOP di atas meja: lakukan <b>walkthrough</b> — ikuti SATU transaksi nyata dari awal sampai akhir sambil melakukan inquiry, inspeksi dokumen pendukung, dan observasi. Walkthrough adalah cara paling efektif menemukan perbedaan antara 'proses menurut SOP' dan 'proses yang sebenarnya terjadi' — di gap itulah risiko biasanya bersembunyi. Susun via FGD lintas unit (operasional, keuangan, TI), lalu sahkan dokumen dengan versi, tanggal, dan tanda tangan pejabat berwenang, plus log perubahan.",
+            },
+            {
+              h: "Prakteknya di aplikasimu",
+              b: "Panel Proses Bisnis + diagram swimlane PELINDO di hub ini pada dasarnya adalah BPM level 1–2 versi belajar; BPM ICOFR formal menambahkan penanda risiko-kontrol per aktivitas dan mengikuti format legenda baku dari juknis.",
+            },
+          ],
+          tcodes: ["VA01", "VF01", "MIGO", "MIRO"],
+        },
+        {
+          id: "ic4",
+          ref: "Bab III.2.1 — Risiko terkait ICOFR; Lampiran 2 (ilustrasi risiko terkait pelaporan keuangan).",
+          title: "Asersi Laporan Keuangan & IPO",
+          en: "Financial Statement Assertions & Information Processing Objectives",
+          level: "ICOFR",
+          summary:
+            "Bahasa presisi untuk menjawab: salah saji seperti apa yang mungkin terjadi di akun ini?",
+          sections: [
+            {
+              h: "Asersi — klaim tersirat dalam angka",
+              b: "Setiap angka di laporan keuangan diam-diam membuat klaim yang bisa salah: <b>Existence/Occurrence</b> (yang dicatat benar-benar ada/terjadi — lawan dari transaksi fiktif), <b>Completeness</b> (semua yang seharusnya dicatat sudah dicatat — lawan dari transaksi disembunyikan), <b>Accuracy</b> (nilai & datanya tepat), <b>Cut-off</b> (dicatat di periode yang benar), <b>Valuation & Allocation</b> (dinilai wajar — persediaan usang diturunkan, piutang dicadangkan), <b>Rights & Obligations</b> (benar hak/kewajiban perusahaan), <b>Presentation & Disclosure</b> (klasifikasi & pengungkapan memadai). Identifikasi risiko ICOFR = bertanya 'what can go wrong?' per asersi per akun.",
+            },
+            {
+              h: "Error vs Fraud",
+              b: "Risiko salah saji dua sumber: <b>error</b> (tidak sengaja) dan <b>fraud</b> — yang untuk ICOFR terbagi tiga: management override (jurnal penyesuaian 'pesanan'), penyalahgunaan aset, dan kecurangan pelaporan (pendapatan fiktif, pendapatan diakui terlalu cepat, biaya dikapitalisasi agar laba naik, kewajiban disembunyikan, estimasi cadangan yang bias, manipulasi arus kas). Risiko fraud otomatis menaikkan prioritas kontrolnya.",
+            },
+            {
+              h: "IPO — versi teknisnya untuk kontrol aplikasi",
+              b: "Untuk merancang & menguji kontrol atas pemrosesan informasi, asersi diterjemahkan jadi 4 tujuan: <b>Completeness</b> (semua transaksi tercatat), <b>Accuracy</b> (nilai, akun, periode tepat — termasuk input ke sistem), <b>Validity</b> (hanya transaksi terotorisasi yang tercatat), <b>Restricted Access</b> (data terlindungi dari perubahan tak berwenang). Tiap kontrol di RCM dipetakan ke IPO dan asersi yang dia mitigasi — satu kontrol kuat bisa mengunci beberapa asersi sekaligus.",
+            },
+            {
+              h: "Penilaian risiko",
+              b: "Tiap risiko diberi rating (heat map likelihood × dampak salah saji) dengan faktor kuantitatif (eksposur nilai vs materialitas — untuk grup, ambang materialitas dialokasikan ke anak usaha) dan kualitatif: riwayat error, perubahan volume/sifat transaksi, ketergantungan pada ITGC, kompleksitas judgement, dan kompetensi pelaksana.",
+            },
+          ],
+          tcodes: ["VF01", "FBL5N", "FBS1", "MB51"],
+        },
+        {
+          id: "ic5",
+          ref: "Bab III.2.2 — Pengendalian ICOFR dan Bab III.3.2 — dokumentasi RCM; Lampiran 5 (ilustrasi Risk Control Matrices).",
+          title: "RCM & Key Control",
+          en: "Risk Control Matrix, TOD/TOE & Deficiency",
+          level: "ICOFR",
+          summary:
+            "Dokumen inti ICOFR: matriks yang mengawinkan setiap risiko dengan kontrol penangkalnya — dan cara mengujinya.",
+          sections: [
+            {
+              h: "Anatomi RCM",
+              b: "Satu baris RCM = satu pasangan risiko-kontrol dengan atribut lengkap: proses/sub-proses, deskripsi risiko (terkait fraud? Y/T), rating risiko, <b>deskripsi aktivitas pengendalian</b>, preventif/detektif, sifat pelaksanaan (manual / otomatis / <b>Management Review Control</b> / <b>IT-Dependent Manual</b> — kontrol manual yang bergantung laporan sistem, termasuk EUC spreadsheet & IPE / spesialis / service organization), frekuensi, aplikasi pendukung, pelaksana, key control (Y/T), IPO & asersi yang dimitigasi, dokumen bukti, dan periode efektif. RCM disusun berjenjang: <b>ELC</b> (entity level — kebijakan, kode etik, review kinerja), <b>TLC</b> (transaction level — kontrol harian di proses), <b>ITGC</b> (fondasi TI: akses, pengembangan, perubahan, operasi).",
+            },
+            {
+              h: "Menentukan key control",
+              b: "Dari puluhan kontrol per proses, pilih yang KEY: jika kontrol ini gagal, salah saji material tidak tercegah/terdeteksi tepat waktu oleh kontrol lain. Kriterianya: paling diandalkan manajemen (reliability), paling dekat ke sumber risiko (proximity), paling tepat waktu (timing), paling sensitif mendeteksi, bisa diuji buktinya (testability), memitigasi banyak asersi sekaligus, dan kontrol atas risiko fraud walau rating-nya medium. Kontrol otomatis + memitigasi banyak risiko > kontrol manual satu risiko. Hanya key control yang masuk pengujian TOD/TOE — inilah kunci efisiensi ICOFR.",
+            },
+            {
+              h: "Bedakan proses vs pengendalian",
+              b: "Jebakan paling umum saat menyusun RCM: menulis PROSES sebagai kontrol. 'Melakukan input operation plan' = proses. 'Supervisor memverifikasi tarif & volume sesuai dokumen permohonan dan memberi persetujuan di sistem' = kontrol (ada pembandingan, ada keputusan, ada bukti). Tes cepat: kontrol selalu menjawab 'apa yang mencegah/mendeteksi kesalahan?' — bukan 'apa yang dikerjakan?'.",
+            },
+            {
+              h: "Defisiensi & pelaporannya",
+              b: "Kontrol yang gagal uji dinilai tingkat keparahannya (Degree of Deficiency): defisiensi biasa → <b>significant deficiency</b> → <b>material weakness</b> (kemungkinan wajar salah saji material tidak tercegah). Semakin parah, semakin tinggi pelaporannya — material weakness harus diungkap dalam asesmen manajemen yang ditandatangani CEO/CFO. Remediasi diuji ulang sebelum status ditutup.",
+            },
+          ],
+          tcodes: ["MRBR", "F110", "OB52", "SUIM", "CDHDR"],
+        },
+        {
+          id: "ic6",
+          ref: "Bab III.1 — Penentuan Ruang Lingkup ICOFR: materialitas (III.1.1, Tabel benchmark & Tabel 4 haircut), akun signifikan (III.1.2), lokasi/perusahaan (III.1.3, aturan ⅔), proses bisnis (III.1.4), aplikasi signifikan & ITGC (III.1.5).",
+          title: "Scoping: Materialitas & Signifikansi (Lini 2)",
+          en: "ICOFR Scoping — Materiality & Significance",
+          level: "ICOFR",
+          summary:
+            "Pekerjaan pembuka Lini 2 yang menentukan seluruh beban ICOFR: seberapa besar 'material', dan apa saja yang masuk lingkup.",
+          sections: [
+            {
+              h: "Dua tingkat materialitas",
+              b: "<b>Overall Materiality (OM)</b> — ambang salah saji di tingkat laporan keuangan keseluruhan, ditentukan dari tolok ukur (benchmark) yang lazim: sekitar <b>5% dari laba sebelum pajak</b> (nilai absolut bila rugi), atau <b>1% dari pendapatan / beban / aset</b> — pilih benchmark yang paling jadi fokus pengguna laporan dan paling stabil. <b>Performance Materiality (PM)</b> — ambang kerja di tingkat akun, dihitung dengan mengurangi OM sebesar <b>haircut</b>. Haircut adalah judgement profesional: makin banyak audit adjustment periode lalu, makin sering defisiensi, dan makin besar potensi salah saji → makin besar haircut (PM makin konservatif). Juknis memberi ilustrasi rentangnya (Tabel 4): haircut rendah sekitar 20% dari OM, haircut tinggi bisa lebih dari 55% dari OM.",
+            },
+            {
+              h: "Uji kecukupan cakupan: aturan dua per tiga",
+              b: "Entitas/lokasi signifikan dipilih sampai dua kondisi terpenuhi: (1) cakupan atas <b>setiap akun/FSLI signifikan minimal ⅔ dari total nilainya</b>, dan (2) cakupan atas nilai operasi & posisi keuangan (total pendapatan, beban, aset, liabilitas) juga <b>minimal ⅔</b>. Praktisnya: urutkan entitas dari kontribusi terbesar, masukkan satu per satu sampai keduanya tembus — sisanya out of scope tahun itu.",
+            },
+            {
+              h: "Empat objek signifikansi",
+              b: "Berturut-turut ditentukan: <b>akun & pengungkapan signifikan</b> (nilai > PM atau berisiko kualitatif: estimasi, judgement, riwayat error, rawan fraud), <b>entitas/lokasi signifikan</b> (aturan ⅔), <b>proses bisnis signifikan</b> (proses yang membentuk akun signifikan — inilah yang dipetakan BPM/RCM), dan <b>aplikasi signifikan</b>: sistem yang memproses transaksi akun signifikan atau menjadi sandaran kontrol otomatis/IT-dependent — untuk perusahaan ber-SAP, ERP hampir pasti aplikasi signifikan, dan konsekuensinya <b>ITGC atas SAP masuk lingkup pengujian</b>.",
+            },
+            {
+              h: "Roadmap implementasi BUMN",
+              b: "Peta jalan KBUMN (S-6/DKU.MBU/02/2025) membagi BUMN per tier — Pelindo masuk <b>Tier 1 (Sistemik A)</b>: perancangan & implementasi langsung di level konsolidasi, sementara pemantauan berkelanjutan dan evaluasi-remediasi dimulai dari level induk (LK 2025) lalu naik ke level konsolidasi (LK 2026 dan seterusnya). Artinya: scoping bukan pekerjaan sekali jadi — lingkup melebar tiap tahun mengikuti roadmap.",
+            },
+          ],
+          tcodes: ["F.01", "FAGLB03", "SE16N"],
+        },
+        {
+          id: "ic7",
+          ref: "Bab III.2.2 — jenis pengendalian termasuk ELC & MRC; Lampiran 1 (ilustrasi pemetaan 17 prinsip COSO ke pengendalian).",
+          title: "ELC: Pengendalian Tingkat Entitas",
+          en: "Entity Level Controls & COSO Principles",
+          level: "ICOFR",
+          summary:
+            "Kontrol yang tidak menempel di transaksi mana pun — tapi kegagalannya menghancurkan semua kontrol di bawahnya.",
+          sections: [
+            {
+              h: "Apa itu ELC",
+              b: "ELC adalah pengendalian di tingkat perusahaan yang membentuk lingkungan tempat semua kontrol transaksi hidup: kode etik & penegakannya, struktur organisasi & pendelegasian wewenang, kebijakan SDM (rekrutmen, kompetensi, rotasi), whistleblowing system, penilaian risiko fraud oleh manajemen, sampai pengawasan Dewan Komisaris/Komite Audit. Dokumentasi & evaluasinya dipetakan ke <b>17 prinsip COSO</b> — tiap prinsip harus terbukti 'present and functioning' dengan bukti nyata, bukan sekadar 'ada kebijakannya'.",
+            },
+            {
+              h: "Direct vs indirect",
+              b: "<b>Indirect ELC</b> bekerja lewat atmosfer (tone at the top, budaya) — efeknya nyata tapi tidak menangkap salah saji spesifik. <b>Direct ELC</b> cukup presisi untuk mencegah/mendeteksi salah saji sendiri — bintangnya adalah <b>Management Review Control (MRC)</b>: review manajemen atas laporan/analisis (analisis varians bulanan, review hasil vs anggaran, review rekonsiliasi kunci). Menguji MRC paling sulit: harus dibuktikan review-nya punya presisi (ambang investigasi yang jelas), reviewer kompeten & punya informasi cukup, dan ada bukti tindak lanjut atas anomali — bukan sekadar paraf.",
+            },
+            {
+              h: "Kenapa ELC menentukan segalanya",
+              b: "Dua kasus Indonesia yang jadi pelajaran klasik (keduanya publik): manipulasi pencadangan perusahaan asuransi BUMN (2017, kurang catat cadangan Rp7,7 triliun, berujung pidana direksi) dan manipulasi pengakuan pendapatan maskapai nasional (2018, pendapatan dilebihkan ~US$240 juta, berujung sanksi BEI & OJK). Di kedua kasus, kontrol transaksi selevel apapun tidak akan menolong — karena yang jebol adalah ELC: management override, tone at the top, dan pengawasan yang tidak berfungsi. Inilah alasan ELC dievaluasi TERPISAH dan lebih dulu: ELC lemah menaikkan risiko seluruh proses di bawahnya.",
+            },
+            {
+              h: "Evaluasi ELC",
+              b: "Lini 2 mendokumentasikan & memvalidasi ELC per prinsip COSO; Lini 3 mengevaluasi efektivitasnya — umumnya kombinasi inquiry, inspeksi dokumen (risalah rapat komite, laporan WBS & tindak lanjutnya, bukti pelatihan etik), dan observasi. ELC yang gagal jarang bisa 'diremediasi cepat' — perbaikannya struktural.",
+            },
+          ],
+          tcodes: ["SUIM", "SM20", "SCU3"],
+        },
+        {
+          id: "ic8",
+          ref: "Bab III.4 — Validasi Rancangan oleh Lini Kedua (manual/ITDM/MRC III.4.1, otomatis III.4.2, pihak ketiga III.4.3); Bab IV — Pemutakhiran BPM/RCM (IV.1) dan CSA (IV.2).",
+          title: "Peran Lini 2: CSA, Validasi & Change Log",
+          en: "Line 2 in Action — CSA Evaluation, Test of One, Change Log Management",
+          level: "ICOFR",
+          summary:
+            "Pekerjaan harian fungsi ICOFR: memastikan dokumentasi tetap hidup dan klaim lini pertama teruji.",
+          sections: [
+            {
+              h: "Control Self Assessment (CSA)",
+              b: "Lini 1 (control owner) menilai sendiri secara berkala: apakah kontrolnya masih dijalankan sesuai desain, dengan bukti pelaksanaan dilampirkan. Peran Lini 2 BUKAN sekadar mengumpulkan jawaban — tapi <b>mengevaluasi & memvalidasi hasil CSA</b>: menguji sampel bukti yang dilampirkan, menantang jawaban 'semua efektif' yang tidak didukung bukti, dan mengidentifikasi kontrol yang diam-diam berubah atau berhenti dijalankan. CSA tanpa validasi lini 2 cepat berubah jadi ritual centang-centang.",
+            },
+            {
+              h: "Test of One",
+              b: "Saat memvalidasi rancangan (kontrol baru atau berubah), Lini 2 menguji dengan <b>satu transaksi</b> yang ditelusuri utuh: apakah kontrol benar-benar bisa dijalankan seperti didesain, buktinya terbentuk, dan pelaksananya paham. Test of One = uji desain versi lini 2; pengujian efektivitas operasi dengan sampel penuh tetap wilayah Lini 3. Efisien: desain yang gagal di satu transaksi tidak perlu dibuang-buang sampel.",
+            },
+            {
+              h: "Change Log Management",
+              b: "Proses bisnis itu hidup: reorganisasi, sistem baru, kebijakan berubah — dan setiap perubahan bisa membuat BPM/RCM basi. Disiplinnya: setiap perubahan proses/kontrol dicatat di <b>change log</b> (apa yang berubah, sejak kapan, dampak ke risiko & kontrol mana), lalu BPM/RCM dimutakhirkan dan disahkan ulang. Auditor (Lini 3) yang menemukan proses nyata ≠ BPM tanpa change log akan mencatatnya sebagai kelemahan pemantauan — dokumentasi yang basi sama buruknya dengan tidak ada.",
+            },
+            {
+              h: "Ritme kerja tahunan Lini 2",
+              b: "Awal periode: refresh scoping & materialitas. Sepanjang tahun: kelola CSA per semester/kuartal, validasi perubahan (Test of One), jaga change log. Menjelang evaluasi: siapkan populasi & dokumen untuk pengujian Lini 3. Setelahnya: kawal remediasi defisiensi sampai teruji ulang, dan konsolidasikan bahan asesmen manajemen yang ditandatangani direksi.",
+            },
+          ],
+          tcodes: ["CDHDR", "SE16N", "MRBR"],
+        },
+        {
+          id: "ic9",
+          ref: "Bab V — Tahap Evaluasi: metode pengujian (V.1.1), TOD (V.1.2), TOE (V.1.3 + Tabel 22 penentuan jumlah sampel).",
+          title: "Peran Lini 3: TOD, TOE & Tabel Sampel",
+          en: "Line 3 Testing — Test of Design & Operating Effectiveness",
+          level: "ICOFR",
+          summary:
+            "Pengujian independen: membuktikan kontrol dirancang benar DAN berjalan konsisten — dengan jumlah sampel yang baku.",
+          sections: [
+            {
+              h: "Test of Design (TOD)",
+              b: "Pertanyaannya: seandainya kontrol ini dijalankan persis seperti didesain, apakah dia MAMPU mencegah/mendeteksi salah saji pada asersi yang dituju, tepat waktu? Diuji lewat walkthrough + inspeksi: kelengkapan atribut kontrol (siapa, apa yang dibandingkan, ambang investigasi, bukti), kompetensi & independensi pelaksana, dan ketepatan penempatan kontrol di alur proses. <b>Defisiensi desain</b> = kontrol yang dibutuhkan tidak ada, atau ada tapi rancangannya tidak menjawab risikonya — percuma lanjut TOE.",
+            },
+            {
+              h: "Test of Operating Effectiveness (TOE) & tabel sampel",
+              b: "TOE menguji konsistensi pelaksanaan sepanjang periode, dengan jumlah sampel baku berdasarkan frekuensi kontrol dan tingkat risikonya:<div class='fin-formula'>Frekuensi          Populasi   Risiko Rendah   Risiko Tinggi\nTahunan                 1            1               1\nKuartalan               4            2               3\nBulanan                12            2               5\nMingguan               52            5              15\nHarian                250           15              40\n>1x per hari         >250           30              60\nAd-hoc            sesuai jumlah transaksi\nOtomatis                             1 per skenario</div>Dua catatan krusial: untuk kontrol bulanan & kuartalan, sampel <b>wajib mencakup kuartal IV dan bulan Desember</b> (periode paling rawan 'pengkondisian' angka); dan kontrol <b>otomatis cukup satu sampel per skenario</b> — asalkan ITGC-nya terbukti efektif, karena sistem yang tidak berubah akan berperilaku sama untuk transaksi ke-1 maupun ke-10.000. Di lingkungan SAP, populasi ditarik langsung dari sistem (SE16N) supaya sampling tidak bisa 'dipilihkan' auditee. Catatan resmi Tabel 22: angka-angka itu adalah panduan dengan ekspektasi TANPA deviasi, dan sebelum menghitung sampel, Lini 3 wajib memastikan kelengkapan-akurasi populasi serta menilai homogenitasnya (kesamaan lingkungan pengendalian, personel, kebijakan, dan kompetensi pelaksana).",
+            },
+            {
+              h: "Defisiensi desain vs operasi",
+              b: "<b>Defisiensi rancangan</b>: kontrolnya memang tidak akan pernah bisa memitigasi risiko (salah desain). <b>Defisiensi operasi</b>: desain benar tapi pelaksanaannya gagal — tidak konsisten dijalankan, dijalankan orang yang tidak berwenang/kompeten, atau bukti tidak memadai. Pembedaan ini menentukan remediasinya: desain ulang vs disiplin eksekusi.",
+            },
+            {
+              h: "Etika temuan",
+              b: "Setiap defisiensi WAJIB didiskusikan dengan Lini 1 (control owner) dan Lini 2 sebelum final: pahami konteks kenapa terjadi, sepakati fakta (bukan sepakati kesimpulan — fakta tidak bisa dinegosiasi), dan pastikan rencana remediasi menyasar akar sebab. No surprise di laporan akhir.",
+            },
+          ],
+          tcodes: ["SE16N", "MB51", "CDHDR", "SM20", "SM37"],
+        },
+        {
+          id: "ic10",
+          ref: "Bab V.2 — Hasil Evaluasi; Bab VI — Remediasi (Tabel 23 periode minimum uji ulang); Bab VII — Pelaporan (klasifikasi defisiensi VII.1.1, laporan Lini 3 VII.1.2, asesmen manajemen VII.2); Bab VIII — Asurans Praktisi Eksternal.",
+          title: "Spektrum Hasil Evaluasi & Remediasi",
+          en: "From Effective to Material Weakness",
+          level: "ICOFR",
+          summary:
+            "Tidak semua temuan itu 'defisiensi' — dan tidak semua defisiensi sama gawatnya.",
+          sections: [
+            {
+              h: "Spektrum lengkap hasil pengujian",
+              b: "Dari paling ringan: (1) <b>Efektif</b> — desain tepat, berjalan konsisten; (2) <b>Documentation Enhancement Opportunity</b> — kontrol jalan efektif tapi buktinya belum memadai/konsisten (misal verifikasi dilakukan tapi tanpa approval tertulis/timestamp) — ingat prinsip audit: bukti lemah hari ini adalah defisiensi di pengujian berikutnya; (3) <b>Process Improvement</b> — kontrol efektif tapi bisa lebih efisien (misal 3-way match sudah jalan, tapi belum ada alert otomatis untuk mismatch); (4) <b>Control Deficiency</b> — kontrol gagal desain/operasi tapi dampak potensialnya terbatas; (5) <b>Significant Deficiency</b> — cukup penting untuk menjadi perhatian pihak yang bertanggung jawab atas pelaporan; (6) <b>Material Weakness</b> — ada kemungkinan wajar (reasonable possibility) salah saji MATERIAL tidak tercegah/terdeteksi tepat waktu.",
+            },
+            {
+              h: "Menilai keparahan",
+              b: "Bukan soal 'sudah terjadi salah saji atau belum' — defisiensi dinilai dari <b>potensinya</b>: besarnya nilai yang terpapar (magnitude vs materialitas), kemungkinan terjadinya, akun & asersi yang terdampak, ada-tidaknya kontrol pengganti (compensating control) yang efektif, dan apakah menyentuh area fraud/management override (otomatis lebih berat). Beberapa defisiensi kecil pada satu akun yang sama bisa TERAGREGASI menjadi significant deficiency. Catatan penting dari juknis: klasifikasi defisiensi FORMAL hanya tiga — control deficiency, significant deficiency, material weakness (Bab VII.1.1, dengan kertas kerja Degree of Deficiency di Lampiran 10); kategori documentation enhancement dan process improvement adalah praktik pelaporan hasil untuk perbaikan, bukan kelas defisiensi resmi.",
+            },
+            {
+              h: "Remediasi & uji ulang",
+              b: "Alur disiplinnya: akar sebab disepakati → rencana remediasi dengan PIC & tenggat → implementasi → kontrol berjalan dulu selama periode yang cukup → <b>diuji ulang</b> (bukan sekadar dinyatakan selesai) → baru status ditutup. Juknis menetapkan periode minimum kontrol hasil remediasi harus berjalan dulu sebelum boleh diuji ulang (Tabel 23): kuartalan = 2 kuartal (2 sampel), bulanan = 3 bulan (2 sampel), mingguan = 5 minggu (5), harian = 30 hari (15), lebih dari sekali sehari = 25 kali kejadian (30 sampel). Remediasi yang dimulai cepat (tanpa menunggu seluruh testing selesai) adalah pembeda implementasi ICOFR yang selesai tepat waktu vs yang molor.",
+            },
+            {
+              h: "Muara akhirnya",
+              b: "Seluruh hasil bermuara ke <b>asesmen manajemen</b>: pernyataan efektivitas ICOFR yang ditandatangani Direktur Utama & Direktur Keuangan (dengan pengungkapan material weakness bila ada), lalu diberi asurans oleh praktisi eksternal. Tanda tangan itulah alasan seluruh rantai ini harus kokoh: direksi menandatangani apa yang dikerjakan tiga lini sepanjang tahun.",
+            },
+          ],
+          tcodes: ["F.01", "MRBR", "OB52", "SUIM"],
+        },
+      ];
 
       const FIN_METRICS = [
         {
@@ -9709,6 +11075,293 @@
         });
       }
 
+      // ---------- alur ICOFR end-to-end ----------
+      function renderIcofrFlowHTML() {
+        const lanes = [
+          "Lini 1 — Pemilik Proses",
+          "Lini 2 — Fungsi ICOFR",
+          "Lini 3 — SPI / Audit Internal",
+          "Direksi & Asurans Eksternal",
+        ];
+        const st = (lane, tcode, label) => ({ lane, tcode, label });
+        const stages = [
+          st(1, "TAHAP 1", "Scoping: materialitas (OM/PM) & signifikansi"),
+          st(1, "TAHAP 1", "Rencana kerja tahunan & kickoff lintas lini"),
+          st(0, "TAHAP 1", "Susun/mutakhirkan BPM (walkthrough proses)"),
+          st(0, "TAHAP 1", "Susun RCM & usulkan key control"),
+          st(1, "TAHAP 1", "Validasi desain BPM/RCM + Test of One"),
+          st(1, "TAHAP 1", "Dokumentasi & validasi ELC (17 prinsip COSO)"),
+          st(0, "TAHAP 2", "Jalankan kontrol harian + simpan bukti"),
+          st(0, "TAHAP 2", "CSA: nilai sendiri kontrol secara berkala"),
+          st(1, "TAHAP 2", "Evaluasi hasil CSA & kelola change log"),
+          st(2, "TAHAP 3", "Susun rencana pengujian independen"),
+          st(2, "TAHAP 3", "TOD: uji rancangan pengendalian"),
+          st(2, "TAHAP 3", "TOE: uji efektivitas operasi (tabel sampel)"),
+          st(2, "TAHAP 3", "Diskusi temuan & tetapkan tingkat defisiensi"),
+          st(0, "TAHAP 4", "Remediasi defisiensi (PIC & tenggat)"),
+          st(2, "TAHAP 4", "Uji ulang hasil remediasi"),
+          st(1, "TAHAP 5", "Konsolidasi hasil & draft asesmen manajemen"),
+          st(3, "TAHAP 5", "Dirut & CFO tandatangani asesmen efektivitas"),
+          st(3, "TAHAP 6", "Asurans praktisi eksternal & pelaporan KBUMN"),
+        ];
+        const tahap = [
+          [
+            "TAHAP 1",
+            "Perancangan (Bab III)",
+            "Scoping, pemetaan BPM/RCM, validasi desain & ELC — fondasi seluruh siklus.",
+          ],
+          [
+            "TAHAP 2",
+            "Implementasi & Pemantauan Berkelanjutan (Bab IV)",
+            "Kontrol berjalan setiap hari; CSA dan change log menjaga dokumentasi tetap hidup.",
+          ],
+          [
+            "TAHAP 3",
+            "Evaluasi/Pengujian (Bab V)",
+            "Pengujian independen Lini 3: TOD lalu TOE dengan jumlah sampel baku per frekuensi.",
+          ],
+          [
+            "TAHAP 4",
+            "Remediasi (Bab VI)",
+            "Perbaikan defisiensi oleh pemilik kontrol, ditutup hanya setelah lolos uji ulang.",
+          ],
+          [
+            "TAHAP 5",
+            "Pelaporan & Asesmen Manajemen (Bab VII)",
+            "Degree of deficiency ditetapkan; direksi menandatangani pernyataan efektivitas ICOFR.",
+          ],
+          [
+            "TAHAP 6",
+            "Asurans Eksternal (Bab VIII)",
+            "Praktisi independen memberi asurans; hasil dilaporkan sesuai roadmap KBUMN.",
+          ],
+        ];
+        return `
+    <div class="flow-desc" style="margin:2px 0 10px">Satu siklus ICOFR penuh (±1 tahun) — terverifikasi terhadap teks resmi Juknis SK-5/DKU.MBU/11/2024: enam tahapnya persis Bab III–VIII. Baca dari atas ke bawah — kolom menunjukkan siapa yang mengerjakan; setelah TAHAP 6, siklus kembali ke TAHAP 1 dengan scoping yang dimutakhirkan.</div>
+    <div style="overflow-x:auto;padding:6px 0"><div style="min-width:920px">${generateSwimlaneSVG(lanes, stages)}</div></div>
+    <div class="bp-section-label" style="margin-top:14px">Enam tahap dalam satu siklus</div>
+    <div class="glossary-list">
+      ${tahap
+        .map(
+          (t) => `
+        <div class="gterm">
+          <div class="gterm-head"><span class="gterm-name">${t[0]}</span></div>
+          <div class="gterm-def"><b style="color:var(--ink)">${t[1]}</b> — ${t[2]}</div>
+        </div>`,
+        )
+        .join("")}
+    </div>
+    <div class="bp-note-int" style="margin-top:14px"><strong>Prinsip pembagian perannya:</strong> yang menjalankan kontrol (Lini 1) bukan yang memvalidasi desainnya (Lini 2), dan bukan pula yang menguji efektivitasnya (Lini 3) — sementara direksi menandatangani hasil kerja ketiganya, lalu pihak eksternal memberi asurans atas keseluruhan. Detail tiap kotak dibahas di topik-topik track ICOFR.</div>`;
+      }
+
+      // ---------- ISO audit checklist (interactive) ----------
+      const CK_KEY = "iso_audit_checklist_v1";
+      async function loadCkStates() {
+        if (ckLoaded) return;
+        try {
+          if (window.storage) {
+            const res = await window.storage.get(CK_KEY, false);
+            if (res && res.value) ckStates = JSON.parse(res.value);
+          }
+        } catch (e) {}
+        ckLoaded = true;
+      }
+      async function saveCkStates() {
+        try {
+          if (window.storage)
+            await window.storage.set(CK_KEY, JSON.stringify(ckStates), false);
+        } catch (e) {}
+      }
+      function ckToggle(id, val) {
+        ckStates[id] = ckStates[id] === val ? 0 : val;
+        saveCkStates();
+        renderAuditPanel();
+      }
+      function renderChecklistHTML() {
+        const data = ISO_CHECKLIST[ckSheet];
+        const clauses = [
+          "Semua",
+          ...new Set(data.map((x) => x.c.split(".")[0]).filter(Boolean)),
+        ];
+        const items = data
+          .map((x, i) => ({ ...x, id: ckSheet + ":" + i }))
+          .filter(
+            (x) => ckClause === "Semua" || x.c.split(".")[0] === ckClause,
+          );
+        const all = data.map((x, i) => ckSheet + ":" + i);
+        const nOk = all.filter((id) => ckStates[id] === 1).length;
+        const nNo = all.filter((id) => ckStates[id] === 2).length;
+        const total = all.length;
+        return `
+    <div class="glossary-cats" style="margin-top:-6px">
+      <button class="gcat-chip cksheet${ckSheet === "smmki" ? " active" : ""}" data-sheet="smmki">Klausul 4–10 (9001 + 27001)</button>
+      <button class="gcat-chip cksheet${ckSheet === "annex" ? " active" : ""}" data-sheet="annex">Annex A — 27001:2022 (93 kontrol)</button>
+    </div>
+    <div class="ck-bar">
+      <div class="ck-progress"><div class="ok" style="width:${total ? (100 * nOk) / total : 0}%"></div><div class="no" style="width:${total ? (100 * nNo) / total : 0}%"></div></div>
+      <span class="ck-stats"><b style="color:var(--fi)">${nOk} sesuai</b> · <b style="color:var(--ab)">${nNo} tidak</b> · ${total - nOk - nNo} belum dinilai dari ${total}</span>
+      <button class="ck-reset" id="ck-reset">Reset lembar ini</button>
+    </div>
+    <div class="glossary-cats">${clauses.map((c) => `<button class="gcat-chip ckcl${c === ckClause ? " active" : ""}" data-cl="${c}">${c === "Semua" ? "Semua" : "Klausul " + c}</button>`).join("")}</div>
+    <div class="ck-list">
+      ${items
+        .map(
+          (x) => `
+        <div class="ck-item st${ckStates[x.id] || 0}">
+          <span class="ck-cl">${escapeXML(x.c)}</span>
+          <div class="ck-q">${escapeXML(x.q)}</div>
+          <div class="ck-btns">
+            <button class="ck-btn ok${ckStates[x.id] === 1 ? " on" : ""}" data-id="${x.id}" data-v="1">✓ Sesuai</button>
+            <button class="ck-btn no${ckStates[x.id] === 2 ? " on" : ""}" data-id="${x.id}" data-v="2">✗ Tidak</button>
+          </div>
+        </div>`,
+        )
+        .join("")}
+    </div>`;
+      }
+
+      // ---------- audit & risiko panel ----------
+      function renderAuditPanel() {
+        const panel = document.getElementById("audit-panel");
+        const levels = [
+          "Semua",
+          "Fondasi",
+          "Risiko",
+          "Audit",
+          "ICOFR",
+          "Alur",
+          "SAP",
+          "Fraud",
+          "Checklist",
+        ];
+        const labels = {
+          Fondasi: "Fondasi Kontrol",
+          Risiko: "Manajemen Risiko",
+          Audit: "Audit Internal",
+          ICOFR: "ICOFR (BUMN)",
+          Alur: "🔄 Alur ICOFR",
+          SAP: "Audit di SAP",
+          Fraud: "Fraud",
+          Checklist: "✅ Checklist ISO",
+        };
+        const items = AUDIT_ACADEMY.filter(
+          (t) => auditLevel === "Semua" || t.level === auditLevel,
+        );
+        panel.innerHTML = `
+    <div class="glossary-head">
+      <h3>🛡️ Audit Internal & Manajemen Risiko</h3>
+      <button class="glossary-close" id="audit-close">Tutup ✕</button>
+    </div>
+    <div class="flow-desc" style="margin-bottom:12px">Kerangka terkini: IIA Global Internal Audit Standards 2024 (efektif Jan 2025), Three Lines Model 2020, COSO ICIF/ERM, ISO 31000:2018 — diturunkan sampai teknik audit berbasis data SAP, plus track ICOFR sesuai Juknis KBUMN SK-5/DKU.MBU/11/2024 dan checklist audit ISO interaktif (progres tersimpan otomatis). Urutan belajar: Fondasi → Risiko → Audit Internal → ICOFR → Audit di SAP → Fraud.</div>
+    <div class="glossary-cats">${levels.map((l) => `<button class="gcat-chip lvlchip${l === auditLevel ? " active" : ""}" data-lvl="${l}">${labels[l] || l}</button>`).join("")}</div>
+    ${
+      auditLevel === "Checklist"
+        ? renderChecklistHTML()
+        : auditLevel === "Alur"
+          ? renderIcofrFlowHTML()
+          : `
+    <div class="bp-grid">
+    ${items
+      .map(
+        (t) => `
+      <div class="bp-card" id="audc-${t.id}">
+        <div class="bp-head" id="audh-${t.id}">
+          <span class="fin-level ${t.level.toLowerCase()}">${labels[t.level] || t.level}</span>
+          <div class="bp-titles">
+            <div class="bp-title">${escapeXML(t.title)}</div>
+            <div class="bp-en">${escapeXML(t.en)}</div>
+          </div>
+          <div class="bp-mods"><span class="arr" id="auda-${t.id}">▶</span></div>
+        </div>
+        <div class="bp-body" id="audb-${t.id}">
+          <div class="bp-desc">${escapeXML(t.summary)}</div>
+          <div class="fin-body">
+            ${t.sections.map((s) => `<div class="bp-section-label">${escapeXML(s.h)}</div><p>${s.b}</p>`).join("")}
+          </div>
+          ${t.ref ? `<div class="bp-note-int"><strong>📖 Rujukan resmi (Juknis SK-5/DKU.MBU/11/2024):</strong> ${escapeXML(t.ref)}</div>` : ""}
+          ${
+            (t.tcodes || []).filter(tcExists).length
+              ? `<div class="bp-section-label">Alat & jejak di SAP — klik untuk cari</div>
+          <div class="bp-tcodes">${t.tcodes
+            .filter(tcExists)
+            .map(
+              (c) =>
+                `<button class="bp-tc" data-tc="${c}" style="background:var(--ab-soft);color:var(--ab)">${c}</button>`,
+            )
+            .join("")}</div>`
+              : ""
+          }
+        </div>
+      </div>`,
+      )
+      .join("")}
+    </div>`
+    }`;
+        document.getElementById("audit-close").addEventListener("click", () => {
+          auditOpen = false;
+          panel.style.display = "none";
+        });
+        panel.querySelectorAll(".gcat-chip.lvlchip").forEach((b) =>
+          b.addEventListener("click", () => {
+            auditLevel = b.dataset.lvl;
+            if (auditLevel === "Checklist") {
+              loadCkStates().then(renderAuditPanel);
+            } else renderAuditPanel();
+          }),
+        );
+        if (auditLevel === "Alur") return;
+        if (auditLevel === "Checklist") {
+          panel.querySelectorAll(".gcat-chip.cksheet").forEach((b) =>
+            b.addEventListener("click", () => {
+              ckSheet = b.dataset.sheet;
+              ckClause = "Semua";
+              renderAuditPanel();
+            }),
+          );
+          panel.querySelectorAll(".gcat-chip.ckcl").forEach((b) =>
+            b.addEventListener("click", () => {
+              ckClause = b.dataset.cl;
+              renderAuditPanel();
+            }),
+          );
+          panel
+            .querySelectorAll(".ck-btn")
+            .forEach((b) =>
+              b.addEventListener("click", () =>
+                ckToggle(b.dataset.id, parseInt(b.dataset.v)),
+              ),
+            );
+          const rst = document.getElementById("ck-reset");
+          if (rst)
+            rst.addEventListener("click", () => {
+              ISO_CHECKLIST[ckSheet].forEach((_, i) => {
+                delete ckStates[ckSheet + ":" + i];
+              });
+              saveCkStates();
+              renderAuditPanel();
+            });
+          return;
+        }
+        items.forEach((t) => {
+          document
+            .getElementById("audh-" + t.id)
+            .addEventListener("click", () => {
+              const body = document.getElementById("audb-" + t.id),
+                card = document.getElementById("audc-" + t.id),
+                arr = document.getElementById("auda-" + t.id);
+              const open = body.classList.toggle("open");
+              card.classList.toggle("expanded", open);
+              arr.classList.toggle("open", open);
+            });
+        });
+        panel.querySelectorAll(".bp-tc").forEach((b) =>
+          b.addEventListener("click", (e) => {
+            e.stopPropagation();
+            jumpToTcode(b.dataset.tc);
+          }),
+        );
+      }
+
       // ---------- akademi keuangan panel ----------
       function tcExists(code) {
         for (const m in DB)
@@ -10607,6 +12260,12 @@
         );
       }
 
+      document.getElementById("audit-toggle").addEventListener("click", () => {
+        auditOpen = !auditOpen;
+        const panel = document.getElementById("audit-panel");
+        panel.style.display = auditOpen ? "block" : "none";
+        if (auditOpen) renderAuditPanel();
+      });
       document.getElementById("fin-toggle").addEventListener("click", () => {
         finOpen = !finOpen;
         const panel = document.getElementById("fin-panel");
