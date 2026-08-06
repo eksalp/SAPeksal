@@ -1112,6 +1112,42 @@
         background: rgba(29, 78, 216, 0.12);
         color: var(--pel);
       }
+      .fin-level.kup {
+        background: rgba(37, 99, 235, 0.12);
+        color: var(--mm);
+      }
+      .fin-level.pph {
+        background: rgba(5, 150, 105, 0.13);
+        color: var(--fi);
+      }
+      .fin-level.ppn {
+        background: rgba(147, 51, 234, 0.11);
+        color: var(--sd);
+      }
+      .fin-level.akp {
+        background: rgba(234, 124, 31, 0.13);
+        color: var(--pp);
+      }
+      .fin-level.dae {
+        background: rgba(13, 148, 136, 0.13);
+        color: var(--ps);
+      }
+      .fin-level.lain {
+        background: rgba(71, 85, 105, 0.13);
+        color: var(--bs);
+      }
+      .fin-level.trx {
+        background: rgba(37, 99, 235, 0.12);
+        color: var(--mm);
+      }
+      .fin-level.adj {
+        background: rgba(234, 124, 31, 0.13);
+        color: var(--pp);
+      }
+      .fin-level.prk {
+        background: rgba(147, 51, 234, 0.11);
+        color: var(--sd);
+      }
       .fin-formula {
         font-family: "JetBrains Mono", ui-monospace, monospace;
         font-size: 12px;
@@ -1583,17 +1619,23 @@
         <button class="fav-chip" id="fav-toggle">
           ⭐ Favorit <span class="fc" id="fav-count">0</span>
         </button>
+        <button class="fav-chip" id="basic-toggle">🌱 Mulai dari Nol</button>
         <button class="fav-chip" id="modmap-toggle">🗺️ Peta Modul</button>
         <button class="fav-chip" id="docs-toggle">📄 Dokumen & Nomor</button>
         <button class="fav-chip" id="fin-toggle">🎓 Akademi Keuangan</button>
+        <button class="fav-chip" id="acc-toggle">📒 Akademi Akuntansi</button>
         <button class="fav-chip" id="audit-toggle">🛡️ Audit & Risiko</button>
+        <button class="fav-chip" id="tax-toggle">🧾 Pajak Brevet AB</button>
         <button class="fav-chip" id="process-toggle">🏢 Proses Bisnis</button>
         <button class="fav-chip" id="glossary-toggle">📖 Glosarium</button>
         <button class="fav-chip" id="flows-toggle">
           🔗 Alur Proses End-to-End
         </button>
       </div>
+      <div id="tax-panel" class="glossary-panel" style="display: none"></div>
       <div id="audit-panel" class="glossary-panel" style="display: none"></div>
+      <div id="basic-panel" class="glossary-panel" style="display: none"></div>
+      <div id="acc-panel" class="glossary-panel" style="display: none"></div>
       <div id="fin-panel" class="glossary-panel" style="display: none"></div>
       <div id="docs-panel" class="glossary-panel" style="display: none"></div>
       <div id="modmap-panel" class="glossary-panel" style="display: none"></div>
@@ -2495,6 +2537,28 @@
               ],
               note: "WAJIB cek Proposal List dulu sebelum Payment Run. Jangan langsung Payment Run tanpa review!",
             },
+            {
+              code: "F-53",
+              purpose: "Post Outgoing Payment (Manual)",
+              desc: "Bayar vendor secara manual per dokumen (di luar payment run F110).",
+              cls: "fi",
+              steps: [
+                {
+                  t: "Buka F-53",
+                  d: "<span class='fp'>F-53</span>. Isi <span class='fp'>Document Date</span>, <span class='fp'>Company Code</span>, <span class='fp'>Bank Account</span> (akun GL bank yang dipakai membayar), dan <span class='fp'>Amount</span>.",
+                },
+                {
+                  t: "Pilih open item",
+                  d: "Masukkan <span class='fp'>Vendor</span> → <span class='fp'>Process Open Items</span>. Pilih tagihan yang dibayar (aktifkan/nonaktifkan baris hingga selisih = 0).",
+                },
+                {
+                  t: "Simpan",
+                  d: "Pastikan <span class='fp'>Not Assigned</span> nol → Post. Sistem mengkredit bank, mendebit hutang vendor (clearing open item), dokumen tipe KZ terbentuk.",
+                },
+              ],
+              note: "F-53 untuk pembayaran ad-hoc/mendesak per dokumen. Untuk pembayaran massal terjadwal gunakan F110 (payment run) — lebih terkontrol dan menghasilkan file transfer bank.",
+              tip: "Kalau ada potongan/selisih pembayaran (mis. diskon), gunakan tab residual/partial atau field selisih agar clearing tetap seimbang.",
+            },
           ],
           "Accounts Receivable": [
             {
@@ -2671,6 +2735,49 @@
               ],
               note: "Retirement permanen dan tidak bisa di-undo. Pastikan sudah ada approval sebelum posting.",
             },
+            {
+              code: "AFAB",
+              purpose: "Depreciation Run",
+              desc: "Jalankan perhitungan & posting penyusutan seluruh aset untuk satu periode.",
+              cls: "fi",
+              steps: [
+                {
+                  t: "Buka AFAB",
+                  d: "<span class='fp'>AFAB</span>. Masukkan <span class='fp'>Company Code</span>, <span class='fp'>Fiscal Year</span>, <span class='fp'>Posting Period</span>.",
+                },
+                {
+                  t: "Pilih tipe run",
+                  d: "<span class='fp'>Planned posting run</span> untuk penyusutan rutin bulanan; <span class='fp'>Repeat</span> bila ada perubahan setelah run; <span class='fp'>Unplanned</span> untuk penyusutan khusus. Centang <span class='fp'>Test Run</span> dulu untuk cek tanpa posting.",
+                },
+                {
+                  t: "Eksekusi",
+                  d: "Jalankan test run → periksa hasil & error (aset bermasalah) → hilangkan test run → jalankan produktif (biasanya via background job). Jurnal terbentuk: Beban Penyusutan (D) / Akumulasi Penyusutan (K), tipe dokumen AF, per depreciation area yang real.",
+                },
+              ],
+              note: "AFAB wajib selesai sebelum tutup periode (lihat topik Tutup Buku Bulanan). Aset yang baru diperoleh bulan itu otomatis ikut terhitung sesuai period control-nya.",
+              tip: "Selalu test run dulu. Kalau ada aset error (mis. depreciation key belum lengkap), bereskan dulu sebelum run produktif — run yang gagal separuh merepotkan untuk diperbaiki.",
+            },
+            {
+              code: "ABAVN",
+              purpose: "Asset Retirement by Scrapping",
+              desc: "Lepas aset karena rusak/usang (di-scrap) tanpa nilai jual.",
+              cls: "fi",
+              steps: [
+                {
+                  t: "Buka ABAVN",
+                  d: "<span class='fp'>ABAVN</span>. Masukkan nomor <span class='fp'>Asset</span> dan <span class='fp'>Document Date</span> / <span class='fp'>Posting Date</span>.",
+                },
+                {
+                  t: "Alasan & area",
+                  d: "Isi alasan scrap. Sistem menghapus nilai perolehan & akumulasi penyusutan aset; sisa nilai buku (jika ada) menjadi rugi pelepasan.",
+                },
+                {
+                  t: "Simpan",
+                  d: "Post. Aset keluar dari daftar penyusutan aktif; riwayatnya tetap tersimpan permanen. Untuk aset yang DIJUAL (ada kas masuk), gunakan ABAON, bukan ABAVN.",
+                },
+              ],
+              note: "Pelepasan aset bersifat permanen dan selalu memerlukan approval — pastikan sudah ada dasar (berita acara penghapusan) sebelum posting.",
+            },
           ],
           "Controlling (CO)": [
             {
@@ -2736,6 +2843,190 @@
                 {
                   t: "Simpan",
                   d: "Ctrl+S. Plan values bisa di-report vs actuals di S_ALR_87013611.",
+                },
+              ],
+            },
+            {
+              code: "KP26",
+              purpose: "Activity Type Planning (Tarif)",
+              desc: "Rencanakan tarif activity type per cost center — dasar pembebanan biaya ke penerima.",
+              cls: "fi",
+              steps: [
+                {
+                  t: "Buka KP26",
+                  d: "<span class='fp'>KP26</span>. Isi <span class='fp'>Version</span> (0 = plan utama), <span class='fp'>Period</span>, <span class='fp'>Fiscal Year</span>, <span class='fp'>Cost Center</span>, dan <span class='fp'>Activity Type</span> (mis. jam mesin/jam orang).",
+                },
+                {
+                  t: "Input tarif",
+                  d: "Masukkan tarif per unit aktivitas (mis. Rp/jam). Tarif ini yang dipakai saat aktivitas dibebankan ke order/produk.",
+                },
+                {
+                  t: "Simpan",
+                  d: "Ctrl+S. Tarif bisa juga dihitung otomatis sistem lewat plan reconciliation, tapi input manual umum untuk tarif yang sudah ditetapkan.",
+                },
+              ],
+              tip: "Tarif activity type mengubah biaya yang 'menumpuk di cost center' jadi biaya yang 'terbebankan ke pemakai' — fondasi product costing yang akurat.",
+            },
+            {
+              code: "KB21N",
+              purpose: "Direct Activity Allocation",
+              desc: "Bebankan aktivitas cost center (mis. jam servis) langsung ke penerima secara manual.",
+              cls: "fi",
+              steps: [
+                {
+                  t: "Buka KB21N",
+                  d: "<span class='fp'>KB21N</span>. Masukkan <span class='fp'>Sender</span> (cost center + activity type) dan <span class='fp'>Receiver</span> (cost center/order penerima).",
+                },
+                {
+                  t: "Input kuantitas",
+                  d: "Masukkan jumlah aktivitas (mis. 5 jam) → sistem menghitung nilai = kuantitas × tarif (dari KP26) memakai secondary cost element.",
+                },
+                {
+                  t: "Posting",
+                  d: "Cek & post. Biaya berpindah dari cost center pemberi ke penerima dengan jejak dokumen CO.",
+                },
+              ],
+            },
+            {
+              code: "KO22",
+              purpose: "Internal Order Budgeting",
+              desc: "Tetapkan budget mengikat untuk internal order dengan availability control.",
+              cls: "fi",
+              steps: [
+                {
+                  t: "Buka KO22",
+                  d: "<span class='fp'>KO22</span>. Masukkan nomor <span class='fp'>Order</span>.",
+                },
+                {
+                  t: "Input budget",
+                  d: "Masukkan nilai budget per tahun/periode. Berbeda dari plan (KPF6) yang hanya perkiraan — budget di sini MENGIKAT.",
+                },
+                {
+                  t: "Aktifkan kontrol",
+                  d: "Dengan availability control aktif, transaksi yang melebihi sisa budget order kena warning atau blokir. Simpan.",
+                },
+              ],
+              tip: "Budget internal order cocok untuk event/kegiatan berpagu tetap — sistem otomatis mencegah pembengkakan.",
+            },
+            {
+              code: "KOB1",
+              purpose: "Internal Order Line Items",
+              desc: "Lihat detail transaksi (line item) yang membebani sebuah internal order.",
+              cls: "fi",
+              steps: [
+                {
+                  t: "Buka KOB1",
+                  d: "<span class='fp'>KOB1</span>. Masukkan <span class='fp'>Order</span> dan rentang periode.",
+                },
+                {
+                  t: "Eksekusi",
+                  d: "F8. Tampil semua biaya aktual yang menempel di order — bisa didrill ke dokumen asalnya (PR/PO/jurnal).",
+                },
+                {
+                  t: "Gunanya",
+                  d: "Menjawab 'total kegiatan ini habis berapa & untuk apa saja' sebelum settlement.",
+                },
+              ],
+            },
+            {
+              code: "KO88",
+              purpose: "Internal Order Settlement",
+              desc: "Alirkan biaya yang terkumpul di internal order ke penerima akhir (cost center/aset).",
+              cls: "fi",
+              steps: [
+                {
+                  t: "Buka KO88",
+                  d: "<span class='fp'>KO88</span>. Masukkan <span class='fp'>Order</span>, <span class='fp'>Settlement Period</span>, <span class='fp'>Fiscal Year</span>.",
+                },
+                {
+                  t: "Test run dulu",
+                  d: "Centang <span class='fp'>Test Run</span> → cek hasil sebelum posting nyata. Settlement rule (penerima & persentase) harus sudah diisi di master order (KO02).",
+                },
+                {
+                  t: "Eksekusi",
+                  d: "Hilangkan test run → post. Biaya berpindah dari order ke penerima; order siap ditutup.",
+                },
+              ],
+              note: "Settlement mewujudkan prinsip: internal order hanya penampung sementara — biaya akhirnya harus 'mendarat' di objek yang tepat (cost center untuk biaya operasional, aset untuk capex via AUC).",
+            },
+            {
+              code: "CK11N",
+              purpose: "Create Cost Estimate",
+              desc: "Hitung biaya standar per unit produk dari BOM + routing (with quantity structure).",
+              cls: "fi",
+              steps: [
+                {
+                  t: "Buka CK11N",
+                  d: "<span class='fp'>CK11N</span>. Masukkan <span class='fp'>Material</span>, <span class='fp'>Plant</span>, dan <span class='fp'>Costing Variant</span> (mengatur cara & harga yang dipakai).",
+                },
+                {
+                  t: "Eksekusi",
+                  d: "Sistem menarik BOM (komponen × harga) + routing (aktivitas × tarif KP26) + overhead (costing sheet) → menghasilkan biaya standar per unit, terurai per cost component.",
+                },
+                {
+                  t: "Analisis",
+                  d: "Lihat rincian bahan/upah/overhead. Untuk jasa tanpa BOM, pakai cost estimate without quantity structure (KKPAN/manual).",
+                },
+              ],
+            },
+            {
+              code: "CK24",
+              purpose: "Price Update (Release Cost Estimate)",
+              desc: "Release cost estimate menjadi harga standar resmi material.",
+              cls: "fi",
+              steps: [
+                {
+                  t: "Buka CK24",
+                  d: "<span class='fp'>CK24</span>. Masukkan <span class='fp'>Period</span>, <span class='fp'>Fiscal Year</span>, <span class='fp'>Plant</span>.",
+                },
+                {
+                  t: "Marking & release",
+                  d: "Dua langkah: <span class='fp'>Marking</span> (menandai hasil costing sebagai calon harga) lalu <span class='fp'>Release</span> (mengaktifkannya sebagai standard price di material master).",
+                },
+                {
+                  t: "Efek",
+                  d: "Sejak release, semua penilaian persediaan & variance produksi memakai standar baru ini. Umumnya dilakukan awal periode/tahun.",
+                },
+              ],
+              note: "Standard price yang di-release jadi tolok ukur: selisih biaya aktual vs standar inilah yang membentuk variance untuk dianalisis.",
+            },
+            {
+              code: "KE30",
+              purpose: "Run Profitability Report (CO-PA)",
+              desc: "Jalankan laporan profitabilitas multidimensi (per produk/pelanggan/segmen).",
+              cls: "fi",
+              steps: [
+                {
+                  t: "Buka KE30",
+                  d: "<span class='fp'>KE30</span>. Pilih laporan CO-PA yang sudah didefinisikan.",
+                },
+                {
+                  t: "Set parameter",
+                  d: "Masukkan periode & karakteristik (produk, pelanggan, wilayah). Laporan menampilkan pendapatan, diskon, HPP, dan margin per dimensi.",
+                },
+                {
+                  t: "Analisis",
+                  d: "Drill-down antar dimensi: dari total → per pelanggan → per produk pelanggan itu. Menjawab 'pelanggan/produk mana yang benar-benar untung setelah semua biaya'.",
+                },
+              ],
+            },
+            {
+              code: "KE24",
+              purpose: "CO-PA Line Item Display (Actual)",
+              desc: "Lihat detail data aktual profitabilitas per dokumen.",
+              cls: "fi",
+              steps: [
+                {
+                  t: "Buka KE24",
+                  d: "<span class='fp'>KE24</span>. Masukkan periode & filter karakteristik.",
+                },
+                {
+                  t: "Eksekusi",
+                  d: "F8. Tampil line item CO-PA aktual — tiap penjualan dengan value field-nya (pendapatan, diskon, HPP).",
+                },
+                {
+                  t: "Gunanya",
+                  d: "Menelusuri dari angka margin agregat ke transaksi pembentuknya — dasar audit & validasi data CO-PA.",
                 },
               ],
             },
@@ -6101,6 +6392,12 @@
       let finLevel = "Semua";
       let auditOpen = false;
       let auditLevel = "Semua";
+      let taxOpen = false;
+      let taxLevel = "Semua";
+      let accOpen = false;
+      let accLevel = "Semua";
+      let basicOpen = false;
+      let basicLevel = "Semua";
       let ckSheet = "smmki";
       let ckClause = "Semua";
       let ckStates = {};
@@ -6661,6 +6958,1792 @@
           },
         ],
       };
+
+      const BASIC_ACADEMY = [
+        {
+          id: "bs1",
+          title: "Apa Itu ERP & SAP? (Untuk yang Benar-benar Baru)",
+          en: "What is ERP & SAP?",
+          level: "Kenalan",
+          summary:
+            "Mulai dari sini kalau kamu belum pernah menyentuh SAP sama sekali.",
+          sections: [
+            {
+              h: "Analogi paling sederhana",
+              b: "Bayangkan warung keluarga: catatan belanja di buku ibu, stok dihafal bapak, utang pelanggan di kertas tempel, gaji karyawan di amplop. Selama warungnya kecil, aman. Begitu jadi 50 cabang dengan 5.000 karyawan — hafalan dan buku terpisah itu jadi bencana: stok kata gudang beda dengan kata kasir, tagihan dobel, gaji telat. <b>ERP (Enterprise Resource Planning)</b> adalah solusinya: SATU sistem, SATU sumber kebenaran, yang dipakai semua bagian — gudang mencatat barang masuk, dan detik itu juga bagian keuangan melihat nilainya, tanpa ada yang lapor-laporan manual.",
+            },
+            {
+              h: "Lalu SAP itu apa",
+              b: "SAP adalah perusahaan software asal Jerman (berdiri 1972) pembuat ERP paling banyak dipakai perusahaan besar di dunia — termasuk mayoritas BUMN Indonesia. Kalau ERP itu 'jenis kendaraan', SAP itu 'merek'-nya (pesaingnya: Oracle, Microsoft Dynamics). Produk utamanya dulu bernama SAP ECC, kini generasi barunya <b>S/4HANA</b>.",
+            },
+            {
+              h: "Kenapa kamu perlu peduli",
+              b: "Karena hampir semua pekerjaan kantoran di perusahaan ber-SAP akan bersentuhan dengannya: mau minta barang → lewat SAP; klaim biaya → SAP; lihat anggaran → SAP. Orang yang paham 'kenapa'-nya (bukan cuma hafal klik) naik kelas dari operator jadi problem-solver — dan itulah tujuan seluruh aplikasi belajar ini.",
+            },
+            {
+              h: "Satu prinsip emas",
+              b: "Di SAP, setiap kejadian nyata (barang datang, uang keluar) menjadi <b>dokumen bernomor</b> yang tidak bisa dihapus — hanya bisa dibalik dengan dokumen lain. Semua materi lain di aplikasi ini pada dasarnya menjelaskan dokumen-dokumen itu: siapa membuatnya, apa efeknya, dan bagaimana membacanya.",
+            },
+          ],
+          tcodes: [],
+        },
+        {
+          id: "bs2",
+          title: "ECC vs S/4HANA: Dua Generasi SAP",
+          en: "ECC vs S/4HANA",
+          level: "Kenalan",
+          summary:
+            "Kamu akan mendengar dua nama ini terus — bedanya penting untuk karier.",
+          sections: [
+            {
+              h: "Singkatnya",
+              b: "<b>ECC</b> (ERP Central Component) = generasi lama yang dipakai sejak 2000-an; <b>S/4HANA</b> = generasi baru yang berjalan di atas database in-memory HANA (super cepat karena data diolah di RAM). SAP menghentikan dukungan utama ECC pada <b>2027</b> (opsi berbayar sampai 2030) — karena itu di mana-mana ada proyek migrasi, dan orang yang paham keduanya sangat dicari.",
+            },
+            {
+              h: "Perubahan yang paling terasa",
+              b: "(1) <b>Fiori</b>: tampilan berbasis web dengan ubin (tiles) menggantikan layar klasik abu-abu — T-code tetap ada di belakangnya; (2) <b>Business Partner (BP)</b>: satu pintu untuk vendor & customer, menggantikan XK01/XD01; (3) <b>Universal Journal (tabel ACDOCA)</b>: FI dan CO yang dulu buku terpisah kini melebur satu — rekonsiliasi FI-CO yang dulu menyita waktu jadi tidak perlu; (4) beberapa transaksi lama digantikan aplikasi baru, tapi mayoritas T-code di aplikasi ini tetap berlaku.",
+            },
+            {
+              h: "Untuk kamu yang belajar",
+              b: "Jangan cemas salah belajar: konsep proses (P2P, O2C, jurnal, dokumen) TIDAK berubah antar generasi — yang berubah kulit dan beberapa mekanisme. Kuasai konsepnya di sini, dan penyesuaian ke versi mana pun tinggal hitungan hari.",
+            },
+          ],
+          tcodes: ["BP", "XK01", "XD01"],
+        },
+        {
+          id: "bs3",
+          title: "Kenali Modul SAP Lewat Analogi Restoran",
+          en: "SAP Modules — The Restaurant Analogy",
+          level: "Kenalan",
+          summary:
+            "Semua modul SAP jadi masuk akal kalau dibayangkan sebagai satu restoran besar.",
+          sections: [
+            {
+              h: "Restorannya",
+              b: "<b>MM</b> = bagian belanja & gudang bahan (beli daging, simpan di kulkas, catat stok); <b>PP</b> = dapur (resep = BOM, jadwal masak = production order); <b>SD</b> = pelayan & kasir (terima pesanan, antar makanan, terbitkan bon); <b>FI</b> = buku kas restoran (semua uang masuk-keluar tercatat); <b>CO</b> = analis untung (menu mana yang cuan, dapur mana yang boros); <b>HR/HCM</b> = urusan koki & pelayan (gaji, absen, karier); <b>PM</b> = teknisi kompor & kulkas (servis rutin sebelum rusak); <b>QM</b> = pencicip mutu (cek bahan datang & masakan keluar); <b>WM</b> = penata gudang (bahan A di rak mana); <b>PS</b> = proyek renovasi cabang baru (anggaran & progress); <b>RE-FX</b> = kalau restoran menyewakan lantai atasnya.",
+            },
+            {
+              h: "Inti dari analoginya",
+              b: "Perhatikan: setiap bagian restoran SALING BERGANTUNG — pelayan tidak bisa jual kalau dapur tak masak, dapur tak masak kalau gudang kosong, dan SEMUA ujungnya tercatat di buku kas. Persis begitulah modul SAP terintegrasi: transaksi di satu modul otomatis berdampak ke modul lain, terutama ke FI. Inilah alasan orang keuangan perlu paham gudang, dan orang gudang perlu paham jurnal.",
+            },
+            {
+              h: "Lanjutkan ke",
+              b: "Buka <b>🗺️ Peta Modul</b> untuk melihat hierarki resminya (klik tiap kotak untuk melompat ke modulnya), dan <b>🏭 Proses Bisnis</b> untuk melihat cara mereka bekerja sama dalam siklus nyata.",
+            },
+          ],
+          tcodes: [],
+        },
+        {
+          id: "bs4",
+          title: "Struktur Organisasi di SAP",
+          en: "Client, Company Code, Plant & Friends",
+          level: "Struktur",
+          summary:
+            "Sebelum transaksi apa pun, pahami 'alamat' yang selalu ditanya sistem.",
+          sections: [
+            {
+              h: "Hierarki utamanya",
+              b: "<div class='fin-formula'>Client (grup/lingkungan sistem)\n └─ Company Code  = 1 badan hukum, 1 laporan keuangan\n     └─ Plant     = lokasi operasi (pabrik/cabang/terminal)\n         └─ Storage Location = gudang di dalam plant\nJalur jual : Sales Organization → Distribution Channel → Division\nJalur beli : Purchasing Organization + Purchasing Group\nJalur biaya: Controlling Area → Cost Center / Profit Center</div>",
+            },
+            {
+              h: "Analogi keluarga besar",
+              b: "Client = marga besar. Company code = tiap keluarga inti yang punya KK sendiri (badan hukum & laporan sendiri — di grup BUMN: induk dan tiap anak usaha adalah company code berbeda). Plant = rumah-rumah milik keluarga itu. Storage location = kamar penyimpanan di tiap rumah. Saat sistem menanyakan company code + plant + storage location, dia sedang bertanya: kejadian ini milik siapa dan di mana?",
+            },
+            {
+              h: "Kenapa ini penting sekali",
+              b: "Salah 'alamat' = kacau beneran: barang diterima di plant yang salah berarti nilai persediaan nyasar ke laporan entitas yang salah. Dan hampir semua pertanyaan lanjutan (kenapa PO-ku tak muncul? kenapa stok tak kelihatan?) jawabannya soal struktur organisasi: kamu mencari di alamat yang berbeda.",
+            },
+            {
+              h: "Cost center vs profit center",
+              b: "<b>Cost center</b> = tempat biaya berkumpul (departemen: HRD, pemeliharaan) — pertanyaannya 'siapa yang memakai biaya ini?'. <b>Profit center</b> = potongan bisnis yang dihitung untung-ruginya (per terminal, per lini usaha). Satu transaksi bisa membawa keduanya sekaligus.",
+            },
+          ],
+          tcodes: ["KS01", "KE51", "MMBE"],
+        },
+        {
+          id: "bs5",
+          title: "Master Data vs Transaksi",
+          en: "Master Data vs Transactional Data",
+          level: "Struktur",
+          summary:
+            "Dua jenis data yang perilakunya beda total — dan kenapa yang satu dijaga ketat sekali.",
+          sections: [
+            {
+              h: "Bedanya dengan analogi HP",
+              b: "<b>Master data</b> = daftar kontak: dibuat sekali, dipakai ribuan kali (vendor, customer, material, akun GL, aset, karyawan). <b>Data transaksi</b> = riwayat chat: kejadian bertanggal yang terus bertambah (PO, GR, invoice, jurnal). Salah simpan nomor di kontak = SEMUA chat ke depan nyasar — persis itulah kenapa master data dijaga jauh lebih ketat daripada transaksi.",
+            },
+            {
+              h: "Contoh nyata dampaknya",
+              b: "Rekening bank vendor salah satu digit di master → semua pembayaran mengalir ke rekening salah. Harga standar material salah → HPP seluruh produksi salah. NPWP customer salah → faktur pajak tidak sah. Karena itu pembuatan/perubahan master data selalu ber-approval, dan perubahannya tercatat (CDHDR) — dipelajari lebih dalam di topik fraud & audit.",
+            },
+            {
+              h: "Aturan sopan santun master data",
+              b: "Jangan membuat master baru sebelum mencari yang sudah ada (duplikat vendor = celah pembayaran dobel); isi field dengan benar walau terlihat sepele (payment term, tax code — semuanya menentukan perilaku transaksi); dan kalau ragu, tanya pemilik prosesnya — master data itu milik bersama.",
+            },
+          ],
+          tcodes: ["BP", "MM01", "FS00", "FK03"],
+        },
+        {
+          id: "bs6",
+          title: "Setiap Kejadian = Dokumen Bernomor",
+          en: "Documents & Document Flow",
+          level: "Struktur",
+          summary:
+            "Cara berpikir paling penting di SAP: semua bisa dilacak seperti resi paket.",
+          sections: [
+            {
+              h: "Analogi resi paket",
+              b: "Belanja online: pesan (nomor order) → dikemas (nomor resi) → kurir antar (update status) → diterima (bukti terima). Kamu bisa melacak paket kapan pun karena tiap tahap meninggalkan nomor yang saling terhubung. SAP persis begitu untuk SEMUA kejadian bisnis: minta barang (PR 10xx) → beli (PO 45xx) → barang datang (dokumen 50xx) → tagihan (51xx) → jurnal (19xx) → bayar (15xx). Rantai ini bernama <b>document flow</b> — dan tiap kartu T-code di aplikasi ini menampilkan 'Posisi dalam alur'-nya.",
+            },
+            {
+              h: "Konsekuensi yang membedakan SAP dari Excel",
+              b: "Dokumen tidak bisa dihapus atau diedit diam-diam — salah ya dibalik (reversal) dengan dokumen baru, dua-duanya tersimpan selamanya lengkap dengan siapa & kapan. Menjengkelkan bagi yang ceroboh, menyelamatkan bagi perusahaan: inilah 'jejak audit' yang membuat laporan bisa dipercaya.",
+            },
+            {
+              h: "Lanjutkan ke",
+              b: "Panel <b>📄 Dokumen & Nomor</b> adalah kamus lengkapnya: arti tiap awalan nomor, jenis dokumen (KR vs RE), sampai movement type. Setelah paham topik ini, kamus itu jadi jauh lebih mudah dicerna.",
+            },
+          ],
+          tcodes: [],
+        },
+        {
+          id: "bs7",
+          title: "Membaca Layar & Mengetik T-code",
+          en: "The SAP Screen & Transaction Codes",
+          level: "Navigasi",
+          summary:
+            "T-code itu apa sih, dan bagaimana sebenarnya orang 'menjalankan' SAP.",
+          sections: [
+            {
+              h: "T-code = nomor cepat",
+              b: "SAP punya ribuan fungsi. Daripada mengklik menu bertingkat-tingkat, tiap fungsi punya kode singkat — <b>transaction code</b> — yang diketik di kolom perintah kiri-atas: ketik ME21N + Enter = langsung ke layar buat PO. Seperti nomor cepat di telepon. Seluruh aplikasi ini pada dasarnya adalah 'buku telepon' 226 nomor terpenting beserta cara memakainya.",
+            },
+            {
+              h: "Trik kolom perintah",
+              b: "<div class='fin-formula'>/n + tcode  : pindah transaksi di jendela yang sama\n/o + tcode  : buka di JENDELA BARU (maks. 6 sesi)\n/n          : batalkan & kembali ke layar awal\n/nex        : keluar SAP tanpa konfirmasi (hati-hati!)</div>Kebiasaan produktif: kerjakan input di satu sesi, buka sesi kedua (/o) untuk mengecek laporan — tanpa bolak-balik.",
+            },
+            {
+              h: "GUI klasik vs Fiori",
+              b: "Layar klasik (SAP GUI): abu-abu, padat field — kamu akan sering melihatnya. Fiori: tampilan web modern berbasis ubin. Keduanya pintu ke mesin yang sama; T-code yang kamu pelajari tetap relevan (di Fiori bahkan bisa dicari dengan nama yang sama).",
+            },
+            {
+              h: "Membaca satu layar transaksi",
+              b: "Pola umum hampir semua layar: header (data umum dokumen: tanggal, vendor) di atas, item (baris-baris detail) di tengah, dan tab-tab detail per item di bawah. Field wajib bertanda; kolom bercentang artinya bisa multi-pilih. Sekali pola ini terasa, layar baru mana pun tinggal variasi.",
+            },
+          ],
+          tcodes: ["ME21N", "SU53", "SM12"],
+        },
+        {
+          id: "bs8",
+          title: "Tombol & Shortcut yang Bikin Cepat",
+          en: "Essential Keys & the ALV Grid",
+          level: "Navigasi",
+          summary:
+            "Sepuluh menit menghafal ini menghemat ribuan klik ke depannya.",
+          sections: [
+            {
+              h: "Tombol inti",
+              b: "<div class='fin-formula'>Enter    : cek/validasi layar (BELUM menyimpan!)\nCtrl+S   : simpan / posting\nF3       : kembali satu layar\nF8       : jalankan (execute) laporan\nF4       : buka daftar pilihan field (match code) — \n           tak perlu hafal kode, cari saja\nF1       : penjelasan field yang sedang disorot</div>Kesalahan pemula #1: mengira Enter = simpan. Enter hanya validasi; dokumen baru tercatat saat Save/Posting.",
+            },
+            {
+              h: "Laporan ALV — teman terbaikmu",
+              b: "Hampir semua laporan SAP (FBL3N, MB52, ME2N…) tampil dalam grid bernama ALV yang bisa: di-sort (klik kolom), di-filter, di-subtotal, diubah susunan kolomnya (layout — bisa disimpan!), dan <b>diekspor ke Excel</b>. Sebelum minta laporan custom ke IT, 90% kebutuhan analisis selesai dengan mengatur layout ALV.",
+            },
+            {
+              h: "Selection screen & variant",
+              b: "Layar awal laporan (isi filter: company code, periode, akun) bisa disimpan sebagai <b>variant</b> — sekali setup, tiap bulan tinggal panggil. Orang yang laporannya cepat bukan yang ngetiknya cepat, tapi yang variant-nya rapi.",
+            },
+          ],
+          tcodes: ["FBL3N", "MB52", "ME23N"],
+        },
+        {
+          id: "bs9",
+          title: "Saat Kena Error: Jangan Panik",
+          en: "When Things Go Wrong",
+          level: "Navigasi",
+          summary:
+            "Panduan pertolongan pertama — karena semua orang pasti kena.",
+          sections: [
+            {
+              h: "Baca warnanya dulu",
+              b: "Pesan di bawah layar: <b>hijau</b> = sukses; <b>kuning</b> = peringatan — boleh lanjut dengan Enter TAPI baca dulu (peringatan duplicate invoice yang di-Enter tanpa baca = bayar dobel); <b>merah</b> = ditolak, harus dibereskan. Klik pesannya untuk penjelasan panjang + nomor pesan (berguna saat bertanya).",
+            },
+            {
+              h: "Tiga error paling umum & obatnya",
+              b: "<div class='fin-formula'>1. 'No authorization'  → jalankan SU53 SEGERA setelah kejadian,\n   screenshot hasilnya, kirim ke tim keamanan — itu 'resep'\n   persis otorisasi apa yang kurang\n2. 'Object locked by user X' → dokumen sedang dibuka orang lain;\n   tunggu / hubungi orangnya (admin bisa cek via SM12)\n3. 'Posting period closed' → periode akuntansi sudah dikunci\n   (OB52) — bukan error sistem; hubungi tim akuntansi</div>",
+            },
+            {
+              h: "Etika bertanya yang baik",
+              b: "Sebelum bertanya: catat T-code, apa yang diinput, dan bunyi pesan (screenshot). Jalur bantuan umumnya: rekan/key user di timmu → helpdesk IT → konsultan. Pertanyaan berbekal screenshot SU53 selesai dalam menit; pertanyaan 'kok nggak bisa ya' selesai dalam minggu.",
+            },
+            {
+              h: "Satu larangan keras",
+              b: "Jangan pernah 'coba-coba sampai bisa' di sistem production untuk transaksi yang efeknya nyata (posting, bayar, hapus). Coba-coba tempatnya di sistem test/sandbox — tanyakan aksesnya, hampir semua perusahaan punya.",
+            },
+          ],
+          tcodes: ["SU53", "SM12", "ST22"],
+        },
+        {
+          id: "bs10",
+          title: "Peran-peran di Dunia SAP",
+          en: "Who's Who in the SAP World",
+          level: "Karier",
+          summary:
+            "Dari pengguna biasa sampai konsultan — peta profesi (dan gerbang masuknya).",
+          sections: [
+            {
+              h: "Peta perannya",
+              b: "<b>End user</b>: menjalankan transaksi sesuai perannya (AP staff, admin gudang); <b>Key user / super user</b>: end user senior yang paling paham proses di departemennya — jembatan ke IT, penguji saat ada perubahan (posisi emas untuk belajar!); <b>Functional consultant</b>: ahli konfigurasi per modul (FI/CO, MM, SD…) — menerjemahkan kebutuhan bisnis jadi setting sistem; <b>ABAPer</b>: programmer yang membangun custom (report, interface, enhancement); <b>BASIS</b>: 'montir mesin'-nya — server, user, transport, performa; plus <b>solution architect</b> dan <b>project manager</b> di proyek implementasi.",
+            },
+            {
+              h: "Jalur yang realistis",
+              b: "Rute paling umum (dan paling kuat): end user yang serius → key user → functional consultant di modul yang dikuasai prosesnya. Kenapa kuat? Konsultan terbaik bukan yang hafal konfigurasi, tapi yang PERNAH menjalani prosesnya — kamu yang paham keuangan + audit + SAP sedang membangun kombinasi itu.",
+            },
+            {
+              h: "Yang mempercepat",
+              b: "Kuasai satu modul sampai dalam (bukan lima modul setengah-setengah), pahami integrasinya ke FI (semua bermuara ke jurnal), terlibat di proyek apa pun (UAT, migrasi, rollout) walau kecil, dan bangun kemampuan data (query, Excel/BI) — pembeda besar di semua peran. Sertifikasi SAP membantu membuka pintu, pengalaman proyek yang membuatmu bertahan di dalamnya.",
+            },
+          ],
+          tcodes: [],
+        },
+        {
+          id: "bs11",
+          title: "Peta Jalan Belajar di Aplikasi Ini",
+          en: "Your Learning Roadmap",
+          level: "Karier",
+          summary:
+            "Urutan yang disarankan supaya tidak tersesat di lautan materi.",
+          sections: [
+            {
+              h: "Untuk yang benar-benar awam",
+              b: "<div class='fin-formula'>1. 🌱 Mulai dari Nol   — selesaikan semua topik panel ini\n2. 🗺️ Peta Modul       — lihat 'peta kota'-nya\n3. 🏭 Proses Bisnis    — pilih 1 siklus terdekat dengan\n                          pekerjaanmu (mis. P2P), baca tuntas\n4. Tab T-code          — buka 5-10 kartu dari siklus itu,\n                          ikuti 'Posisi dalam alur'\n5. 📄 Dokumen & Nomor  — baru sekarang kamus ini terasa mudah\n6. 📚 Glosarium        — rujuk saat ketemu istilah asing</div>",
+            },
+            {
+              h: "Untuk yang mengejar keuangan",
+              b: "Lanjutkan: 📒 Akademi Akuntansi (cara mencatat) → 🎓 Akademi Keuangan Dasar-Menengah (konsep & laporan) → track CFA (analisis) → track PSAK (standar) → 🧾 Pajak. Selalu klik chip T-code di tiap topik — bolak-balik konsep ↔ transaksi itulah yang membuat nempel.",
+            },
+            {
+              h: "Untuk yang mengarah audit/risiko",
+              b: "🛡️ Audit & Risiko berurutan: Fondasi → Risiko → Audit Internal → ICOFR → Audit di SAP → Fraud, lalu jelajahi Alur ICOFR dan Checklist ISO. Prasyaratnya: paham Proses Bisnis dulu — auditor yang tak paham proses hanya memeriksa kertas.",
+            },
+            {
+              h: "Cara belajar yang terbukti",
+              b: "(1) Sedikit tapi rutin mengalahkan marathon sekali; (2) tandai ⭐ favorit untuk yang sering dipakai; (3) setiap selesai satu topik, JELASKAN ulang dengan kata-katamu ke orang lain (atau ke dinding) — kalau tak bisa menjelaskan, belum paham; (4) cari akses sistem sandbox dan praktikkan langkah di kartu T-code — membaca 10 kartu kalah oleh mempraktikkan 1.",
+            },
+          ],
+          tcodes: [],
+        },
+        {
+          id: "cfg1",
+          title: "Di Balik Layar: Apa Itu Kustomisasi (SPRO)",
+          en: "Configuration & the IMG",
+          level: "Konfigurasi",
+          summary:
+            "Kenapa dua perusahaan pakai SAP yang sama tapi perilakunya beda — jawabannya ada di sini.",
+          sections: [
+            {
+              h: "Config vs transaksi",
+              b: "Yang kamu jalankan sehari-hari (buat PO, posting jurnal) adalah <b>transaksi</b>. Tapi bagaimana sistem BERPERILAKU — nomor dokumen mulai dari berapa, tax code apa saja yang tersedia, siapa boleh posting ke periode mana — itu ditentukan lebih dulu lewat <b>kustomisasi/konfigurasi</b> di transaksi <b>SPRO</b> (membuka IMG — Implementation Guide). Config dikerjakan konsultan/tim fungsional, biasanya di sistem DEV lalu dikirim (transport) ke production.",
+            },
+            {
+              h: "Kenapa penting kamu tahu ini",
+              b: "Saat kamu bertanya 'kenapa PO-ku tidak bisa di atas 100 juta?' atau 'kenapa tax code X tak muncul?', jawabannya hampir selalu 'begitulah config-nya' — bukan bug. Memahami adanya lapisan config membuatmu tahu KE MANA mengarahkan pertanyaan (ke tim fungsional/konsultan, bukan helpdesk teknis), dan membuatmu jadi key user yang didengar saat ada perubahan proses.",
+            },
+            {
+              h: "Struktur IMG",
+              b: "IMG tersusun seperti daftar isi bertingkat: Enterprise Structure → Financial Accounting → Controlling → Logistics, dst. Tiap langkah config punya dokumentasinya sendiri. Prinsip emas: config production TIDAK diubah langsung — selalu lewat DEV→QAS→PRD dengan transport & approval (inilah change management yang kamu pelajari di topik ITGC/audit).",
+            },
+            {
+              h: "Rujukan",
+              b: "Struktur langkah config di topik-topik ini mengikuti buku 'Hand Book on SAP FICO for Beginners/Learners' (NN Satya) — panduan hands-on konfigurasi FICO.",
+            },
+          ],
+          tcodes: ["FS00", "OB52"],
+        },
+        {
+          id: "cfg2",
+          title: "Fondasi FI: Yang Dikonfigurasi Sebelum Transaksi Pertama",
+          en: "FI Global Settings",
+          level: "Konfigurasi",
+          summary:
+            "Pengaturan dasar yang harus ada sebelum satu jurnal pun bisa diposting.",
+          sections: [
+            {
+              h: "Urutan fondasinya",
+              b: "Buku FICO menyusun fondasi FI seperti ini: <b>Company & Company Code</b> (badan hukum) → <b>Business Area</b> (segmen) → <b>Fiscal Year Variant</b> (tahun buku: Jan–Des? berapa periode + periode khusus untuk adjustment) → <b>Posting Period Variant</b> (periode mana boleh diposting — mesin di balik OB52) → <b>Field Status Variant</b> (field mana wajib/opsional/tersembunyi saat posting) → <b>Document Types & Number Ranges</b> → <b>Posting Keys</b> → <b>Chart of Accounts</b> + Account Groups + Retained Earnings account.",
+            },
+            {
+              h: "Kenapa urutan ini masuk akal",
+              b: "Tiap langkah menumpuk di atas yang sebelumnya: tidak bisa bikin akun GL tanpa Chart of Accounts; tidak bisa posting tanpa document type & posting period. Memahami tumpukan ini menjelaskan banyak error 'misterius' — 'posting period closed' (OB52 belum dibuka), 'field X is required' (field status variant), 'document type not defined'.",
+            },
+            {
+              h: "Tolerance & global parameters",
+              b: "Config penting lain: <b>tolerance groups</b> (batas selisih pembayaran/posting yang boleh diterima user — mesin di balik siapa boleh approve selisih berapa), <b>global parameters</b> per company code (mata uang, chart of accounts, fiscal year yang dipakai), dan <b>parallel currencies</b> (mencatat paralel dalam beberapa mata uang — relevan untuk pelaporan grup).",
+            },
+            {
+              h: "Kaitan ke materimu",
+              b: "Semua ini adalah 'sisi setup' dari hal yang sudah kamu pelajari: document type & number range (panel Dokumen & Nomor), posting key & tolerance (panel Dokumen & Nomor), CoA (Akademi Akuntansi), posting period (topik Tutup Buku). Sekarang kamu tahu di MANA mereka lahir.",
+            },
+          ],
+          tcodes: ["FS00", "OB52", "FBL3N"],
+        },
+        {
+          id: "cfg3",
+          title: "Integrasi FI-MM-SD: Jurnal Otomatis dari Mana",
+          en: "Automatic Account Determination",
+          level: "Konfigurasi",
+          summary:
+            "Rahasia terbesar SAP: bagaimana barang datang di gudang bisa otomatis jadi jurnal yang benar.",
+          sections: [
+            {
+              h: "Pertanyaan intinya",
+              b: "Saat GR diposting (MIGO), sistem tahu harus mendebit akun 'Persediaan' mana dan mengkredit 'GR/IR' mana — padahal orang gudang tidak pernah menyentuh nomor akun. Bagaimana? Lewat <b>automatic account determination</b>: jembatan config yang menerjemahkan kejadian logistik → akun FI.",
+            },
+            {
+              h: "Mekanismenya (MM)",
+              b: "Kombinasi: <b>Valuation Class</b> di material master (mengelompokkan material: bahan baku, barang jadi) + <b>Transaction Key</b> (BSX untuk stok, WRX untuk GR/IR, PRD untuk selisih harga, dll) → dipetakan ke akun GL di transaksi config <b>OBYC</b>. Jadi 'material kelompok X yang bergerak dengan movement Y' selalu jatuh ke akun GL yang sudah ditentukan. Inilah kenapa movement type begitu penting — dia memicu transaction key yang menentukan jurnal.",
+            },
+            {
+              h: "Mekanismenya (SD)",
+              b: "Sisi penjualan serupa: saat billing (VF01), <b>account determination</b> (via kondisi & transaksi VKOA) menentukan akun pendapatan mana yang dikredit berdasarkan jenis pelanggan, material, dan organisasi penjualan. Salah setup di sini = pendapatan masuk akun yang salah, laporan segmen kacau.",
+            },
+            {
+              h: "Kenapa ini 'aha moment'",
+              b: "Begitu paham account determination, seluruh integrasi SAP jadi masuk akal: modul logistik tidak 'tahu akuntansi' — mereka hanya memicu kejadian, dan config-lah yang menerjemahkannya jadi jurnal seragam. Ini juga jawaban saat auditor bertanya 'yakin semua GR masuk akun yang benar?' — buktinya ada di konsistensi OBYC, bukan di kebaikan hati user.",
+            },
+          ],
+          tcodes: ["MIGO", "MIRO", "VF01", "MB51", "FBL3N"],
+        },
+        {
+          id: "cfg4",
+          title: "Modul CO Lebih Dalam: Dari Cost Element ke COPA",
+          en: "Controlling Deep-Dive",
+          level: "Konfigurasi",
+          summary:
+            "Peta lengkap Controlling — bagian SAP yang paling membingungkan pemula, diurai jelas.",
+          sections: [
+            {
+              h: "Kenapa CO terpisah dari FI",
+              b: "FI menjawab 'berapa laba perusahaan?' (untuk pihak luar); CO menjawab 'dari mana laba/biaya itu, dan siapa bertanggung jawab?' (untuk manajemen internal). Di S/4HANA keduanya melebur satu tabel (Universal Journal), tapi konsepnya tetap dibedakan.",
+            },
+            {
+              h: "Hierarki komponen CO",
+              b: "<div class='fin-formula'>Cost Element Accounting : 'jenis biaya apa' (jembatan dari akun GL FI)\n  Primary   = dari FI (gaji, listrik) \n  Secondary = internal (alokasi, settlement)\nCost Center Accounting  : 'biaya di departemen mana' (HRD, gudang)\nInternal Orders         : 'biaya untuk kegiatan/event tertentu'\nProduct Costing (CO-PC) : 'biaya per unit produk'\nProfitability (CO-PA)   : 'laba per produk/pelanggan/segmen'\nProfit Center (EC-PCA)  : 'laba per unit bisnis'</div>",
+            },
+            {
+              h: "Konsep yang sering ditanya",
+              b: "<b>Activity type</b> (jenis aktivitas: jam mesin, jam orang — dengan tarif, untuk membebankan biaya cost center ke produk); <b>Statistical key figure</b> (basis alokasi: jumlah karyawan, luas m² — untuk membagi biaya bersama); <b>Assessment/Distribution</b> (metode mengalirkan biaya dari cost center pembantu ke penerima); <b>Settlement</b> (mengalirkan biaya terkumpul dari order/proyek ke penerima akhir). Semua ini 'plumbing' yang membuat laporan biaya per unit akurat.",
+            },
+            {
+              h: "Untuk kariermu",
+              b: "CO adalah area di mana orang keuangan paling bernilai di proyek SAP — karena butuh paham akuntansi manajemen DAN sistem. Kamu yang sudah kuasai cost center, budgeting, dan product costing (Akademi Keuangan) tinggal menambah lapisan 'di mana ini dikonfigurasi' untuk melangkah ke peran fungsional CO.",
+            },
+          ],
+          tcodes: ["KS01", "KP06", "KSB1", "KE51", "KO01"],
+        },
+        {
+          id: "co1",
+          title: "Peta Controlling: Kenapa Ada & Bagaimana Tersusun",
+          en: "CO Overview & Organizational Units",
+          level: "Controlling",
+          summary:
+            "Gerbang masuk CO — pahami dulu kerangka besarnya sebelum menyelam ke tiap komponen.",
+          sections: [
+            {
+              h: "Kenapa CO ada terpisah dari FI",
+              b: "FI menghadap keluar (pemegang saham, pajak, regulator) dan terikat aturan hukum; CO menghadap ke dalam (manajemen) dan bebas dibentuk sesuai kebutuhan pengambilan keputusan. Pertanyaan FI: 'berapa laba & aset perusahaan?'. Pertanyaan CO: 'produk mana untung, departemen mana boros, proyek mana sesuai anggaran?'. Di S/4HANA keduanya menyatu di satu tabel (Universal Journal/ACDOCA) sehingga tidak perlu rekonsiliasi FI-CO lagi — tapi konsep dua sudut pandang ini tetap hidup.",
+            },
+            {
+              h: "Controlling Area — wadah utamanya",
+              b: "Semua aktivitas CO hidup dalam <b>Controlling Area</b>. Satu controlling area bisa menaungi beberapa company code (asalkan sama chart of accounts & fiscal year) — inilah yang memungkinkan analisis biaya lintas entitas dalam satu grup. Hubungan: Controlling Area 1 : N Company Code.",
+            },
+            {
+              h: "Komponen CO dan urutan belajarnya",
+              b: "<div class='fin-formula'>Cost Element Accounting  → 'jenis biaya apa' (jembatan dari FI)\nCost Center Accounting   → 'biaya di unit/departemen mana'\nInternal Orders          → 'biaya untuk kegiatan/event tertentu'\nProduct Costing (CO-PC)  → 'biaya per unit produk/jasa'\nProfitability (CO-PA)    → 'laba per produk/pelanggan/segmen'\nProfit Center (EC-PCA)   → 'laba per unit bisnis'\nActivity-Based Costing   → 'biaya per proses lintas departemen'</div>Urutan ini juga urutan ketergantungannya: yang atas jadi fondasi yang bawah.",
+            },
+            {
+              h: "Untuk konteks Pelindo",
+              b: "CO adalah tempat pertanyaan manajemen pelabuhan dijawab: berapa biaya per call kapal, terminal mana paling menguntungkan, apakah biaya pemeliharaan crane sesuai anggaran. Orang keuangan yang menguasai CO menjadi mitra strategis manajemen, bukan sekadar pencatat.",
+            },
+          ],
+          tcodes: ["KS01", "KSB1", "KE51", "KO01"],
+        },
+        {
+          id: "co2",
+          title: "Cost Element: Jembatan dari FI ke CO",
+          en: "Cost Element Accounting",
+          level: "Controlling",
+          summary:
+            "Titik temu tempat biaya di buku besar 'masuk' ke dunia Controlling.",
+          sections: [
+            {
+              h: "Dua jenis cost element",
+              b: "<b>Primary cost element</b>: berpasangan 1:1 dengan akun GL beban di FI (gaji, listrik, penyusutan) — saat biaya diposting di FI, ia otomatis mengalir ke CO lewat cost element ini, MEMBAWA info 'ke cost center/order mana'. <b>Secondary cost element</b>: TIDAK punya padanan di FI — hanya hidup di dalam CO untuk mencatat aliran biaya internal (alokasi antar cost center, settlement order, pembebanan aktivitas). Angka secondary tidak pernah muncul di laporan keuangan FI — murni alat manajemen.",
+            },
+            {
+              h: "Kenapa pembedaan ini penting",
+              b: "Saat kamu lihat biaya cost center, sebagian primary (biaya asli dari luar) dan sebagian secondary (kiriman dari cost center lain). Membedakannya = memahami mana biaya yang benar-benar 'baru' vs sekadar dipindahkan internal — krusial saat menganalisis kenapa biaya suatu departemen membengkak.",
+            },
+            {
+              h: "Di S/4HANA",
+              b: "Perubahan besar: cost element kini menjadi <b>bagian dari Chart of Accounts</b> (jenis akun 'primary costs/revenue' dan 'secondary costs'), bukan master data terpisah seperti di ECC. Jadi membuat akun GL beban sekaligus membuat cost element-nya. Ini salah satu penyederhanaan terbesar S/4.",
+            },
+            {
+              h: "Di sistem",
+              b: "Primary cost element dibuat/otomatis dari akun GL beban (di ECC via KA01, di S/4 lewat FS00 dengan tipe akun yang sesuai); laporannya menyatu dengan analisis cost center (KSB1). Reconciliation ledger dulu menjembatani selisih CO-FI lintas company code — tidak lagi diperlukan di S/4 karena sudah satu tabel.",
+            },
+          ],
+          tcodes: ["KA01", "FS00", "KSB1", "FBL3N"],
+        },
+        {
+          id: "co3",
+          title: "Cost Center: Biaya per Departemen",
+          en: "Cost Center Accounting",
+          level: "Controlling",
+          summary:
+            "Komponen CO yang paling sering dipakai — melacak biaya sampai ke unit yang bertanggung jawab.",
+          sections: [
+            {
+              h: "Konsep",
+              b: "<b>Cost center</b> = unit terkecil tempat biaya dikumpulkan dan dipertanggungjawabkan (departemen HRD, divisi pemeliharaan, terminal tertentu). Setiap cost center punya penanggung jawab — inilah dasar akuntabilitas biaya. Cost center disusun dalam <b>standard hierarchy</b>: pohon yang mengelompokkan semua cost center per fungsi/lokasi, sehingga biaya bisa dilihat per departemen sampai per direktorat.",
+            },
+            {
+              h: "Perencanaan & aktual",
+              b: "Rencana biaya diinput per cost element per periode (KP06); aktual mengalir otomatis dari setiap posting yang menyebut cost center itu. Laporan plan/actual (S_ALR_87013611) dan detail line item (KSB1) membandingkan keduanya — inti pengendalian biaya bulanan. Selisih plan vs actual yang besar memicu investigasi.",
+            },
+            {
+              h: "Activity type & tarif",
+              b: "<div class='fin-formula'>Cost center 'Bengkel' menanggung biaya (mekanik, sparepart, listrik)\n  → biaya itu dibebankan ke penerima lewat ACTIVITY TYPE\n     mis. 'jam servis' dengan tarif Rp X / jam\n  → order pemeliharaan yang pakai 5 jam servis\n     menerima beban 5 × tarif</div>Activity type mengubah biaya 'menumpuk di cost center' menjadi biaya 'terbebankan ke yang memakai' — dasar costing yang adil. Tarifnya bisa direncanakan (KP26) atau dihitung sistem.",
+            },
+            {
+              h: "Statistical Key Figure & alokasi",
+              b: "<b>SKF</b> = basis pembagian biaya bersama: jumlah karyawan, luas m², jumlah PC. Biaya listrik gedung bersama dibagi ke tiap departemen berdasar luas ruangannya. Metode mengalirkannya di period-end: <b>distribution</b> (pakai cost element asli), <b>assessment</b> (pakai secondary cost element), <b>periodic reposting</b> — semuanya dijalankan lewat <b>cycle</b> berisi definisi sender-receiver.",
+            },
+          ],
+          tcodes: ["KS01", "KP06", "KP26", "KSB1", "KB21N"],
+        },
+        {
+          id: "co4",
+          title: "Internal Order: Biaya per Kegiatan",
+          en: "Internal Orders",
+          level: "Controlling",
+          summary:
+            "Pengumpul biaya sementara untuk event, proyek kecil, atau capex — lebih lincah dari cost center.",
+          sections: [
+            {
+              h: "Kapan pakai internal order",
+              b: "Cost center itu permanen (departemen); internal order itu spesifik & sering sementara: menyelenggarakan pelatihan, pameran, perbaikan besar satu kali, atau capex kecil. Semua biaya kegiatan itu dikumpulkan di satu order → mudah tahu 'total acara ini habis berapa' tanpa mengotori laporan cost center.",
+            },
+            {
+              h: "Jenis internal order",
+              b: "<b>Real order</b>: mengumpulkan biaya yang nanti di-<b>settle</b> (dialirkan) ke penerima akhir (cost center, aset, atau proyek) — dipakai untuk capex/kegiatan nyata. <b>Statistical order</b>: hanya untuk info paralel, biaya sebenarnya tetap di cost center. Order untuk capex kecil sering menampung biaya lalu di-settle ke aset (AUC → aset final).",
+            },
+            {
+              h: "Budgeting & availability control",
+              b: "Kekuatan internal order: bisa di-budget (KO22) dengan <b>availability control</b> — saat komitmen/aktual mendekati atau melewati budget, sistem memberi warning atau memblokir. Ini kontrol anggaran yang lebih ketat dari sekadar plan cost center. Cocok untuk event dengan pagu tetap.",
+            },
+            {
+              h: "Siklus hidupnya",
+              b: "<div class='fin-formula'>Buat order (KO01) → budget (KO22) → biaya masuk\n(PR/PO/jurnal menyebut order) → monitor (KOB1)\n→ selesai: SETTLEMENT (KO88) mengalirkan biaya\nke penerima akhir → tutup order</div>Settlement adalah konsep kunci: order hanya penampung sementara, biaya akhirnya harus 'mendarat' di objek yang tepat.",
+            },
+          ],
+          tcodes: ["KO01", "KO22", "KOB1", "KO88", "CJ88"],
+        },
+        {
+          id: "co5",
+          title: "Product Costing: Biaya per Unit",
+          en: "Product Costing (CO-PC)",
+          level: "Controlling",
+          summary:
+            "Berapa sebenarnya biaya membuat satu unit produk/jasa — dan dari mana variance muncul.",
+          sections: [
+            {
+              h: "Komponen biaya produk",
+              b: "HPP satu unit = bahan langsung + tenaga kerja/aktivitas langsung + overhead. Di SAP ini dihitung dari: <b>BOM</b> (daftar bahan × harganya) + <b>Routing</b> (urutan kerja × tarif activity type mesin/orang) + <b>overhead</b> (via costing sheet — persentase atau jumlah tertentu di atas biaya dasar).",
+            },
+            {
+              h: "Costing sheet & cost component",
+              b: "<div class='fin-formula'>Costing Sheet   : aturan membebankan overhead\n                  (mis. +10% dari biaya bahan untuk overhead gudang)\nCost Component  : mengelompokkan hasil costing jadi kategori\n                  (bahan / upah / overhead) untuk analisis\nCost Estimate   : hasil perhitungan biaya standar per unit\n  - dengan quantity structure  = otomatis dari BOM+routing\n  - tanpa quantity structure   = input manual (untuk jasa/non-produksi)</div>",
+            },
+            {
+              h: "Standard cost & variance",
+              b: "Cost estimate di-<b>release</b> (CK24) menjadi harga standar material. Saat produksi nyata berjalan, biaya aktual dibandingkan standar → selisihnya = <b>variance</b>: harga (beli bahan lebih mahal), kuantitas (pakai bahan lebih banyak), efisiensi (mesin lebih lama). Analisis variance = umpan balik untuk perbaikan proses & akurasi harga jual.",
+            },
+            {
+              h: "Relevansi jasa pelabuhan",
+              b: "Meski pelabuhan bukan pabrik, konsep costing tetap relevan: berapa biaya menyediakan satu jam layanan crane atau satu call kapal? 'Cost estimate tanpa quantity structure' cocok untuk costing jasa — dan hasilnya jadi dasar penetapan tarif yang menutup biaya + margin.",
+            },
+          ],
+          tcodes: ["CK11N", "CK24", "CS01", "CA01", "KSB1"],
+        },
+        {
+          id: "co6",
+          title: "CO-PA & Profit Center: Analisis Laba",
+          en: "Profitability & Profit Center Analysis",
+          level: "Controlling",
+          summary:
+            "Puncak Controlling: melihat laba dari berbagai sudut — per produk, pelanggan, segmen, unit bisnis.",
+          sections: [
+            {
+              h: "CO-PA: laba multidimensi",
+              b: "<b>Profitability Analysis</b> menjawab 'laba dari mana?' dalam banyak dimensi sekaligus (<b>characteristics</b>): per produk, pelanggan, wilayah, jalur distribusi, segmen. Nilai yang dianalisis (<b>value fields</b>): pendapatan, diskon, HPP, margin. Contoh pertanyaan yang dijawab CO-PA: 'pelanggan A beromzet besar tapi setelah diskon & biaya layanan, apakah masih untung?' — sering jawabannya mengejutkan.",
+            },
+            {
+              h: "Dua tipe CO-PA",
+              b: "<b>Costing-based</b>: memakai value field, bisa menampilkan margin sebelum FI selesai posting (cepat untuk analisis, tapi bisa beda tipis dengan FI). <b>Account-based</b>: memakai akun GL, selalu rekonsiliasi dengan FI. Di S/4HANA account-based jadi default karena sudah menyatu di Universal Journal — rekonsiliasi otomatis.",
+            },
+            {
+              h: "Profit Center: laba per unit bisnis",
+              b: "<b>Profit center</b> memandang organisasi sebagai kumpulan 'perusahaan mini' yang masing-masing dihitung laba-ruginya (per terminal, per lini usaha). Setiap transaksi berpendapatan/berbiaya membawa profit center → bisa disusun laporan laba-rugi & bahkan neraca per profit center. Dummy profit center menampung yang belum ter-assign — idealnya kosong.",
+            },
+            {
+              h: "Cost center vs profit center (yang sering tertukar)",
+              b: "<div class='fin-formula'>Cost Center   : hanya BIAYA, fokus 'siapa membelanjakan'\n                → pertanggungjawaban efisiensi\nProfit Center : PENDAPATAN − BIAYA, fokus 'unit ini untung?'\n                → pertanggungjawaban profitabilitas</div>Satu transaksi bisa membawa keduanya: biaya gaji mekanik dibebankan ke cost center Bengkel DAN profit center Terminal yang dilayaninya.",
+            },
+          ],
+          tcodes: ["KE51", "KE30", "KE24", "KSB1"],
+        },
+        {
+          id: "aa1",
+          title: "Fondasi Asset Accounting: Sub-Ledger Aset",
+          en: "FI-AA Overview & Chart of Depreciation",
+          level: "Aset",
+          summary:
+            "Kenapa aset punya 'buku sendiri' terpisah — dan struktur config paling atas yang menaunginya.",
+          sections: [
+            {
+              h: "Aset = sub-ledger",
+              b: "FI-AA (Asset Accounting) adalah <b>sub-ledger</b>: buku pembantu detail per aset, yang totalnya otomatis mengalir ke akun rekonsiliasi aset di buku besar (persis konsep buku pembantu di Akademi Akuntansi). Tujuannya menjawab presisi: nilai TEPAT tiap aset pada tanggal tertentu — untuk pelaporan (PSAK) maupun pajak. Kamu tidak posting langsung ke akun aset di GL; kamu posting ke aset, dan GL ter-update sendiri.",
+            },
+            {
+              h: "Chart of Depreciation — payung tertinggi",
+              b: "<b>Chart of Depreciation</b> adalah wadah semua aturan penyusutan untuk satu negara. SAP menyediakan template per negara (mis. untuk Indonesia) yang tinggal di-copy lalu disesuaikan — di dalamnya sudah ada depreciation area standar. Satu chart of depreciation di-assign ke company code; company code di negara sama bisa berbagi chart yang sama.",
+            },
+            {
+              h: "Kaitan ke materimu",
+              b: "Di topik PSAK 216 (Aset Tetap) dan Rekonsiliasi Fiskal (Pajak) kamu belajar bahwa buku komersial dan buku pajak menghitung penyusutan paralel. FI-AA-lah mesin yang mewujudkannya — dan chart of depreciation adalah tempat aturan-aturan itu ditata. Topik-topik berikut mengurai isinya.",
+            },
+            {
+              h: "Di sistem",
+              b: "Cek template negara (OA08), copy chart of depreciation (EC08), lalu assign ke company code. Setelah fondasi ini berdiri, barulah asset class, depreciation area, dan depreciation key bisa didefinisikan.",
+            },
+          ],
+          tcodes: ["AW01N", "AS01", "FBL3N"],
+        },
+        {
+          id: "aa2",
+          title: "Asset Class: Cetakan Setiap Aset",
+          en: "Asset Class & Account Determination",
+          level: "Aset",
+          summary:
+            "Pengelompokan aset yang menentukan penomoran, akun GL, dan aturan penyusutannya sekaligus.",
+          sections: [
+            {
+              h: "Apa itu asset class",
+              b: "<b>Asset class</b> = template/cetakan untuk aset sejenis (tanah, bangunan, mesin, kendaraan, crane, IT equipment). Saat membuat aset baru (AS01), kamu memilih asset class-nya — dan aset itu langsung mewarisi: rentang nomornya, akun GL rekonsiliasi mana yang dipakai, depreciation area apa yang aktif, dan default depreciation key. Asset class membuat ribuan aset konsisten tanpa setup satu per satu.",
+            },
+            {
+              h: "Account Determination — jembatan ke GL",
+              b: "Tiap asset class menunjuk sebuah <b>account determination</b>: kunci yang memetakan ke akun-akun GL yang tersentuh transaksi aset — akun aset (nilai perolehan), akun akumulasi penyusutan, akun beban penyusutan, akun laba/rugi pelepasan. Jadi saat aset kelas 'Crane' disusutkan, sistem tahu persis mendebit beban & mengkredit akumulasi di akun yang benar — otomatis, konsisten, auditable.",
+            },
+            {
+              h: "Aset khusus: AUC",
+              b: "Satu asset class penting: <b>Asset Under Construction (AUC)</b> — penampung biaya aset yang masih dibangun (proyek dermaga, gedung). Selama konstruksi, biaya menumpuk di AUC dan TIDAK disusutkan. Saat selesai, AUC di-settle ke aset final (kelas definitif) yang baru mulai disusutkan. Menghubungkan modul PS (proyek) ke FI-AA.",
+            },
+            {
+              h: "Di sistem",
+              b: "Asset class & account determination didefinisikan sekali di config (referensi bab Asset Accounting buku FICO NN Satya). Sebagai end user kamu memakainya lewat AS01 (buat aset) — pilih class, sisanya terwarisi. Lihat seluruh nilai & aturan aset di AW01N (Asset Explorer).",
+            },
+          ],
+          tcodes: ["AS01", "AS02", "AW01N", "CJ88"],
+        },
+        {
+          id: "aa3",
+          title: "Depreciation Area: Banyak 'Buku' dalam Satu Aset",
+          en: "Depreciation Areas",
+          level: "Aset",
+          summary:
+            "Rahasia bagaimana satu aset dihitung penyusutannya untuk komersial DAN pajak sekaligus.",
+          sections: [
+            {
+              h: "Konsep paralel",
+              b: "Satu aset fisik, tapi nilai bukunya bisa berbeda tergantung 'buku' mana yang ditanya: buku komersial (PSAK) pakai umur manfaat ekonomis; buku pajak (UU PPh) pakai kelompok & tarif fiskal; bisa juga ada buku untuk pelaporan grup atau mata uang lain. <b>Depreciation area</b> adalah masing-masing 'buku' itu — dihitung PARALEL dalam satu master aset.",
+            },
+            {
+              h: "Contoh nyata",
+              b: "<div class='fin-formula'>Crane senilai 10 M, satu aset (AS01):\n  Area 01 (komersial/PSAK): umur 20 th → susut 500 jt/th\n  Area 15 (fiskal/pajak) : kelompok 3, 16 th → susut beda\n  Area 30 (grup, USD)    : nilai dijabarkan ke USD\nSemua dihitung otomatis, tiap area punya nilai buku sendiri</div>Inilah jawaban teknis kenapa rekonsiliasi fiskal penyusutan (topik Pajak) tinggal selisih dua area — bukan hitung ulang ribuan aset manual.",
+            },
+            {
+              h: "Area utama & turunannya",
+              b: "Area 01 biasanya buku utama (posting real-time ke GL). Area lain bisa 'real' (ikut posting ke GL/ledger terpisah) atau sekadar 'statistical' (hanya untuk pelaporan/perhitungan). Nilai satu area bisa diturunkan dari area lain (mis. area pajak = area komersial dengan aturan berbeda). Di S/4HANA konsep ini menyatu dengan ledger di Universal Journal.",
+            },
+            {
+              h: "Di sistem",
+              b: "Depreciation area diatur per chart of depreciation & per asset class (config). Sebagai pengguna, kamu melihat semua area berdampingan di AW01N — tab 'Posted values' & 'Comparisons' menampilkan nilai buku tiap area side-by-side. Ini layar yang wajib kamu kuasai untuk analisis aset.",
+            },
+          ],
+          tcodes: ["AW01N", "AS02", "AFAB"],
+        },
+        {
+          id: "aa4",
+          title: "Depreciation Key: Otak Perhitungan Penyusutan",
+          en: "Depreciation Keys & Methods",
+          level: "Aset",
+          summary:
+            "Kode kecil di master aset yang menentukan metode & tarif penyusutan — dan dari mana angkanya lahir.",
+          sections: [
+            {
+              h: "Apa yang dikendalikan",
+              b: "<b>Depreciation key</b> menentukan BAGAIMANA aset disusutkan: metode (garis lurus/straight-line, saldo menurun/declining), persentase atau basis umur, perlakuan tahun perolehan, dan kapan berhenti (sampai nilai residu/nol). Tiap depreciation area di aset punya depreciation key-nya sendiri — itu sebabnya buku komersial & pajak bisa memakai metode berbeda pada aset yang sama.",
+            },
+            {
+              h: "Komponen di baliknya",
+              b: "Depreciation key dirakit dari elemen config: <b>calculation method</b> (base, declining, multi-level, period control). Contoh: 'garis lurus 5% mulai bulan perolehan' atau 'saldo menurun 2× garis lurus lalu beralih ke garis lurus'. Perusahaan memakai beberapa depreciation key baku sesuai jenis aset & aturan yang berlaku — kamu tinggal memilih yang tepat saat membuat aset.",
+            },
+            {
+              h: "Perubahan estimasi (prospektif)",
+              b: "Ingat topik PSAK 216: umur manfaat & metode wajib direview & bisa berubah. Di SAP, mengganti depreciation key atau umur di AS02 berlaku PROSPEKTIF otomatis — penyusutan sisa dihitung ulang ke depan tanpa mengutak-atik masa lalu. Ini alasan kenapa perubahan estimasi tidak merepotkan di sistem, asalkan disertai justifikasi & approval (jejak di CDHDR).",
+            },
+            {
+              h: "Di sistem",
+              b: "Depreciation key dipilih per area saat membuat/mengubah aset (AS01/AS02). Simulasi dampaknya sebelum committing bisa dilihat di AW01N (tab planned values). Perhitungan aktualnya dieksekusi massal oleh depreciation run.",
+            },
+          ],
+          tcodes: ["AS02", "AW01N", "AFAB", "AS01"],
+        },
+        {
+          id: "aa5",
+          title: "Siklus Hidup Aset & Depreciation Run",
+          en: "Asset Lifecycle: Acquisition to Retirement",
+          level: "Aset",
+          summary:
+            "Menyatukan semuanya: dari aset lahir sampai dilepas, dan ritual bulanan yang menghidupkan penyusutan.",
+          sections: [
+            {
+              h: "Perolehan",
+              b: "Aset masuk lewat beberapa jalur: pembelian via PO (account assignment 'A' di ME21N → nilai mengalir ke aset saat GR), langsung di FI (F-90/ABZON), atau dari proyek (settlement AUC via CJ88). Nilai perolehan = semua biaya sampai siap pakai (topik PSAK 216). Sejak diperoleh, aset masuk daftar penyusutan sesuai depreciation key-nya.",
+            },
+            {
+              h: "Depreciation Run (AFAB) — jantung bulanan",
+              b: "<div class='fin-formula'>Tiap akhir bulan: jalankan AFAB\n → sistem menghitung penyusutan SEMUA aset untuk periode itu\n → posting otomatis: Beban Penyusutan (D) / Akum. Penyusutan (K)\n   (tipe dokumen AF), per depreciation area yang real\n → wajib SELESAI sebelum tutup periode (topik Tutup Buku)</div>Test run dulu untuk cek, baru run produktif. Aset yang baru diperoleh bulan itu otomatis ikut terhitung sesuai period control-nya.",
+            },
+            {
+              h: "Transaksi sepanjang hidup",
+              b: "<b>Transfer</b> (ABUMN — pindah antar aset/cost center), <b>write-up/write-down</b> (koreksi nilai, termasuk impairment PSAK 236 sebagai unplanned depreciation), <b>revaluasi</b>. Semua tercatat per aset & terlihat di AW01N sebagai riwayat lengkap.",
+            },
+            {
+              h: "Pelepasan (retirement)",
+              b: "Aset dijual (ABAON) atau di-scrap (ABAVN). Sistem otomatis mengeksekusi 4 langkah dari topik Akuntansi (hapus perolehan, hapus akumulasi, catat kas, hitung laba/rugi) dalam satu transaksi. Pelepasan bersifat permanen — selalu dengan approval. Setelahnya aset hilang dari daftar penyusutan aktif tapi riwayatnya abadi.",
+            },
+          ],
+          tcodes: ["AFAB", "ABZON", "ABAON", "AW01N", "CJ88", "AS01"],
+        },
+        {
+          id: "bk1",
+          title: "Struktur Bank di SAP: House Bank & Bank Account",
+          en: "House Banks & Bank Master",
+          level: "Bank & Treasury",
+          summary:
+            "Bagaimana SAP 'mengenal' rekening bank perusahaan — fondasi semua transaksi kas.",
+          sections: [
+            {
+              h: "Tiga lapis",
+              b: "<b>Bank master</b> = data bank di tingkat negara (nama bank, kode/kliring) — dipakai bersama oleh siapa pun yang bertransaksi dengan bank itu, termasuk data bank vendor/customer. <b>House bank</b> = bank tempat PERUSAHAAN punya rekening (BRI, Mandiri, dll), diberi ID 4-karakter per company code. <b>Account ID</b> = tiap rekening di house bank itu (giro operasional, rekening penerimaan, escrow). Hubungan: satu house bank bisa punya banyak account ID.",
+            },
+            {
+              h: "Kenapa strukturnya begini",
+              b: "Memisahkan 'bank sebagai institusi' dari 'rekening perusahaan di bank itu' membuat sistem rapi: satu bank master BRI dipakai untuk rekening perusahaan sekaligus untuk ratusan vendor yang juga pakai BRI. Tiap house bank account terhubung ke satu akun GL bank — itulah jembatan ke buku besar (setiap mutasi rekening akhirnya jadi saldo di akun bank di neraca).",
+            },
+            {
+              h: "Bank vendor/customer",
+              b: "Master vendor & customer menyimpan data bank MEREKA (untuk transfer/penerimaan) di tabel LFBK/KNBK — dan ingat topik fraud: perubahan rekening bank vendor (CDHDR pada LFBK) menjelang pembayaran besar adalah red flag utama. Struktur bank yang rapi memudahkan audit ini.",
+            },
+            {
+              h: "Di sistem",
+              b: "House bank didefinisikan di FI12 (config, referensi bab Bank Accounting buku FICO); saldo & mutasi tiap akun bank dilihat di FBL3N / FF7A/FF7B (cash position). Sebagai pengguna kamu jarang menyentuh config-nya, tapi memahami strukturnya menjelaskan kenapa pembayaran 'tahu' harus keluar dari rekening mana.",
+            },
+          ],
+          tcodes: ["FBL3N", "F110"],
+        },
+        {
+          id: "bk2",
+          title: "Pembayaran Otomatis: Payment Program (F110)",
+          en: "Automatic Payment Program (APP)",
+          level: "Bank & Treasury",
+          summary:
+            "Mesin yang membayar ratusan tagihan sekaligus — jantung siklus hutang dan kas keluar.",
+          sections: [
+            {
+              h: "Kenapa perlu otomatis",
+              b: "Perusahaan bisa punya ratusan tagihan jatuh tempo tiap minggu. Membayar satu-satu (F-53) tidak realistis. <b>Automatic Payment Program (F110)</b> menyeleksi semua tagihan yang jatuh tempo, mengelompokkannya per vendor, memilih rekening & metode bayar, lalu memposting pembayaran + menghasilkan file transfer bank — semuanya dalam satu proses terjadwal.",
+            },
+            {
+              h: "Empat langkah F110",
+              b: "<div class='fin-formula'>1. PARAMETER : tentukan tanggal, company code, metode bayar,\n               rekening (house bank), dan vendor yang diikutkan\n2. PROPOSAL  : sistem menyusun daftar usulan bayar\n               → REVIEW di sini! blokir/ubah sebelum eksekusi\n3. PAYMENT RUN: posting pembayaran (dokumen ZP), clearing\n               open item vendor\n4. PAYMENT MEDIUM: hasilkan file bank (transfer) / cek</div>Langkah proposal adalah kontrol kunci: di sinilah pembayaran ke vendor bermasalah bisa dihentikan sebelum uang keluar (topik audit: review payment proposal = key control).",
+            },
+            {
+              h: "Konfigurasi di baliknya",
+              b: "F110 bergantung config yang matang: payment method per negara/company code (transfer, cek, giro), ranking house bank (bank mana didahulukan), dan pengelompokan. Setup yang salah = pembayaran gagal atau salah rekening — buku FICO menekankan 'konfigurasikan APP dengan hati-hati' karena kompleksitasnya.",
+            },
+            {
+              h: "Kaitan ke materimu",
+              b: "F110 adalah puncak siklus Procure-to-Pay & Invoice Non-PO (lihat 'Posisi dalam alur' di kartu F110). Kontrolnya menyentuh SoD (yang menyiapkan proposal ≠ yang approve), dan jejaknya jadi objek audit pembayaran ganda (topik CAATs).",
+            },
+          ],
+          tcodes: ["F110", "FB60", "FBL1N", "F-53"],
+        },
+        {
+          id: "bk3",
+          title: "Rekonsiliasi Bank Elektronik (EBS)",
+          en: "Electronic Bank Statement",
+          level: "Bank & Treasury",
+          summary:
+            "Bagaimana ribuan baris rekening koran dicocokkan otomatis ke pembukuan tiap hari.",
+          sections: [
+            {
+              h: "Masalah yang dipecahkan",
+              b: "Tiap hari bank mengirim rekening koran berisi ratusan mutasi (penerimaan customer, biaya admin, kliring). Mencocokkan manual ke pembukuan = mustahil untuk perusahaan besar. <b>Electronic Bank Statement (EBS)</b> mengimpor file rekening koran (format MT940/CAMT dari bank) dan mencocokkannya OTOMATIS ke open item di sistem.",
+            },
+            {
+              h: "Alur & auto-matching",
+              b: "<div class='fin-formula'>Import file bank (FF.5 / FEBAN)\n → sistem cocokkan tiap baris ke dokumen terkait:\n   • penerimaan → clearing piutang customer (F-28 otomatis)\n   • pembayaran → clearing dokumen ZP dari F110\n   • biaya admin/jasa giro → posting ke akun beban/pendapatan\n → baris yang GAGAL match → masuk post-processing (FEBAN)</div>Kunci auto-matching: aturan interpretasi (posting rules) + informasi referensi di mutasi. Makin rapi referensi (nomor dokumen tercantum di transfer), makin tinggi tingkat otomatis.",
+            },
+            {
+              h: "Post-processing (FEBAN)",
+              b: "Baris yang tidak ter-match otomatis dibereskan manual di FEBAN — biasanya karena referensi tidak lengkap atau transaksi belum dicatat di sistem. Ini persis kategori 'perusahaan belum catat' di topik Rekonsiliasi Bank (Akademi Akuntansi). Disiplin: bereskan FEBAN tiap hari, jangan menumpuk sampai tutup buku.",
+            },
+            {
+              h: "Kenapa penting",
+              b: "EBS mengubah rekonsiliasi bank dari pekerjaan berhari-hari jadi proses harian yang hampir otomatis — posisi kas selalu akurat untuk keputusan. Tingkat auto-match yang tinggi juga = kontrol yang kuat (lebih sedikit intervensi manual = lebih sedikit celah error/fraud).",
+            },
+          ],
+          tcodes: ["FF67", "FEBAN", "F-28", "FBL3N"],
+        },
+        {
+          id: "bk4",
+          title: "Manajemen Kas & Likuiditas (Cash Management)",
+          en: "Cash & Liquidity Management",
+          level: "Bank & Treasury",
+          summary:
+            "Melihat posisi kas hari ini dan memproyeksikan kebutuhan besok — inti fungsi treasury.",
+          sections: [
+            {
+              h: "Cash position vs liquidity forecast",
+              b: "<b>Cash position</b>: posisi kas jangka SANGAT pendek (hari ini/besok) dari sumber pasti — saldo bank + mutasi terkonfirmasi. <b>Liquidity forecast</b>: proyeksi jangka menengah dari sumber yang belum pasti — open item piutang (kapan customer mungkin bayar), hutang (kapan harus bayar), PO/SO yang akan jadi kas. Keduanya bersama menjawab: 'apakah kas cukup untuk kewajiban 2 minggu ke depan?'",
+            },
+            {
+              h: "Dari mana datanya",
+              b: "<div class='fin-formula'>Cash position    ← saldo akun bank (GL) + memo record\nLiquidity forecast← piutang (FBL5N) + hutang (FBL1N)\n                   + planned items (PO/SO)\nLaporan: FF7A (cash position) / FF7B (liquidity forecast)</div>Data mengalir otomatis dari transaksi operasional — makin akurat tanggal jatuh tempo di dokumen, makin andal proyeksinya.",
+            },
+            {
+              h: "Keputusan yang didukung",
+              b: "Dengan posisi & proyeksi kas: kelebihan kas → tempatkan (deposito/investasi jangka pendek); kekurangan → tarik fasilitas kredit atau percepat penagihan. Untuk grup (Pelindo): <b>cash pooling</b> — menggabungkan kas antar anak usaha agar tidak ada yang idle sementara yang lain pinjam mahal ke bank.",
+            },
+            {
+              h: "Kaitan ke materimu",
+              b: "Ini sisi operasional dari topik Arus Kas (Akademi Keuangan) dan rasio likuiditas (CCC, current ratio di Kamus Rasio). Analisis mengukur likuiditas dari laporan; cash management MENGELOLANYA harian secara nyata.",
+            },
+          ],
+          tcodes: ["FF67", "FEBAN", "FBL5N", "FBL1N", "F110"],
+        },
+        {
+          id: "bk5",
+          title: "Treasury & Manajemen Risiko Keuangan",
+          en: "Treasury & Risk Management (TRM)",
+          level: "Bank & Treasury",
+          summary:
+            "Mengelola pinjaman, investasi, dan risiko pasar — level lanjutan fungsi keuangan korporat.",
+          sections: [
+            {
+              h: "Cakupan TRM",
+              b: "Modul Treasury (TRM) menangani instrumen keuangan perusahaan: <b>money market</b> (deposito, pinjaman jangka pendek), <b>securities</b> (investasi obligasi/saham), <b>loans</b> (pengelolaan pinjaman diterima/diberikan), dan <b>derivatives/hedging</b> (lindung nilai kurs & suku bunga). Tiap instrumen dicatat siklus penuhnya: penciptaan → settlement → penilaian berkala → jatuh tempo.",
+            },
+            {
+              h: "Manajemen risiko pasar",
+              b: "TRM menghubungkan ke pengelolaan risiko: eksposur kurs (utang USD saat Rupiah melemah), risiko suku bunga (pinjaman floating rate), risiko likuiditas. Instrumen hedging (forward, swap) dicatat dan dinilai — dan akuntansinya menyentuh PSAK 71/109 (instrumen keuangan) & hedge accounting. Ini menghubungkan treasury ke topik manajemen risiko di panel Audit & Risiko.",
+            },
+            {
+              h: "Konteks BUMN",
+              b: "Untuk BUMN sebesar Pelindo, treasury bukan sekadar kelola kas: mengelola pinjaman proyek infrastruktur (sindikasi bank, obligasi korporat), lindung nilai utang valas untuk pengadaan alat, dan penempatan dana menganggur — semua dengan tata kelola & batasan risiko (risk appetite, lihat topik ERM). Keputusan treasury besar biasanya butuh persetujuan komite khusus.",
+            },
+            {
+              h: "Untuk kariermu",
+              b: "Treasury adalah area di mana keuangan korporat, manajemen risiko, dan pasar keuangan bertemu — kombinasi yang kamu bangun lewat track CFA (TVM, WACC, valuasi) + manajemen risiko (Audit & Risiko) sangat relevan di sini. Level lanjutan, tapi jalur karier bernilai tinggi.",
+            },
+          ],
+          tcodes: ["FF67", "FBL1N", "F110"],
+        },
+        {
+          id: "fg1",
+          title: "Prinsip Variant: Rahasia Config yang Bisa Dipakai Ulang",
+          en: "The Variant Principle",
+          level: "FI Global",
+          summary:
+            "Satu ide sederhana yang mendasari hampir semua konfigurasi FI — pahami ini, sisanya jadi mudah.",
+          sections: [
+            {
+              h: "Apa itu variant principle",
+              b: "Daripada mengatur ulang aturan yang sama untuk tiap company code satu per satu, SAP memakai <b>variant</b>: 'paket aturan' yang didefinisikan sekali, lalu di-assign ke banyak company code. Tiga variant fondasi FI: <b>fiscal year variant</b> (struktur tahun buku), <b>posting period variant</b> (periode mana boleh diposting), <b>field status variant</b> (field mana wajib/opsional saat posting). Definisikan sekali → pakai berulang → konsisten.",
+            },
+            {
+              h: "Kenapa ini penting dipahami",
+              b: "Ini menjelaskan kenapa banyak perilaku SAP 'seragam' antar entitas dalam satu grup: mereka berbagi variant yang sama. Dan saat satu company code perilakunya beda (mis. periode tutup beda), itu karena di-assign variant berbeda. Memahami adanya lapisan variant membuatmu tahu bahwa perubahan aturan = mengubah variant (berdampak ke SEMUA yang memakainya) — bukan setting per transaksi.",
+            },
+            {
+              h: "Level client",
+              b: "Variant didefinisikan di level client (lingkungan sistem), lalu di-assign ke company code. Jadi satu definisi bisa melayani seluruh grup. Ini efisiensi sekaligus disiplin: perubahan terpusat, tidak tersebar.",
+            },
+            {
+              h: "Rujukan",
+              b: "Struktur config di topik-topik ini mengikuti bab Introduction/FI Global Settings buku 'Hand Book on SAP FICO' (NN Satya) — dijelaskan ulang dengan konteks penggunaan.",
+            },
+          ],
+          tcodes: ["OB52", "FS00"],
+        },
+        {
+          id: "fg2",
+          title: "Fiscal Year Variant: Struktur Tahun Buku",
+          en: "Fiscal Year Variant",
+          level: "FI Global",
+          summary:
+            "Menentukan 'kalender akuntansi' perusahaan — berapa periode, kapan mulai & berakhir.",
+          sections: [
+            {
+              h: "Konsep",
+              b: "<b>Fiscal year variant</b> mendefinisikan tahun buku: apakah <b>calendar year</b> (Jan–Des, umum di Indonesia) atau <b>non-calendar</b> (mis. Apr–Mar). Selain itu menentukan jumlah periode posting (umumnya 12 = bulanan) plus <b>special periods</b> (biasanya 4 periode ekstra) untuk posting penyesuaian akhir tahun & audit tanpa mengganggu Desember.",
+            },
+            {
+              h: "Kenapa special period berguna",
+              b: "Bayangkan audit menemукan koreksi bulan Maret tahun berikutnya, padahal untuk tahun buku sebelumnya. Special period (13–16) memungkinkan posting ke 'tahun lama' setelah Desember ditutup — koreksi audit & jurnal penutup masuk ke sini, terpisah dari operasional bulanan. Laporan bisa menampilkan 'dengan/tanpa special period'.",
+            },
+            {
+              h: "Year-dependent vs independent",
+              b: "Kebanyakan variant <b>year-independent</b> (pola periodenya sama tiap tahun — Jan selalu periode 1). Untuk kalender khusus (mis. retail 4-4-5 minggu) bisa <b>year-dependent</b> (tanggal batas periode beda tiap tahun). Perusahaan biasa cukup year-independent kalendar.",
+            },
+            {
+              h: "Di sistem & kaitannya",
+              b: "Didefinisikan di OB29 lalu di-assign ke company code (config). Sebagai pengguna, fiscal year variant menjelaskan kenapa ada 'periode 13–16' saat kamu lihat pilihan posting period, dan kenapa fiscal year jadi bagian kunci unik dokumen (BUKRS+BELNR+GJAHR — topik Dokumen & Nomor).",
+            },
+          ],
+          tcodes: ["OB52", "FBL3N"],
+        },
+        {
+          id: "fg3",
+          title: "Posting Period Variant: Gerbang Waktu",
+          en: "Posting Period Variant (OB52)",
+          level: "FI Global",
+          summary:
+            "Mesin di balik 'posting period closed' — mengunci kapan boleh & tidak boleh membukukan.",
+          sections: [
+            {
+              h: "Konsep",
+              b: "<b>Posting period variant</b> mengontrol periode mana yang TERBUKA untuk posting. Tujuannya menegakkan disiplin tutup buku: begitu periode ditutup, tidak ada lagi transaksi yang bisa masuk ke sana — angka laporan jadi final & tak berubah. Inilah alasan error 'posting period XXX is not open' muncul: bukan bug, tapi kontrol sedang bekerja.",
+            },
+            {
+              h: "Dua rentang & account type",
+              b: "<div class='fin-formula'>OB52 mengatur per account type (S=GL, D=customer,\nK=vendor, A=aset, M=material, + = semua):\n  Periode 1 (from–to) : periode operasional yang terbuka\n  Periode 2 (from–to) : biasanya untuk special period\n                        (posting penyesuaian akhir tahun)\nBisa dibuka selektif: hanya GL untuk closing,\nsementara vendor/customer sudah dikunci</div>Fleksibilitas ini penting saat tutup buku: operasional dikunci lebih dulu, akun GL dibiarkan terbuka sebentar untuk tim closing menyelesaikan jurnal penyesuaian.",
+            },
+            {
+              h: "Kontrol & otorisasi",
+              b: "Membuka/menutup periode adalah wewenang terbatas (biasanya tim akuntansi/closing). Membuka periode lama sembarangan = celah memanipulasi angka yang sudah dilaporkan (topik fraud: jurnal ke periode yang seharusnya tertutup). Karena itu perubahan OB52 sendiri sering dijadikan objek monitoring audit.",
+            },
+            {
+              h: "Kaitan ke materimu",
+              b: "OB52 adalah langkah ke-7 di checklist Tutup Buku Bulanan (Akademi Keuangan) — 'kunci periode' setelah semua penyesuaian selesai. Sekarang kamu tahu mesin di baliknya, dan kenapa urutannya paling akhir.",
+            },
+          ],
+          tcodes: ["OB52", "FBL3N", "FBS1"],
+        },
+        {
+          id: "fg4",
+          title: "Field Status & Tolerance: Aturan Saat Posting",
+          en: "Field Status Variant & Tolerance Groups",
+          level: "FI Global",
+          summary:
+            "Dua config yang menentukan apa yang wajib diisi dan berapa selisih yang boleh diterima.",
+          sections: [
+            {
+              h: "Field Status Variant",
+              b: "Menentukan, saat posting ke suatu akun GL, field mana yang <b>wajib (required)</b>, <b>opsional</b>, <b>ditampilkan</b>, atau <b>disembunyikan</b>. Contoh: posting ke akun biaya mewajibkan cost center (kalau tidak, biaya 'menggantung' tanpa pemilik); posting ke akun bank menyembunyikan field yang tak relevan. Ini menjelaskan error 'Field XXX is required' — field status variant sedang menegakkan kelengkapan data.",
+            },
+            {
+              h: "Kenapa ini kontrol penting",
+              b: "Field status adalah kontrol pencegahan (preventive control): memaksa data lengkap & benar DI DEPAN, sebelum dokumen tercatat — jauh lebih murah daripada mengoreksi belakangan. Cost center wajib di akun biaya = jaminan setiap biaya bisa dianalisis di CO. Ini contoh konkret 'kontrol aplikasi' dari topik ITGC (Audit).",
+            },
+            {
+              h: "Tolerance Groups",
+              b: "<div class='fin-formula'>Batas yang boleh diterima sistem, per grup user/akun:\n  • selisih pembayaran maksimal (mis. terima kurang Rp50rb\n    dari customer → auto-tulis ke selisih, tak perlu tolak)\n  • nilai maksimal per dokumen/baris yang boleh diposting\n    user tertentu\nTujuan: keseimbangan antara kelancaran & kontrol</div>Tolerance group menjawab 'siapa boleh menerima selisih berapa' — user junior batasnya kecil, senior lebih besar. Selisih di luar toleransi = ditolak, harus eskalasi.",
+            },
+            {
+              h: "Kaitan ke materimu",
+              b: "Tolerance adalah mesin di balik banyak kontrol yang kamu pelajari: toleransi 3-way match (MIRO), batas approval — semuanya bentuk tolerance. Field status & tolerance bersama adalah 'rambu-rambu' yang membuat ribuan posting harian tetap tertib.",
+            },
+          ],
+          tcodes: ["FS00", "MIRO", "FB50"],
+        },
+        {
+          id: "fg5",
+          title: "Global Parameters & Multi-Company",
+          en: "Company Code Global Parameters & Cross-Company",
+          level: "FI Global",
+          summary:
+            "Pengaturan payung per entitas — dan bagaimana transaksi antar entitas grup ditangani.",
+          sections: [
+            {
+              h: "Global parameters per company code",
+              b: "Tiap company code punya 'KTP config'-nya: chart of accounts yang dipakai, fiscal year variant, posting period variant, field status variant, mata uang lokal, dan opsi seperti business area balance sheet. Semua variant yang kamu pelajari tadi 'bertemu' & di-assign di sini. Ini titik rujukan saat troubleshooting: 'company code ini pakai aturan apa?'",
+            },
+            {
+              h: "Parallel currencies",
+              b: "Company code bisa mencatat paralel dalam beberapa mata uang: mata uang lokal (Rupiah), mata uang grup (untuk konsolidasi), dan/atau hard currency. Tiap dokumen menyimpan nilai di semua mata uang sekaligus — penting untuk grup dengan pelaporan konsolidasi (topik PSAK 110) dan entitas bertransaksi valas (PSAK 210).",
+            },
+            {
+              h: "Cross-company code transactions",
+              b: "<div class='fin-formula'>Satu transaksi menyentuh 2 company code (mis. induk\nbayar tagihan atas nama anak usaha):\n → sistem otomatis membuat dokumen di KEDUA company code\n → + jurnal antar-perusahaan (clearing intercompany)\n   memakai akun perantara yang sudah dikonfigurasi\n → ditandai trading partner → memudahkan ELIMINASI\n   saat konsolidasi (topik PSAK 110)</div>Untuk grup seperti Pelindo (banyak company code), setup cross-company yang benar = rekonsiliasi intercompany yang lancar saat tutup buku grup.",
+            },
+            {
+              h: "Menutup lingkaran",
+              b: "Topik ini menyatukan banyak hal: chart of accounts (Akademi Akuntansi), fiscal year & posting period (topik ini), parallel currency (PSAK kurs), cross-company & trading partner (PSAK konsolidasi & topik ICOFR intercompany). Global parameters adalah tempat semua fondasi FI 'dirakit' jadi satu entitas yang berfungsi.",
+            },
+          ],
+          tcodes: ["FS00", "OB52", "FBL1N", "FBL3N"],
+        },
+      ];
+
+      const ACC_ACADEMY = [
+        {
+          id: "ac1",
+          ref: "CAFB IAI Modul Akuntansi Keuangan — Bab 1 Pengantar Akuntansi (prinsip berlaku umum, karakteristik kualitatif) & Bab 2 Persamaan Akuntansi dan Analisa Transaksi.",
+          title: "Saldo Normal & Akun Kontra",
+          en: "Normal Balances & Contra Accounts",
+          level: "Dasar",
+          summary:
+            "Peta arah tiap kelompok akun — dan akun-akun 'pengurang' yang sering membingungkan pemula.",
+          sections: [
+            {
+              h: "Saldo normal",
+              b: "<div class='fin-formula'>Kelompok akun        Saldo Normal    Bertambah di\nAset                    Debit           Debit\nBeban                   Debit           Debit\nPrive/Dividen           Debit           Debit\nLiabilitas              Kredit          Kredit\nEkuitas/Modal           Kredit          Kredit\nPendapatan              Kredit          Kredit</div>Mnemonic klasik: <b>ABeD</b> — Aset, Beban, Dividen bersaldo Debit; sisanya Kredit. Akun bersaldo tidak normal (misal kas bersaldo kredit) hampir selalu tanda ada kesalahan atau kondisi khusus (overdraft) yang wajib diinvestigasi.",
+            },
+            {
+              h: "Akun kontra",
+              b: "Akun yang 'melawan' saldo normal induknya untuk menyajikan nilai bersih tanpa menghapus nilai bruto: <b>Akumulasi Depresiasi</b> (kontra aset — kredit), <b>Cadangan Kerugian Piutang</b> (kontra piutang — kredit), <b>Retur & Potongan Penjualan</b> (kontra pendapatan — debit), <b>Diskon Pembelian</b> (kontra pembelian). Kenapa tidak langsung dikurangkan? Karena informasi brutonya bernilai: aset 10M dengan akumulasi 9M bercerita berbeda dari aset baru 1M — walau nilai bukunya sama.",
+            },
+            {
+              h: "Di SAP",
+              b: "Saldo normal ditegakkan otomatis lewat posting key (40/50 dst); akun kontra dibuat sebagai akun GL terpisah (FS00) — akumulasi depresiasi bahkan di-maintain otomatis oleh FI-AA per depreciation area, dan penyajian netonya diatur di Financial Statement Version.",
+            },
+          ],
+          tcodes: ["FS00", "FAGLB03", "AW01N"],
+        },
+        {
+          id: "ac2",
+          ref: "CAFB IAI — Bab 2–3 (analisa transaksi, jurnal & buku besar); konsep buku pembantu & akun pengendali pada bab siklus akuntansi.",
+          title: "Jurnal Khusus & Buku Besar Pembantu",
+          en: "Special Journals & Subsidiary Ledgers",
+          level: "Dasar",
+          summary:
+            "Kenapa perusahaan tidak mencatat semuanya di satu jurnal umum — dan bagaimana SAP mewarisi konsep ini.",
+          sections: [
+            {
+              h: "Jurnal khusus",
+              b: "Di akuntansi manual, transaksi berulang dikelompokkan ke jurnal khusus: <b>jurnal penjualan</b> (penjualan kredit), <b>jurnal pembelian</b>, <b>jurnal penerimaan kas</b>, <b>jurnal pengeluaran kas</b> — jurnal umum hanya untuk transaksi lain-lain (penyesuaian, koreksi). Manfaatnya: pembagian kerja, posting ringkas (total per periode, bukan per transaksi), dan jejak yang rapi.",
+            },
+            {
+              h: "Buku besar pembantu",
+              b: "Akun 'Piutang Usaha' di buku besar hanya satu angka — padahal ada ratusan pelanggan. Detailnya hidup di <b>buku besar pembantu</b> (subsidiary ledger) per pelanggan/pemasok, dan akun induknya di buku besar disebut <b>akun pengendali</b> (controlling account). Aturan emasnya: total seluruh pembantu = saldo akun pengendali, setiap saat.",
+            },
+            {
+              h: "Di SAP — konsep yang sama, nama berbeda",
+              b: "SAP adalah sistem jurnal khusus & subledger raksasa: dokumen SD/MM/HR adalah 'jurnal khusus'-nya; buku pembantu piutang = FBL5N per customer, hutang = FBL1N per vendor, aset = AW01N per aset; dan akun pengendalinya adalah <b>reconciliation account</b> — yang sengaja dikunci dari posting langsung supaya aturan emas 'pembantu = pengendali' tidak pernah bisa dilanggar. Memahami akuntansi manual membuatmu paham KENAPA SAP didesain begitu.",
+            },
+          ],
+          tcodes: ["FBL5N", "FBL1N", "AW01N", "FS00", "FAGLB03"],
+        },
+        {
+          id: "ac3",
+          ref: "CAFB IAI — bab Neraca Saldo, Kertas Kerja (neraca lajur) & penyusunan laporan keuangan (sekitar Bab 5–8: neraca saldo disesuaikan, kertas kerja, menyiapkan laporan keuangan).",
+          title: "Neraca Lajur & Alur Penyusunan Laporan",
+          en: "The Worksheet (Neraca Lajur 10 Kolom)",
+          level: "Dasar",
+          summary:
+            "Kertas kerja legendaris yang merangkum seluruh proses tutup buku dalam satu lembar.",
+          sections: [
+            {
+              h: "Struktur 10 kolom",
+              b: "Lima pasang kolom debit-kredit: (1) <b>Neraca Saldo</b> — saldo semua akun sebelum penyesuaian; (2) <b>Penyesuaian</b> — jurnal penyesuaian; (3) <b>Neraca Saldo Disesuaikan</b> = kolom 1 ± 2; (4) <b>Laba Rugi</b> — pindahkan semua akun pendapatan & beban; (5) <b>Neraca</b> — pindahkan akun riil (aset, liabilitas, ekuitas). Selisih kolom Laba Rugi = laba/rugi bersih, yang dipindahkan ke kolom Neraca supaya keduanya seimbang.",
+            },
+            {
+              h: "Kenapa masih relevan dipelajari",
+              b: "SAP membuat neraca lajur 'tidak terlihat' — tapi logikanya tetap terjadi: transaksi terkumpul (neraca saldo), jurnal penyesuaian diposting (FBS1/FB50), laporan ditarik (F.01). Saat angka laporan aneh, akuntan yang paham neraca lajur tahu persis lapisan mana yang dicek: saldo awalnya, penyesuaiannya, atau pemetaannya ke laporan (FSV). Yang tidak paham hanya bisa bilang 'sistemnya salah'.",
+            },
+            {
+              h: "Urutan penyusunan laporan",
+              b: "Dari neraca saldo disesuaikan, laporan disusun berurutan karena saling memberi input: <b>Laba Rugi</b> dulu (menghasilkan laba bersih) → <b>Laporan Perubahan Ekuitas</b> (laba masuk, dividen keluar → ekuitas akhir) → <b>Neraca</b> (memakai ekuitas akhir) → <b>Arus Kas</b> (disusun dari perubahan neraca + detail laba rugi).",
+            },
+          ],
+          tcodes: ["F.01", "FAGLB03", "FBS1", "FB50"],
+        },
+        {
+          id: "ac4",
+          ref: "CAFB IAI — bab Akuntansi Perusahaan Dagang (sistem perpetual vs periodik, retur & potongan, syarat penyerahan FOB).",
+          title: "Jurnal Pembelian & Penjualan: Perpetual vs Periodik",
+          en: "Merchandising Journals",
+          level: "Transaksi",
+          summary:
+            "Dua sistem pencatatan persediaan yang menghasilkan jurnal berbeda untuk transaksi yang sama.",
+          sections: [
+            {
+              h: "Perbedaannya",
+              b: "<b>Perpetual</b>: persediaan dicatat real-time — setiap pembelian menambah akun Persediaan, setiap penjualan langsung membentuk HPP. <b>Periodik</b>: pembelian dicatat ke akun 'Pembelian', HPP baru dihitung akhir periode lewat rumus (persediaan awal + pembelian − persediaan akhir hasil opname). Perpetual butuh sistem; periodik cukup opname — karena itu SAP (dan hampir semua ERP) adalah sistem perpetual.",
+            },
+            {
+              h: "Jurnal pembandingnya",
+              b: "<div class='fin-formula'>PERPETUAL — beli 10jt:  Persediaan (D) 10jt / Hutang (K) 10jt\n           jual, HPP 8jt: Piutang (D) / Penjualan (K)\n                          HPP (D) 8jt / Persediaan (K) 8jt\nPERIODIK  — beli:        Pembelian (D) 10jt / Hutang (K) 10jt\n           jual:         Piutang (D) / Penjualan (K)  (tanpa HPP!)\n           akhir periode: hitung & jurnal HPP sekaligus</div>",
+            },
+            {
+              h: "Retur & potongan",
+              b: "Retur pembelian mengkredit Persediaan (perpetual) atau akun Retur Pembelian (periodik); diskon tunai (termin 2/10, n/30) dicatat sebagai potongan saat pembayaran dalam masa diskon. Freight: FOB shipping point = ongkir tanggungan pembeli → menambah biaya persediaan; FOB destination = tanggungan penjual → beban penjualan.",
+            },
+            {
+              h: "Di SAP",
+              b: "GR (MIGO) = jurnal perpetual sisi beli; PGI (VL02N, movement 601) = pembentukan HPP sisi jual — persis pola perpetual di atas, plus akun perantara GR/IR (lihat topik GR/IR di Akademi Keuangan). Retur via movement 122/mekanisme retur SD.",
+            },
+          ],
+          tcodes: ["MIGO", "MIRO", "VL02N", "VF01", "MB51"],
+          journal: [
+            {
+              d: "Perpetual — jual barang: Piutang Usaha",
+              dr: "11.100.000",
+              cr: "",
+            },
+            { d: "     Penjualan", dr: "", cr: "10.000.000" },
+            { d: "     PPN Keluaran", dr: "", cr: "1.100.000" },
+            { d: "HPP", dr: "7.000.000", cr: "" },
+            { d: "     Persediaan", dr: "", cr: "7.000.000" },
+          ],
+        },
+        {
+          id: "ac5",
+          ref: "CAFB IAI — bab Kas & Setara Kas (kas kecil sistem imprest, rekonsiliasi bank).",
+          title: "Kas Kecil & Rekonsiliasi Bank",
+          en: "Petty Cash & Bank Reconciliation",
+          level: "Transaksi",
+          summary:
+            "Dua kontrol kas paling klasik — beserta jurnalnya yang sering salah.",
+          sections: [
+            {
+              h: "Kas kecil: imprest vs fluktuasi",
+              b: "<b>Imprest</b> (dana tetap): saldo kas kecil selalu Rp X; pengeluaran TIDAK dijurnal saat terjadi, baru dijurnal saat pengisian kembali (beban-beban di debit, kas bank di kredit sebesar total bon). <b>Fluktuasi</b>: setiap pengeluaran langsung dijurnal, pengisian bebas. Imprest lebih kuat kontrolnya: kas fisik + bon harus selalu = dana tetap — selisihnya langsung ketahuan.",
+            },
+            {
+              h: "Rekonsiliasi bank — anatomi selisih",
+              b: "Saldo per buku vs per rekening koran hampir tidak pernah sama. Penyebab dari sisi <b>bank belum catat</b>: setoran dalam perjalanan (+ di bank), cek beredar (− di bank). Sisi <b>perusahaan belum catat</b> — INI yang butuh jurnal: jasa giro (+), biaya admin (−), inkaso, cek kosong pelanggan (− kas, + piutang kembali), salah catat.",
+            },
+            {
+              h: "Format rekonsiliasi",
+              b: "<div class='fin-formula'>Saldo per Bank          xxx  | Saldo per Buku          xxx\n+ Setoran dlm perjalanan     | + Jasa giro/inkaso\n− Cek beredar                | − Biaya admin, cek kosong\n± Koreksi bank               | ± Koreksi buku\n= Saldo benar           xxx  | = Saldo benar           xxx\n         (kedua sisi HARUS sama)</div>",
+            },
+            {
+              h: "Di SAP",
+              b: "FF67 mengotomasi rekonsiliasi: item rekening koran di-match otomatis ke buku; yang gagal masuk FEBAN — dan item FEBAN persis kategori 'perusahaan belum catat' di atas. Kas kecil biasanya dikelola sebagai akun kas tersendiri dengan pengisian via FB50/F-53.",
+            },
+          ],
+          tcodes: ["FF67", "FEBAN", "FB50", "FBL3N"],
+          journal: [
+            {
+              d: "Pengisian kas kecil (imprest) — Beban ATK",
+              dr: "350.000",
+              cr: "",
+            },
+            { d: "Beban Transport", dr: "420.000", cr: "" },
+            { d: "Beban Konsumsi", dr: "230.000", cr: "" },
+            { d: "     Bank", dr: "", cr: "1.000.000" },
+          ],
+        },
+        {
+          id: "ac6",
+          ref: "CAFB IAI — bab Piutang (metode cadangan/penyisihan, penghapusan & pemulihan piutang).",
+          title: "Jurnal Piutang: Cadangan, Penghapusan & Pemulihan",
+          en: "Receivables: Allowance, Write-off & Recovery",
+          level: "Transaksi",
+          summary:
+            "Tiga jurnal piutang yang urutan logikanya wajib hafal di luar kepala.",
+          sections: [
+            {
+              h: "Metode cadangan (allowance)",
+              b: "Standar (dan PSAK 71/ECL) mewajibkan metode cadangan, bukan penghapusan langsung: estimasi kerugian diakui LEBIH DULU sebagai beban + cadangan (kontra piutang). Saat piutang benar-benar tak tertagih → <b>penghapusan</b>: cadangan di-debit, piutang di-kredit — perhatikan: penghapusan TIDAK menyentuh beban (bebannya sudah diakui saat mencadangkan) dan TIDAK mengubah nilai bersih piutang.",
+            },
+            {
+              h: "Tiga jurnal berurutan",
+              b: "<div class='fin-formula'>1. Mencadangkan:  Beban Kerugian Piutang (D)\n                     Cadangan Kerugian Piutang (K)\n2. Menghapus:     Cadangan Kerugian Piutang (D)\n                     Piutang Usaha (K)\n3. Pemulihan (yang dihapus ternyata bayar):\n   a. Piutang Usaha (D) / Cadangan (K)   ← hidupkan lagi\n   b. Kas (D) / Piutang Usaha (K)        ← terima kasnya</div>",
+            },
+            {
+              h: "Jebakan ujian & praktik",
+              b: "Penghapusan langsung (direct write-off: beban diakui saat piutang macet) hanya boleh untuk kondisi terbatas — melanggar matching principle. Dan secara fiskal: penghapusan piutang punya syarat formal sendiri (daftar nominatif, upaya penagihan) agar deductible — beda lagi dari akuntansinya (lihat topik Rekonsiliasi Fiskal di panel Pajak).",
+            },
+            {
+              h: "Di SAP",
+              b: "Aging untuk menghitung cadangan ditarik dari FBL5N; jurnal cadangan via FB50; penghapusan piutang di SAP adalah proses ber-approval (write-off) yang meng-clearing open item customer — jejaknya permanen di akun pelanggan.",
+            },
+          ],
+          tcodes: ["FBL5N", "FB50", "F-32"],
+        },
+        {
+          id: "ac7",
+          ref: "CAFB IAI — bab Persediaan (FIFO & rata-rata tertimbang, penilaian nilai terendah antara biaya dan NRV).",
+          title: "Jurnal Persediaan: FIFO, Rata-rata & LCNRV",
+          en: "Inventory Costing & Valuation",
+          level: "Transaksi",
+          summary:
+            "Barang yang sama dibeli dengan harga berbeda-beda — mana yang jadi HPP saat terjual?",
+          sections: [
+            {
+              h: "Dua metode yang diizinkan PSAK",
+              b: "(LIFO dilarang PSAK/IFRS.) <b>FIFO</b>: yang masuk duluan dianggap keluar duluan → HPP memakai harga lama, persediaan akhir memakai harga terbaru (saat harga naik: HPP kecil, laba besar). <b>Rata-rata tertimbang</b>: setiap pembelian menghitung ulang harga rata-rata; pengeluaran memakai rata-rata terkini (moving average dalam sistem perpetual).",
+            },
+            {
+              h: "Contoh cepat",
+              b: "<div class='fin-formula'>Beli 10 @1.000, lalu 10 @1.200. Jual 12 unit:\nFIFO      : HPP = 10×1.000 + 2×1.200 = 12.400\nRata-rata : rata2 = 22.000/20 = 1.100 → HPP = 12×1.100 = 13.200\nPersediaan akhir: FIFO 9.600 vs Rata-rata 8.800</div>Metode dipilih per kelompok persediaan dan diterapkan konsisten — ganti metode = perubahan kebijakan akuntansi dengan konsekuensi pengungkapan.",
+            },
+            {
+              h: "LCNRV — penurunan nilai",
+              b: "Persediaan disajikan pada yang LEBIH RENDAH antara biaya vs <b>nilai realisasi neto</b> (taksiran harga jual − biaya menyelesaikan & menjual). Barang usang/rusak/harga pasarnya anjlok → jurnal penurunan: Beban (D) / Persediaan atau Cadangan Penurunan (K). Pemulihan diperbolehkan maksimal sebesar penurunan semula.",
+            },
+            {
+              h: "Di SAP",
+              b: "Price control di material master: <b>V (moving average)</b> = metode rata-rata perpetual otomatis; <b>S (standard)</b> = harga baku dengan variance (lihat topik Product Costing). FIFO tersedia sebagai valuasi periodik/balance sheet valuation. Nilai & pergerakan per material diaudit via MB5B/MB52.",
+            },
+          ],
+          tcodes: ["MM03", "MB5B", "MB52", "MI07"],
+        },
+        {
+          id: "ac8",
+          ref: "CAFB IAI — Bab 9 Akuisisi & Disposisi Aset Tetap (akuisisi, biaya setelah perolehan, disposisi, biaya pembongkaran, biaya pinjaman, metode depresiasi) & Bab 10 Properti Investasi.",
+          title: "Jurnal Aset Tetap: Perolehan sampai Pelepasan",
+          en: "Fixed Assets: Acquisition to Disposal",
+          level: "Transaksi",
+          summary:
+            "Jurnal-jurnal sepanjang hidup aset — termasuk dua yang paling sering salah: pembelian gabungan dan pelepasan.",
+          sections: [
+            {
+              h: "Perolehan",
+              b: "Harga perolehan = semua biaya sampai aset siap pakai (harga + ongkut + instalasi + uji coba — dan BPHTB untuk tanah/bangunan). <b>Pembelian lumpsum</b> (tanah + bangunan satu harga): alokasikan berdasar nilai wajar relatif masing-masing — karena tanah tidak disusutkan, alokasi ini menentukan beban puluhan tahun.",
+            },
+            {
+              h: "Pengeluaran setelah perolehan",
+              b: "<b>Dikapitalisasi</b> (menambah aset): memperpanjang umur, menambah kapasitas/kualitas — overhaul besar, penggantian komponen utama. <b>Dibebankan</b>: pemeliharaan rutin agar aset berfungsi normal. Garis batasnya diatur kebijakan (ambang kapitalisasi) — dan ini area manipulasi klasik: membebankan capex agar laba turun (pajak), atau mengkapitalisasi beban agar laba naik (window dressing — kasus maskapai!).",
+            },
+            {
+              h: "Pelepasan — jurnal 4 langkah",
+              b: "(1) Update depresiasi sampai tanggal pelepasan; (2) hapus harga perolehan (kredit aset); (3) hapus akumulasi depresiasinya (debit); (4) catat kas yang diterima — selisihnya = <b>laba/rugi pelepasan</b>.",
+            },
+            {
+              h: "Di SAP",
+              b: "Perolehan via jalur PO (account assignment A) atau ABZON; kapitalisasi dari proyek via CJ88; komponen besar = sub-aset tersendiri; pelepasan via ABAON (dijual) yang otomatis mengeksekusi 4 langkah di atas dalam satu transaksi — coba lihat jurnal yang terbentuk untuk membuktikannya.",
+            },
+          ],
+          tcodes: ["AS01", "ABZON", "AW01N", "ABAON", "CJ88"],
+          journal: [
+            {
+              d: "Jual mesin (perolehan 100jt, akum. 70jt) laku 35jt — Kas",
+              dr: "35.000.000",
+              cr: "",
+            },
+            { d: "Akumulasi Depresiasi", dr: "70.000.000", cr: "" },
+            { d: "     Mesin", dr: "", cr: "100.000.000" },
+            { d: "     Laba Pelepasan Aset", dr: "", cr: "5.000.000" },
+          ],
+        },
+        {
+          id: "ac9",
+          ref: "CAFB IAI — bab Liabilitas (Bab 13 Liabilitas Jangka Pendek & Jangka Panjang) dan bab Ekuitas; provisi & kontinjensi pada bab terkait.",
+          title: "Jurnal Liabilitas & Ekuitas",
+          en: "Liabilities & Equity Journals",
+          level: "Transaksi",
+          summary:
+            "Sisi kanan neraca: dari utang berbunga sampai dividen — dengan tiga tanggal dividen yang legendaris.",
+          sections: [
+            {
+              h: "Utang berbunga",
+              b: "Pinjaman diterima: Kas (D) / Utang Bank (K). Bunga diakui per periode berjalan (akrual!) walau dibayar kemudian: Beban Bunga (D) / Utang Bunga (K). Bagian pinjaman yang jatuh tempo ≤ 12 bulan direklasifikasi ke liabilitas jangka pendek — reklas yang sering terlupa saat tutup tahun.",
+            },
+            {
+              h: "Provisi vs kontinjensi",
+              b: "<b>Provisi</b>: kewajiban kini dari peristiwa lalu, kemungkinan besar keluar sumber daya, bisa diestimasi andal → DIJURNAL (garansi produk, restorasi lingkungan, imbalan kerja). <b>Liabilitas kontinjensi</b>: belum memenuhi syarat → cukup DIUNGKAP di CALK (gugatan hukum yang belum jelas). Salah menempatkan keduanya = salah saji klasik.",
+            },
+            {
+              h: "Tiga tanggal dividen",
+              b: "<div class='fin-formula'>Tgl PENGUMUMAN : Laba Ditahan (D) / Utang Dividen (K)  ← jurnal!\nTgl PENCATATAN : tidak ada jurnal (hanya penentuan siapa berhak)\nTgl PEMBAYARAN : Utang Dividen (D) / Kas (K)</div>Kewajiban lahir saat DIUMUMKAN, bukan saat dibayar. Setoran modal: Kas (D) / Modal Saham (K) + Agio bila di atas nominal.",
+            },
+            {
+              h: "Di SAP",
+              b: "Utang bank & jadwal bunganya dikelola treasury; jurnal akrual bunga via FBS1 (dengan auto-reversal); provisi imbalan kerja dari laporan aktuaria (topik PSAK 24); dividen BUMN mengikuti keputusan RUPS — jurnalnya persis pola tiga tanggal di atas.",
+            },
+          ],
+          tcodes: ["FBS1", "FB50", "F110", "F.01"],
+        },
+        {
+          id: "ac10",
+          ref: "CAFB IAI — bab Jurnal Penyesuaian (akrual & biaya dibayar di muka, ringkasan proses penyesuaian).",
+          title: "Jurnal Penyesuaian: 5 Keluarga Lengkap",
+          en: "Adjusting Entries",
+          level: "Penyesuaian",
+          summary:
+            "Peta lengkap penyesuaian akhir periode — kuasai lima polanya, selesai semua variasinya.",
+          sections: [
+            {
+              h: "Lima keluarga",
+              b: "<div class='fin-formula'>1. Beban dibayar di muka (prepaid)  : Beban (D) / Sewa Dibayar Dimuka (K)\n2. Pendapatan diterima di muka      : Pendapatan Diterima Dimuka (D) / Pendapatan (K)\n3. Beban akrual (sudah terjadi,     : Beban (D) / Utang Beban (K)\n   belum dibayar)\n4. Pendapatan akrual (sudah berhak, : Piutang Pendapatan (D) / Pendapatan (K)\n   belum ditagih)\n5. Estimasi                         : Depresiasi, cadangan piutang,\n                                      penurunan persediaan</div>Pola 1–2 = koreksi atas kas yang bergerak DULUAN; pola 3–4 = pengakuan atas kas yang bergerak BELAKANGAN; pola 5 = alokasi & estimasi. Nomor 2 persis mekanisme Uper/liabilitas kontrak (PSAK 72).",
+            },
+            {
+              h: "Dua pendekatan pencatatan awal",
+              b: "Prepaid bisa dicatat awal sebagai ASET (pendekatan neraca) atau langsung BEBAN (pendekatan laba rugi) — jurnal penyesuaiannya kebalikan satu sama lain, tapi hasil akhirnya identik. Soal ujian suka menjebak di sini: baca dulu bagaimana pencatatan awalnya.",
+            },
+            {
+              h: "Di SAP",
+              b: "Keluarga 1–2: bisa otomatis via accrual engine atau recurring; keluarga 3–4: FBS1 dengan reversal date (bulan depan membalik sendiri, digantikan tagihan riil); keluarga 5: depresiasi oleh AFAB, cadangan via FB50 dari worksheet. Checklist penyesuaian bulanan yang baku = topik Tutup Buku.",
+            },
+          ],
+          tcodes: ["FBS1", "FB50", "AW01N", "FBL3N"],
+          journal: [
+            {
+              d: "Sewa setahun 120jt dibayar 1 Okt (dicatat sbg aset). Penyesuaian 31 Des — Beban Sewa (3 bln)",
+              dr: "30.000.000",
+              cr: "",
+            },
+            { d: "     Sewa Dibayar di Muka", dr: "", cr: "30.000.000" },
+          ],
+        },
+        {
+          id: "ac11",
+          ref: "CAFB IAI — bab Jurnal Penutup & Siklus Akuntansi (Bab 8: jurnal penutup, ilustrasi siklus akuntansi).",
+          title: "Jurnal Penutup & Jurnal Pembalik",
+          en: "Closing & Reversing Entries",
+          level: "Penyesuaian",
+          summary:
+            "Me-nol-kan akun nominal ke laba ditahan — dan trik pembalik yang menyelamatkan dari dobel catat.",
+          sections: [
+            {
+              h: "Empat langkah jurnal penutup",
+              b: "<div class='fin-formula'>1. Tutup Pendapatan : Pendapatan (D) / Ikhtisar Laba Rugi (K)\n2. Tutup Beban      : Ikhtisar Laba Rugi (D) / Beban-beban (K)\n3. Tutup Ikhtisar   : Ikhtisar L/R (D) / Laba Ditahan (K)  [jika laba]\n4. Tutup Dividen    : Laba Ditahan (D) / Dividen (K)</div>Setelahnya semua akun nominal (pendapatan, beban, dividen) bersaldo NOL — siap menampung tahun baru; akun riil (neraca) terus berjalan. Inilah kenapa laba rugi 'per periode' sedangkan neraca 'kumulatif'.",
+            },
+            {
+              h: "Jurnal pembalik",
+              b: "Opsional tapi cerdas: awal periode, balik jurnal penyesuaian akrual (keluarga 3–4). Gunanya: saat tagihan riil datang & dicatat penuh sebagai beban, tidak terjadi dobel (karena sebagian sudah dibebankan periode lalu dan sudah dibalik). Tanpa pembalik, pencatat harus INGAT memecah tagihan — mengandalkan ingatan = resep salah catat.",
+            },
+            {
+              h: "Di SAP",
+              b: "Penutupan pendapatan-beban ke retained earnings terjadi otomatis saat <b>balance carryforward (F.16)</b> — tidak ada jurnal penutup manual; ini salah satu perbedaan terbesar SAP vs pembukuan manual. Jurnal pembalik built-in di FBS1 (reversal date) dan F.81 untuk pembalikan massal. Konsepnya sama persis, eksekusinya diotomasi.",
+            },
+          ],
+          tcodes: ["F.16", "FBS1", "OB52", "F.01"],
+        },
+        {
+          id: "ac12",
+          ref: "CAFB IAI — bab siklus akuntansi & kertas kerja (koreksi kesalahan dan penelusuran neraca saldo).",
+          title: "Koreksi Kesalahan & Mencari Selisih",
+          en: "Error Correction & Trial Balance Detective Work",
+          level: "Penyesuaian",
+          summary:
+            "Salah catat itu pasti terjadi — yang membedakan akuntan baik adalah cara memperbaikinya (dan menemukannya).",
+          sections: [
+            {
+              h: "Prinsip koreksi",
+              b: "Kesalahan TIDAK dihapus — dikoreksi dengan jurnal koreksi (atau reversal + jurnal benar). Kesalahan periode berjalan: koreksi langsung. Kesalahan periode LALU yang material: koreksi ke saldo awal laba ditahan + sajikan ulang komparatif (PSAK 25) — bukan dibebankan ke periode sekarang. Kesalahan yang saling menutup sendiri dalam 2 periode (counterbalancing — misal salah cut-off persediaan) tetap wajib dianalisis dampak per periodenya.",
+            },
+            {
+              h: "Teknik detektif neraca saldo",
+              b: "<div class='fin-formula'>Selisih habis dibagi 9  → kemungkinan TRANSPOSISI\n  (750 ditulis 570; 750−570=180; 180/9=20 ✓)\nSelisih habis dibagi 2  → posting ke sisi yang salah\n  (debit 500 tercatat di kredit → selisih 1.000)\nSelisih = satu angka bulat → ada transaksi terlewat\nSelisih habis dibagi 10/100 → salah letak desimal (slide)</div>Teknik warisan era manual yang tetap berguna membaca selisih rekonsiliasi apa pun.",
+            },
+            {
+              h: "Di SAP",
+              b: "Trial balance tidak akan pernah tak seimbang (sistem menolak dokumen unbalanced) — kesalahan modern berbentuk lain: salah akun, salah cost center, salah periode, salah tax code. Koreksinya tetap prinsip yang sama: reverse (FB08 dengan reversal reason) lalu posting benar — dua-duanya tinggal jejak. Salah saji periode lalu: koreksi via jurnal ke laba ditahan sesuai PSAK 25.",
+            },
+          ],
+          tcodes: ["FB50", "FBL3N", "FAGLB03", "F.01"],
+        },
+        {
+          id: "ac13",
+          ref: "CAFB IAI — Bab 1 (laporan keuangan utama & kerangka konseptual) sebagai dasar perancangan bagan akun.",
+          title: "Merancang Chart of Accounts yang Baik",
+          en: "CoA Design in Practice",
+          level: "Praktik",
+          summary:
+            "Keputusan arsitektur akuntansi paling berdampak jangka panjang — dan paling mahal diubah belakangan.",
+          sections: [
+            {
+              h: "Prinsip penomoran",
+              b: "Blok per kelompok dengan ruang tumbuh: 1xxxx aset (11 kas-bank, 12 piutang, 13 persediaan, 15 aset tetap, 16 akumulasi), 2xxxx liabilitas, 3xxxx ekuitas, 4xxxx pendapatan, 5xxxx HPP, 6xxxx beban operasi, 7-8xxxx pendapatan/beban lain, 9xxxx pos khusus. Sisakan gap antar akun (10, 20…) — menyisipkan akun di tengah struktur padat adalah penderitaan.",
+            },
+            {
+              h: "Kesalahan desain klasik",
+              b: "(1) Akun terlalu SEDIKIT: semua biaya masuk 'beban lain-lain' → laporan buta; (2) terlalu BANYAK: satu akun per vendor/kegiatan → duplikasi subledger, rekonsiliasi neraka; (3) mencampur dimensi: membuat akun per departemen ('Beban ATK Divisi A') padahal itu tugas cost center — dimensi organisasi JANGAN dikodekan ke nomor akun; (4) tidak memisahkan akun yang beda perlakuan fiskal (entertainment, sumbangan, natura) — menyulitkan rekonsiliasi fiskal selamanya.",
+            },
+            {
+              h: "Aturan praktis",
+              b: "Satu akun = satu makna ekonomi + satu perlakuan (PSAK & fiskal). Detail 'siapa/di mana/untuk apa' diserahkan ke dimensi lain: customer/vendor (subledger), cost center, profit center, internal order. Nama akun harus bisa dipahami orang di luar tim akuntansi.",
+            },
+            {
+              h: "Di SAP",
+              b: "CoA hidup di FS00 dua level (chart vs company code) dengan atribut yang mengunci perilakunya: account group (mengatur blok nomor!), reconciliation type, open item management, field status. Perubahan CoA di sistem berjalan = proyek besar — karena itu desain awal sepadan dipikirkan berminggu-minggu.",
+            },
+          ],
+          tcodes: ["FS00", "FAGLB03", "KS01", "KE51"],
+        },
+        {
+          id: "ac14",
+          ref: "Jembatan penerapan: konsep siklus akuntansi CAFB IAI dipetakan ke transaksi & dokumen di SAP.",
+          title: "Akuntansi Manual → SAP: Kamus Pemetaan",
+          en: "From Textbook to ERP — Concept Mapping",
+          level: "Praktik",
+          summary:
+            "Jembatan terakhir: setiap konsep buku teks punya padanan persisnya di SAP.",
+          sections: [
+            {
+              h: "Kamus pemetaannya",
+              b: "<div class='fin-formula'>Buku teks                    →  SAP\nJurnal umum                  →  FB50 / F-02 (dokumen SA)\nJurnal khusus penjualan      →  Billing SD (VF01, tipe RV)\nJurnal khusus pembelian      →  MIRO/FB60 (tipe RE/KR)\nJurnal penerimaan kas        →  F-28 (tipe DZ)\nJurnal pengeluaran kas       →  F-53/F110 (tipe KZ/ZP)\nBuku besar                   →  FAGLB03 + FBL3N\nBuku pembantu piutang/hutang →  FBL5N / FBL1N\nKartu aset                   →  AW01N\nKartu persediaan             →  MB52 / MB5B / MB51\nNeraca saldo                 →  Trial balance (S_ALR / FAGLB03)\nJurnal penyesuaian           →  FBS1 (auto-reversal!)\nJurnal penutup               →  F.16 (otomatis saat carryforward)\nNeraca lajur                 →  proses closing (OB52, F.01)\nLaporan keuangan             →  F.01 dengan FSV</div>",
+            },
+            {
+              h: "Tiga perbedaan mental terbesar",
+              b: "(1) Di buku teks kamu MENULIS jurnal; di SAP mayoritas jurnal LAHIR dari transaksi operasional orang lain (gudang, sales, HR) — tugasmu bergeser ke memastikan konfigurasi & memonitor hasil; (2) tidak ada 'hapus' — hanya reversal berpasangan; (3) periode mengunci dirinya (OB52) — disiplin waktu ditegakkan sistem, bukan itikad baik.",
+            },
+            {
+              h: "Cara belajar terbaik",
+              b: "Ambil satu transaksi di tiap baris kamus di atas, buka dokumennya di SAP, tekan tombol tampilkan dokumen akuntansi — dan cocokkan dengan jurnal versi buku teks. Sekali kamu terbiasa 'membaca jurnal di balik transaksi', dua duniamu menyatu.",
+            },
+          ],
+          tcodes: [
+            "FB50",
+            "VF01",
+            "MIRO",
+            "F-28",
+            "FBL5N",
+            "FAGLB03",
+            "FBS1",
+            "F.16",
+            "F.01",
+          ],
+        },
+      ];
+
+      const TAX_ACADEMY = [
+        {
+          id: "tx1",
+          ref: "Modul KUP — Bab I Pendahuluan (istilah & sistem pemungutan), Bab II NPWP dan Pengukuhan PKP, Bab IV Pembukuan dan Pencatatan.",
+          title: "Dasar KUP: Sistem, NPWP & PKP",
+          en: "Ketentuan Umum & Tata Cara Perpajakan — Fondasi",
+          level: "KUP",
+          summary:
+            "Aturan main perpajakan Indonesia: siapa wajib apa, dan tiga sistem pemungutan yang menjelaskan semuanya.",
+          sections: [
+            {
+              h: "Tiga sistem pemungutan",
+              b: "<b>Self assessment</b> — WP menghitung, menyetor, dan melaporkan pajaknya sendiri (PPh Badan, PPN): negara percaya dulu, memeriksa kemudian; <b>Withholding</b> — pihak ketiga memotong/memungut (PPh 21/23/26: perusahaanmu adalah 'petugas pajak' bagi karyawan & vendornya); <b>Official assessment</b> — fiskus menetapkan (PBB). Hampir semua kewajiban pajak perusahaan adalah kombinasi self assessment + withholding — dan hampir semua sengketa lahir dari sana.",
+            },
+            {
+              h: "NPWP, NIK & PKP",
+              b: "Sejak UU HPP: <b>NIK berfungsi sebagai NPWP</b> untuk orang pribadi (format 16 digit). Badan wajib ber-NPWP sejak berdiri. <b>PKP</b> (Pengusaha Kena Pajak) wajib dikukuhkan jika omzet melewati <b>Rp4,8 miliar</b>/tahun (di bawah itu boleh memilih) — konsekuensinya: wajib memungut PPN, menerbitkan faktur pajak, dan lapor SPT Masa PPN. Sejak 1 Januari 2025 seluruh administrasi (pendaftaran, faktur, bupot, SPT) terpusat di <b>Coretax (CTAS)</b>.",
+            },
+            {
+              h: "Pembukuan vs pencatatan",
+              b: "WP Badan & OP beromzet ≥ Rp4,8M wajib <b>pembukuan</b> (laporan keuangan lengkap, disimpan 10 tahun); OP di bawahnya boleh <b>pencatatan</b> + Norma Penghitungan Penghasilan Neto. Pembukuan inilah jembatan ke SAP: buku besar FI adalah dasar SPT — dan dasar pemeriksaan.",
+            },
+            {
+              h: "Di SAP",
+              b: "NPWP vendor/customer disimpan di master data (BP/XK01/XD01 — field tax number); kesalahan NPWP di master = bukti potong tidak bisa di-kreditkan lawan transaksi. Konfigurasi tax code menentukan seluruh perlakuan PPN/PPh di transaksi.",
+            },
+          ],
+          tcodes: ["BP", "XK01", "XD01", "FS00"],
+        },
+        {
+          id: "tx2",
+          ref: "Modul KUP — Bab III Surat Pemberitahuan: jenis & cara pengambilan, syarat pengisian, batas waktu & perpanjangan, sanksi administrasi, SPT dianggap tidak disampaikan, pembetulan SPT.",
+          title: "SPT, Pembayaran & Batas Waktu",
+          en: "Surat Pemberitahuan & Tata Cara Pembayaran",
+          level: "KUP",
+          summary:
+            "Kalender kewajiban yang tidak boleh terlewat — beserta denda kalau terlambat.",
+          sections: [
+            {
+              h: "Batas waktu kunci",
+              b: "<div class='fin-formula'>Setor PPh Masa (21/23/26/4-2)  : tgl 10 bulan berikutnya\nSetor PPh 25 (angsuran)        : tgl 15 bulan berikutnya\nLapor SPT Masa PPh             : tgl 20 bulan berikutnya\nSetor & Lapor SPT Masa PPN     : akhir bulan berikutnya\nSPT Tahunan OP                 : 31 Maret\nSPT Tahunan Badan              : 30 April\nPPh 29 (kurang bayar tahunan)  : sebelum SPT disampaikan</div>Pembayaran memakai kode billing (e-Billing/Coretax); bukti setor (NTPN) adalah dokumen yang selalu diminta saat pemeriksaan.",
+            },
+            {
+              h: "Denda keterlambatan lapor",
+              b: "<div class='fin-formula'>SPT Masa PPN      : Rp500.000\nSPT Masa lainnya  : Rp100.000\nSPT Tahunan Badan : Rp1.000.000\nSPT Tahunan OP    : Rp100.000</div>Kecil kelihatannya — tapi perusahaan dengan puluhan masa & jenis pajak yang kacau administrasinya bisa mengakumulasi denda + bunga signifikan, belum termasuk risiko pemeriksaan.",
+            },
+            {
+              h: "Pembetulan SPT",
+              b: "SPT bisa dibetulkan sepanjang belum diperiksa. Kurang bayar akibat pembetulan dikenai bunga per bulan (lihat topik Sanksi). Strategis: menemukan kesalahan sendiri lalu membetulkan jauh lebih murah daripada ditemukan pemeriksa (sanksi SKPKB lebih berat).",
+            },
+            {
+              h: "Di SAP",
+              b: "Sumber angka SPT: PPN dari rekap pajak keluaran-masukan (transaksi VF01/MIRO via tax code, saldo di FBL3N per akun PPN), PPh potput dari dokumen pembayaran (F110/F-53). Rekonsiliasi bulanan 'GL vs SPT' adalah kontrol kunci — selisihnya harus nol atau terjelaskan.",
+            },
+          ],
+          tcodes: ["MIRO", "VF01", "FBL3N", "F110"],
+        },
+        {
+          id: "tx3",
+          ref: "Modul KUP — sanksi NPWP/PKP (Bab II, termasuk kesengajaan & percobaan) serta bab pemeriksaan, penetapan, dan keberatan pada bagian lanjutan modul.",
+          title: "Sanksi, Pemeriksaan & Upaya Hukum",
+          en: "Sanksi Administrasi, SKP, Keberatan & Banding",
+          level: "KUP",
+          summary:
+            "Apa yang terjadi kalau salah — dan jenjang perlawanan kalau tidak setuju.",
+          sections: [
+            {
+              h: "Sanksi bunga era UU HPP",
+              b: "Bunga tidak lagi flat 2%/bulan — kini mengacu <b>suku bunga acuan Kemenkeu + uplift</b>, dibagi 12, maksimal 24 bulan. Uplift bertingkat sesuai 'kadar kesalahan': pembetulan sendiri (uplift 5%) < ditagih STP (10%) < ditemukan pemeriksaan/SKPKB (15%, plus kenaikan). Pesannya eksplisit: makin sukarela mengoreksi, makin murah.",
+            },
+            {
+              h: "Produk pemeriksaan",
+              b: "Pemeriksaan berujung Surat Ketetapan Pajak: <b>SKPKB</b> (kurang bayar + sanksi), <b>SKPKBT</b> (tambahan jika ada data baru), <b>SKPLB</b> (lebih bayar → restitusi), <b>SKPN</b> (nihil), plus <b>STP</b> untuk sanksi/denda administratif. Jatuh tempo pembayaran ketetapan: 1 bulan sejak terbit.",
+            },
+            {
+              h: "Jenjang upaya hukum",
+              b: "<div class='fin-formula'>Keberatan (ke DJP)     : diajukan ≤ 3 bulan sejak SKP\n  → ditolak/dikabulkan sebagian: denda 30% dari pajak yang masih harus dibayar\nBanding (Pengadilan Pajak): ≤ 3 bulan sejak keputusan keberatan\n  → ditolak: denda 60%\nPeninjauan Kembali (MA)</div>Denda bertingkat 30%→60% membuat keputusan melawan harus dihitung matang: kekuatan bukti vs eksposur. Alternatif non-sengketa: pembetulan, pengurangan/penghapusan sanksi (Pasal 36).",
+            },
+            {
+              h: "Di SAP — menghadapi pemeriksaan",
+              b: "Pemeriksa bekerja dari data: mereka meminta GL, rekap faktur, bukti potong — dan menyilangkannya dengan SPT. Kesiapanmu = kemampuan menarik populasi transaksi per akun pajak (FBL3N, SE16N atas BSEG) dan menelusuri dokumen sumbernya (document flow). Perusahaan yang rekonsiliasinya rapi menutup pemeriksaan berbulan-bulan lebih cepat.",
+            },
+          ],
+          tcodes: ["FBL3N", "SE16N", "FB60", "MIRO"],
+        },
+        {
+          id: "tx4",
+          ref: "Modul PPh — Bab I Subjek Pajak (OP, badan, BUT, bukan subjek) dan Bab II Objek Pajak: penghasilan final, dikecualikan, deductible vs non-deductible expenses, hubungan istimewa, nilai perolehan.",
+          title: "Konsep PPh: Subjek, Objek & Tarif",
+          en: "Pajak Penghasilan — Kerangka Dasar",
+          level: "PPh",
+          summary:
+            "Satu undang-undang, banyak pasal pemotongan — peta besarnya dulu sebelum menyelam.",
+          sections: [
+            {
+              h: "Subjek & objek",
+              b: "Subjek: OP, badan, BUT, warisan belum terbagi — dibedakan dalam negeri (dikenai atas penghasilan worldwide) vs luar negeri (hanya penghasilan dari Indonesia, umumnya via PPh 26). Objek = <b>setiap tambahan kemampuan ekonomis</b> dengan nama dan bentuk apa pun — sejak UU HPP termasuk <b>natura/kenikmatan</b> (dengan daftar pengecualian: makanan seluruh pegawai, natura daerah tertentu, dll).",
+            },
+            {
+              h: "Tarif progresif OP (Pasal 17, UU HPP)",
+              b: "<div class='fin-formula'>Lapisan penghasilan kena pajak      Tarif\ns.d. Rp60 juta                       5%\n> 60 juta – 250 juta                15%\n> 250 juta – 500 juta               25%\n> 500 juta – 5 miliar               30%\n> 5 miliar                          35%\n\nPTKP: 54 juta + 4,5 juta (kawin)\n      + 4,5 juta/tanggungan (maks 3)</div>",
+            },
+            {
+              h: "Peta pasal pemotongan",
+              b: "Cara tercepat menghafal PPh: per 'pintu keluar uang'. Gaji karyawan → <b>21</b>; impor & pembelian oleh pemungut → <b>22</b>; jasa, sewa (non-tanah), dividen-bunga-royalti antar WP DN → <b>23</b>; ke luar negeri → <b>26</b>; penghasilan tertentu bersifat final (sewa tanah/bangunan, konstruksi, pengalihan tanah) → <b>4(2)</b>; pelayaran/penerbangan → <b>15</b>; angsuran sendiri → <b>25</b>; pelunasan tahunan → <b>29</b>.",
+            },
+            {
+              h: "Di SAP",
+              b: "Seluruh pasal potput dieksekusi lewat konfigurasi <b>withholding tax type & code</b> di master vendor + dokumen: sistem memotong otomatis saat invoice/pembayaran, mengkredit akun hutang PPh per pasal, dan datanya jadi dasar bukti potong (kini bupot unifikasi di Coretax).",
+            },
+          ],
+          tcodes: ["XK02", "FB60", "MIRO", "F110"],
+        },
+        {
+          id: "tx5",
+          ref: "Modul PPh — Bab III.1 PPh Pasal 21: pemotong & penerima, DPP, tarif tanpa NPWP, contoh perhitungan pegawai tetap. Catatan: modul memakai metode lama — topik ini memperbaruinya dengan TER (PP 58/2023) yang berlaku sejak 2024.",
+          title: "PPh 21 & Metode TER",
+          en: "PPh 21 — Tarif Efektif Rata-rata (PP 58/2023)",
+          level: "PPh",
+          summary:
+            "Revolusi cara hitung PPh gaji sejak 2024: bulanan cukup satu kali kali tarif.",
+          sections: [
+            {
+              h: "Cara kerja TER",
+              b: "Jan–Nov: PPh 21 bulanan = <b>penghasilan bruto × Tarif Efektif Rata-rata</b> — tanpa disetahunkan, tanpa hitung PTKP bulanan. TER terbagi kategori berdasar status PTKP: <b>A</b> (TK/0, TK/1, K/0), <b>B</b> (TK/2, TK/3, K/1, K/2), <b>C</b> (K/3) — masing-masing tabel tarif berjenjang dari 0% (bruto kecil) sampai 34%. <b>Desember</b>: hitung setahun penuh dengan tarif Pasal 17 (bruto − biaya jabatan 5% maks 6jt − iuran pensiun − PTKP), lalu kurangi total yang sudah dipotong Jan–Nov — selisihnya dipotong/dikembalikan di Desember.",
+            },
+            {
+              h: "Contoh intuisi",
+              b: "<div class='fin-formula'>Gaji Rp10 juta/bulan, status TK/0 (kategori A)\nTER kategori A utk 10 juta ≈ 2%  →  PPh 21 = Rp200.000/bulan\nDesember: rekonsiliasi tahunan tarif Pasal 17</div>Konsekuensi praktis: potongan Desember bisa berbeda jauh dari bulan-bulan lain — wajar dan by design, bukan salah hitung. Komunikasikan ke karyawan sebelum mereka protes ke payroll.",
+            },
+            {
+              h: "Yang sering salah",
+              b: "(1) Salah kategori TER karena status PTKP di master data karyawan tidak update (menikah/anak); (2) bonus & THR ikut dikali TER bulan pembayarannya — bruto melonjak, tarif TER ikut naik di bulan itu; (3) natura kena pajak lupa dimasukkan ke bruto; (4) pegawai tidak ber-NPWP/NIK-tervalidasi: tarif lebih tinggi 20%.",
+            },
+            {
+              h: "Di SAP",
+              b: "Payroll (PC00_M99_CALC0 dengan aturan lokal Indonesia) menghitung TER dari master infotype: status keluarga & PTKP dari data karyawan (PA30) — sekali lagi terbukti: master data adalah pajak. Jurnal payroll mengkredit hutang PPh 21 yang dibayar via proses AP.",
+            },
+          ],
+          tcodes: ["PA30", "PC00_M99_CALC0", "FBL3N"],
+        },
+        {
+          id: "tx6",
+          ref: "Modul PPh — Bab III.2 dst: PPh Pasal 22 (pemungut, objek & tarif), 23, 26, 4(2), dan 15 per pasal.",
+          title: "PPh Potput: 22, 23, 26, 4(2), 15",
+          en: "Withholding Lengkap per Pasal",
+          level: "PPh",
+          summary:
+            "Tabel tarif yang dipakai tim AP setiap hari — dengan jebakan klasifikasinya.",
+          sections: [
+            {
+              h: "Tarif inti per pasal",
+              b: "<div class='fin-formula'>PPh 23: jasa & sewa non-tanah        2%  (tanpa NPWP: 4%)\n        dividen, bunga, royalti     15%\nPPh 26: ke WP luar negeri           20%  (atau tarif P3B + DGT form)\nPPh 4(2) final:\n  sewa tanah/bangunan               10%\n  jasa konstruksi                   1,75%–6% (sesuai kualifikasi)\n  pengalihan tanah/bangunan         2,5%\n  bunga deposito/tabungan           20%\nPPh 15: pelayaran dalam negeri      1,2% dari peredaran bruto\nPPh 22: impor, pembelian pemungut   beragam (0,25%–7,5%)</div>",
+            },
+            {
+              h: "Jebakan klasifikasi",
+              b: "Kesalahan paling mahal: salah pasal. Sewa <b>gedung</b> = 4(2) final 10%; sewa <b>alat berat</b> = 23 sebesar 2%. Jasa konstruksi = 4(2); jasa perawatan biasa = 23. Dividen ke badan DN = <b>dikecualikan</b> dari objek; ke OP dalam negeri bisa dikecualikan bila diinvestasikan kembali sesuai ketentuan. Satu invoice bisa berisi campuran (barang + jasa) — potput hanya atas komponen jasanya bila dipisah jelas di tagihan.",
+            },
+            {
+              h: "Relevansi pelabuhan",
+              b: "PPh 15 pelayaran (1,2% final) adalah pasal sehari-hari mitra pelabuhan; sewa lahan & bangunan ke tenant = 4(2) 10% yang dipotong <b>penyewa</b>; jasa bongkar muat pihak ketiga = objek 23.",
+            },
+            {
+              h: "Di SAP",
+              b: "Withholding tax code per pasal dipasang di master vendor; saat MIRO/FB60/F110 sistem memotong otomatis dan memisahkan hutang per pasal — rekonsiliasi bulanan: saldo akun hutang PPh per pasal (FBL3N) vs bupot yang diterbitkan vs SPT Masa unifikasi. Tiga angka itu wajib sama.",
+            },
+          ],
+          tcodes: ["XK02", "MIRO", "FB60", "F110", "FBL3N"],
+        },
+        {
+          id: "tx7",
+          ref: "Modul PPh — Bab II.4 Biaya dalam Perhitungan PKP, Bab II.7 Penyusutan & Amortisasi Fiskal, Bab II.8 Norma Penghitungan, serta bagian perhitungan PPh Badan & kredit pajak.",
+          title: "PPh Badan & Rekonsiliasi Fiskal",
+          en: "PPh Badan, Tarif & Angsuran PPh 25",
+          level: "PPh",
+          summary:
+            "Dari laba akuntansi ke laba fiskal ke pajak terutang — jalur yang dilalui setiap SPT Tahunan Badan.",
+          sections: [
+            {
+              h: "Tarif & fasilitas",
+              b: "<div class='fin-formula'>Tarif PPh Badan                       : 22%\nPerseroan Tbk (free float ≥40%, syarat): 22% − 3% = 19%\nOmzet ≤ 50 miliar: diskon 50% tarif utk\n  bagian PKP dari omzet s.d. 4,8 miliar (Psl 31E)\nUMKM omzet ≤ 4,8 M (PP 55/2022)       : final 0,5% × omzet\n  (jangka waktu: PT 3 th, CV/firma 4 th, OP 7 th;\n   OP omzet ≤ 500 juta/tahun: tidak dikenai)</div>",
+            },
+            {
+              h: "Alur perhitungan",
+              b: "Laba akuntansi (F.01) → <b>rekonsiliasi fiskal</b> (koreksi positif/negatif — detail di topik Akuntansi Pajak) → Penghasilan Kena Pajak → × tarif → PPh terutang → dikurangi <b>kredit pajak</b> (PPh 22/23 yang dipotong pihak lain + PPh 25 yang diangsur sendiri) → kurang/lebih bayar (PPh 29 / restitusi). Kompensasi kerugian fiskal dapat dibawa maksimal 5 tahun.",
+            },
+            {
+              h: "PPh 25 — angsuran",
+              b: "Angsuran bulanan = (PPh terutang tahun lalu − kredit pajak potput) ÷ 12. Perusahaan yang labanya anjlok bisa mengajukan pengurangan angsuran — daripada lebih bayar besar lalu restitusi (yang hampir pasti memicu pemeriksaan).",
+            },
+            {
+              h: "Di SAP",
+              b: "Bahan SPT Badan seluruhnya dari sistem: laba per F.01, detail akun untuk koreksi fiskal (FBL3N: entertainment, sumbangan, penyusutan), kredit pajak dari rekap bukti potong yang diterima. Praktik rapi: akun-akun 'sensitif fiskal' dipisah sejak chart of accounts supaya rekonsiliasi tinggal tarik saldo.",
+            },
+          ],
+          tcodes: ["F.01", "FBL3N", "FS00", "FAGLB03"],
+        },
+        {
+          id: "tx8",
+          ref: "Modul PPN-PPnBM — Bab II Subjek: Pengusaha Kena Pajak, penyerahan BKP, pemungut PPN; serta bab faktur pajak & pengkreditan Pajak Masukan pada bagian lanjutan modul.",
+          title: "Mekanisme PPN: PK − PM & Faktur Pajak",
+          en: "PPN — Mekanisme Pengkreditan",
+          level: "PPN",
+          summary:
+            "Pajak atas nilai tambah: kamu memungut untuk negara, dan membayar lewat selisih.",
+          sections: [
+            {
+              h: "Mekanisme dasarnya",
+              b: "<div class='fin-formula'>PPN disetor = Pajak Keluaran − Pajak Masukan\n\nPK = PPN yang KAMU pungut saat menjual (VF01/FB70)\nPM = PPN yang kamu BAYAR saat membeli (MIRO/FB60)\nPK > PM → setor selisihnya (akhir bulan berikutnya)\nPM > PK → kompensasi ke masa berikut, atau restitusi</div>Karena hanya nilai tambah yang terpajaki, PPN 'menempel' di rantai — dan faktur pajak adalah mata uangnya: tanpa faktur pajak yang sah, PM tidak bisa dikreditkan = biaya nyata perusahaan.",
+            },
+            {
+              h: "Faktur pajak & Coretax",
+              b: "Faktur diterbitkan saat penyerahan (atau saat pembayaran jika mendahului), bernomor seri dari DJP, kini melalui <b>Coretax</b> (sebelumnya e-Faktur). Syarat PM dapat dikreditkan: formal (faktur lengkap & sah) + material (benar ada transaksinya, berhubungan dengan kegiatan usaha). Faktur dari PKP non-aktif / faktur TBTS (tidak berdasarkan transaksi sebenarnya) = PM ditolak + risiko pidana.",
+            },
+            {
+              h: "Sanksi khas PPN",
+              b: "Terlambat/tidak menerbitkan faktur, atau faktur tidak lengkap: denda <b>1% dari DPP</b> (STP). Ditambah risiko koreksi PM saat pemeriksaan — pos koreksi terbesar di hampir semua pemeriksaan PPN adalah PM yang cacat formal.",
+            },
+            {
+              h: "Di SAP",
+              b: "Tax code di setiap baris transaksi menentukan PK/PM dan akunnya (dikonfigurasi di FTXP + OB40); MIRO memvalidasi & mencatat PM, VF01 membentuk PK. Rekonsiliasi tiga arah tiap masa: GL (FBL3N akun PPN) vs rekap Coretax vs SPT Masa — dan nomor faktur vendor dicatat di dokumen untuk penelusuran.",
+            },
+          ],
+          tcodes: ["MIRO", "FB60", "VF01", "FB70", "FBL3N"],
+        },
+        {
+          id: "tx9",
+          ref: "Modul PPN-PPnBM — Bab III Objek PPN & PPnBM (termasuk Kegiatan Membangun Sendiri) dan Bab IV Cara Memungut & Menghitung: tarif dan DPP. Catatan: tarif di topik ini sudah diperbarui ke PMK 131/2024 (12% dengan DPP 11/12).",
+          title: "Tarif, DPP & Fasilitas PPN + PPnBM",
+          en: "Tarif 12%, DPP Nilai Lain & Fasilitas",
+          level: "PPN",
+          summary:
+            "Update paling membingungkan 2025 — dijelaskan sampai tuntas.",
+          sections: [
+            {
+              h: "Tarif 12% tapi efektif 11% (PMK 131/2024)",
+              b: "<div class='fin-formula'>Mulai 1 Jan 2025: tarif resmi PPN = 12%\nNamun untuk barang/jasa NON-mewah:\n  DPP = 11/12 × harga jual\n  → PPN = 12% × (11/12 × harga) = EFEKTIF 11%\nBarang mewah (objek PPnBM): DPP penuh → efektif 12%</div>Jadi di faktur: tarif tertulis 12%, tapi DPP-nya 'nilai lain 11/12' — inilah yang membuat banyak sistem billing harus disesuaikan awal 2025. Secara kas, beban konsumen non-mewah tidak berubah dari 11%.",
+            },
+            {
+              h: "Fasilitas — tiga rasa berbeda",
+              b: "<b>Tarif 0%</b> (ekspor BKP/JKP): PK nol tapi <b>PM tetap bisa dikreditkan</b> → eksportir posisi lebih bayar → restitusi; <b>Dibebaskan</b> (barang strategis, jasa tertentu): tidak memungut, dan <b>PM-nya TIDAK dapat dikreditkan</b> (jadi biaya); <b>Tidak dipungut</b> (kawasan berikat, proyek tertentu): tidak memungut tapi PM tetap kreditable. Membedakan tiga ini adalah soal favorit ujian brevet — dan sumber salah hitung nyata di lapangan.",
+            },
+            {
+              h: "PPnBM",
+              b: "Pajak tambahan satu kali di tingkat pabrikan/impor untuk barang mewah (10%–200% sesuai kelompok; kendaraan diatur terpisah). Tidak bisa dikreditkan — murni menambah harga. Setelahnya rantai distribusi hanya mengenakan PPN.",
+            },
+            {
+              h: "Di SAP",
+              b: "Perubahan tarif/DPP = pekerjaan konfigurasi: tax code baru (bukan mengubah yang lama — dokumen historis harus tetap benar), kondisi pricing SD di-maintain, dan tanggal efektif dijaga. Pelajaran 2025: uji di sistem test dengan transaksi lintas tanggal cutover sebelum go-live.",
+            },
+          ],
+          tcodes: ["VF01", "VK11", "MIRO", "FBL3N"],
+        },
+        {
+          id: "tx10",
+          ref: "Modul Akuntansi Perpajakan — Bab I Konsep Dasar: perbedaan akuntansi pajak vs komersial, prinsip akuntansi pajak; dipadukan dengan Modul PPh Bab II.7 (penyusutan fiskal).",
+          title: "Rekonsiliasi Fiskal & Penyusutan Fiskal",
+          en: "Koreksi Positif-Negatif & Penyusutan",
+          level: "AkPajak",
+          summary:
+            "Menerjemahkan laba PSAK menjadi laba versi UU PPh — pekerjaan inti akuntan pajak tiap tutup tahun.",
+          sections: [
+            {
+              h: "Beda tetap vs beda waktu",
+              b: "<b>Beda tetap</b>: tidak akan pernah ketemu — biaya yang selamanya non-deductible (sanksi pajak, sebagian entertainment tanpa daftar nominatif, sumbangan non-fasilitas, natura yang dikecualikan dari objek) atau penghasilan final/bukan objek yang dikeluarkan dari laba fiskal. <b>Beda waktu/temporer</b>: hanya soal kapan — penyusutan komersial vs fiskal, pencadangan (ECL PSAK 71 tidak deductible sampai piutang benar dihapus dengan syarat), imbalan kerja (PSAK 24 dibebankan saat provisi, fiskal saat dibayar).",
+            },
+            {
+              h: "Arah koreksi",
+              b: "<b>Koreksi positif</b> menambah laba fiskal (biaya non-deductible dikeluarkan, pendapatan yang belum diakui komersial ditambahkan); <b>koreksi negatif</b> mengurangi (penghasilan final dikeluarkan, penyusutan fiskal lebih besar). Hasil akhirnya Penghasilan Kena Pajak di SPT 1771.",
+            },
+            {
+              h: "Penyusutan fiskal",
+              b: "<div class='fin-formula'>Kelompok  Masa    Garis Lurus   Saldo Menurun\n   1       4 th      25%            50%\n   2       8 th     12,5%           25%\n   3      16 th     6,25%          12,5%\n   4      20 th       5%            10%\nBangunan permanen  20 th  5%   (garis lurus saja)\nBangunan non-permanen 10 th 10%</div>Metode dipilih dan diterapkan konsisten (taat asas). Perbedaan umur PSAK 16 vs kelompok fiskal inilah beda temporer terbesar perusahaan padat aset.",
+            },
+            {
+              h: "Di SAP",
+              b: "Inilah gunanya <b>depreciation area</b>: satu aset dihitung paralel — area buku komersial (umur manfaat PSAK) dan area fiskal (kelompok UU PPh). AW01N menampilkan keduanya berdampingan; rekonsiliasi fiskal penyusutan tinggal selisih dua area, bukan hitung ulang manual ribuan aset.",
+            },
+          ],
+          tcodes: ["AS01", "AS02", "AW01N", "F.01", "FBL3N"],
+        },
+        {
+          id: "tx11",
+          ref: "Modul Akuntansi Perpajakan — bagian akuntansi PPh & pajak tangguhan (lanjutan konsep dasar), disandingkan dengan PSAK 46.",
+          title: "Pajak Tangguhan (PSAK 46)",
+          en: "Deferred Tax — DTA & DTL",
+          level: "AkPajak",
+          summary:
+            "Konsekuensi akuntansi dari beda temporer: pajak masa depan diakui hari ini.",
+          sections: [
+            {
+              h: "Logikanya",
+              b: "Beda temporer berarti pajak yang 'tertunda', bukan hilang. PSAK 46: akui <b>liabilitas pajak tangguhan (DTL)</b> untuk beda yang akan MENAMBAH pajak masa depan (penyusutan fiskal lebih cepat → hari ini bayar lebih kecil, nanti lebih besar) dan <b>aset pajak tangguhan (DTA)</b> untuk yang akan MENGURANGI (provisi imbalan kerja, cadangan ECL, rugi fiskal yang bisa dikompensasi — DTA rugi hanya diakui sejauh besar kemungkinan ada laba masa depan untuk memakainya).",
+            },
+            {
+              h: "Mekanika",
+              b: "<div class='fin-formula'>Pajak tangguhan = beda temporer × tarif (22%)\nBeban pajak di laba rugi =\n  pajak kini (current tax)\n  ± perubahan pajak tangguhan (deferred)</div>Efeknya: <b>tarif pajak efektif</b> (beban pajak ÷ laba akuntansi) bisa jauh dari 22% — dan rekonsiliasi tarif efektif wajib diungkap di CALK. Analis membacanya untuk menilai kualitas laba (topik CFA!).",
+            },
+            {
+              h: "Contoh jurnal",
+              b: "Provisi imbalan kerja Rp1 miliar (belum deductible): DTA = 220 juta.",
+            },
+            {
+              h: "Di SAP",
+              b: "Perhitungan pajak tangguhan umumnya di worksheet dari data sistem (selisih depreciation area di AW01N, saldo provisi di FBL3N), diposting sebagai jurnal akhir tahun (FB50) ke akun DTA/DTL dan beban pajak tangguhan — bagian dari checklist tutup buku tahunan.",
+            },
+          ],
+          tcodes: ["AW01N", "FBL3N", "FB50", "F.01"],
+        },
+        {
+          id: "tx12",
+          ref: "Modul PBB — Bab I: subjek, objek, klasifikasi sektor perkebunan-perhutanan-pertambangan (P3); Modul PDRD — Bab 2 PBB-P2 (NJOP/NJOPTKP, tarif & perhitungan) dan Bab 3 BPHTB.",
+          title: "PBB & BPHTB",
+          en: "Pajak Bumi dan Bangunan & Bea Perolehan Hak",
+          level: "Daerah",
+          summary:
+            "Pajak atas tanah-bangunan: rutin tiap tahun (PBB) dan sekali saat berpindah tangan (BPHTB).",
+          sections: [
+            {
+              h: "PBB",
+              b: "<div class='fin-formula'>PBB = Tarif × NJKP\nNJOP  : nilai jual objek pajak (ditetapkan pemerintah)\nNJOPTKP: pengurang (min Rp10 juta)\nP2 (perdesaan-perkotaan, daerah): tarif maks 0,5% (UU HKPD)\nP3 (perkebunan-perhutanan-pertambangan + sektor lain, pusat):\n    0,5% × NJKP (NJKP = 40% × (NJOP − NJOPTKP))</div>PBB adalah contoh langka official assessment: SPPT datang, WP membayar. Untuk perusahaan dengan aset tanah masif (pelabuhan!), verifikasi NJOP & luas di SPPT vs data aset sendiri adalah kontrol tahunan yang nilainya besar.",
+            },
+            {
+              h: "BPHTB",
+              b: "<div class='fin-formula'>BPHTB = 5% × (NPOP − NPOPTKP)\nNPOP    : nilai perolehan (harga transaksi/NJOP, mana lebih tinggi)\nNPOPTKP : min Rp60 juta (waris/hibah keluarga: min Rp300 juta)</div>Ditanggung PEMBELI/penerima hak, dibayar sebelum akta ditandatangani — pasangannya di sisi penjual adalah PPh final 2,5% pengalihan tanah/bangunan (topik potput). Satu transaksi properti selalu memicu keduanya.",
+            },
+            {
+              h: "Di SAP",
+              b: "Tanah & bangunan tercatat sebagai aset (AS01/AW01N) — data luasnya jadi pembanding SPPT; untuk portofolio properti sewaan, RE-FX menyimpan data objek yang sama. PBB terutang dibebankan sebagai biaya; BPHTB atas perolehan <b>dikapitalisasi</b> ke harga perolehan aset (PSAK 16).",
+            },
+          ],
+          tcodes: ["AS01", "AW01N", "RE80", "FB60"],
+        },
+        {
+          id: "tx13",
+          ref: "Modul PDRD — Bab 1 Gambaran Umum dan jenis-jenis pajak daerah. Catatan: topik ini memperbarui modul ke rezim UU HKPD 1/2022 termasuk PBJT dan opsen 2025.",
+          title: "Pajak Daerah & Retribusi (UU HKPD)",
+          en: "PDRD — Rezim Baru UU 1/2022",
+          level: "Daerah",
+          summary:
+            "Pajak-pajak yang dipungut provinsi & kabupaten/kota — kini di bawah rezim UU HKPD.",
+          sections: [
+            {
+              h: "Peta jenisnya",
+              b: "<b>Provinsi</b>: PKB & BBNKB (kendaraan), pajak alat berat, bahan bakar, air permukaan, rokok. <b>Kabupaten/kota</b>: PBB-P2, BPHTB, dan <b>PBJT</b> — Pajak Barang & Jasa Tertentu yang menyatukan lima pajak lama (makanan-minuman/resto, tenaga listrik, perhotelan, parkir, kesenian-hiburan) dengan tarif umum maksimal 10% (hiburan khusus: 40–75%). Ditambah pajak reklame, air tanah, MBLB, sarang burung walet, serta retribusi jasa umum/usaha/perizinan.",
+            },
+            {
+              h: "Yang baru & sering ditanya",
+              b: "<b>Opsen</b> mulai 5 Januari 2025: kabupaten/kota memungut tambahan <b>66% dari PKB & BBNKB</b> provinsi (dan provinsi opsen 25% atas MBLB) — bukan pajak baru bagi WP (tarif induknya diturunkan), melainkan skema bagi hasil yang dipungut bersamaan. Ini materi paling mutakhir untuk ujian maupun praktik.",
+            },
+            {
+              h: "Relevansi perusahaan",
+              b: "Perusahaan menyentuh PDRD lebih sering dari yang disadari: PBJT atas listrik (di tagihan PLN), pajak resto di reimbursement jamuan, PKB armada kendaraan & alat berat, reklame untuk papan nama, air permukaan/tanah untuk operasi. Semua dibebankan sebagai biaya — dan sebagian daerah aktif memeriksa (terutama PBJT parkir & reklame).",
+            },
+            {
+              h: "Di SAP",
+              b: "PDRD masuk sebagai biaya via FB60/MIRO dengan akun biaya pajak daerah tersendiri — pisahkan dari PPh/PPN di chart of accounts supaya SPT dan laporan beban pajak tidak tercampur, dan monitoring per jenis mudah (FBL3N).",
+            },
+          ],
+          tcodes: ["FB60", "MIRO", "FBL3N", "FS00"],
+        },
+        {
+          id: "tx14",
+          ref: "Modul Bea Meterai — Bab I (dasar hukum, subjek-objek, dokumen tidak dikenakan, tarif), Bab II Saat Terutang, Bab III Pelunasan.",
+          title: "Bea Meterai",
+          en: "UU 10/2020 — Meterai Rp10.000 & e-Meterai",
+          level: "Lainnya",
+          summary:
+            "Pajak atas dokumen — kecil nilainya, sering salah pahamnya.",
+          sections: [
+            {
+              h: "Ketentuan inti",
+              b: "Tarif tunggal <b>Rp10.000</b> (UU 10/2020, menggantikan 3.000/6.000). Objek: dokumen perdata — surat perjanjian, akta, surat berharga, dan <b>dokumen yang menyatakan jumlah uang di atas Rp5 juta</b> (kuitansi, pernyataan pelunasan), termasuk <b>dokumen elektronik</b> — karena itu lahir e-Meterai untuk kontrak digital. Dokumen transaksi surat berharga punya batasan sendiri.",
+            },
+            {
+              h: "Miskonsepsi terbesar",
+              b: "Meterai BUKAN penentu sah-tidaknya perjanjian — kontrak tanpa meterai tetap sah secara perdata. Fungsinya: pajak atas dokumen, dan syarat agar dokumen dapat dijadikan <b>alat bukti di pengadilan</b> (dokumen tanpa meterai bisa dimeteraikan kemudian/pemeteraian kemudian dengan sanksi 100%).",
+            },
+            {
+              h: "Praktik perusahaan",
+              b: "Yang wajib ditata: siapa menanggung meterai di kontrak (lazim: pihak yang berkepentingan/penerima dokumen), stok & distribusi e-Meterai untuk dokumen digital massal (kontrak tenant, BAST), dan meterai atas kuitansi pembayaran > Rp5 juta.",
+            },
+            {
+              h: "Di SAP",
+              b: "Tidak ada mesin khusus — biaya meterai dibebankan (FB60) dan kebutuhan e-Meterai massal biasanya terintegrasi di sistem dokumen/kontrak (misal kontrak RE-FX atau output billing).",
+            },
+          ],
+          tcodes: ["FB60", "RE80"],
+        },
+        {
+          id: "tx15",
+          ref: "Modul PPSP — Bab 1 Pendahuluan (istilah, Surat Paksa, jurusita, prosedur penerbitan), Bab 2 Penyitaan (prosedur, objek, pengecualian), Bab 3 Eksekusi Penyitaan.",
+          title: "PPSP: Penagihan Pajak dengan Surat Paksa",
+          en: "Tahapan Penagihan Aktif",
+          level: "Lainnya",
+          summary:
+            "Kalau utang pajak tidak dibayar: eskalasi bertahap dari surat teguran sampai lelang — dengan jam yang berdetak.",
+          sections: [
+            {
+              h: "Garis waktu penagihan",
+              b: "<div class='fin-formula'>Utang pajak (STP/SKPKB/dst) jatuh tempo 1 bulan\n  ↓ tidak dibayar\nSurat Teguran        : setelah 7 hari dari jatuh tempo\n  ↓ 21 hari\nSurat Paksa          : kekuatan eksekutorial ('Demi Keadilan...')\n  ↓ 2 × 24 jam\nSurat Perintah Melaksanakan Penyitaan (SPMP)\n  ↓ 14 hari\nPengumuman Lelang → Lelang</div>Ditambah instrumen lain: <b>pencegahan</b> bepergian ke luar negeri, pemblokiran rekening, hingga <b>penyanderaan (gijzeling)</b> untuk penanggung pajak nakal dengan utang signifikan — semuanya dengan syarat & prosedur ketat.",
+            },
+            {
+              h: "Penanggung pajak",
+              b: "Tanggung jawab tidak berhenti di badan: pengurus (direksi, bahkan pemegang saham tertentu) dapat menjadi penanggung pajak secara pribadi — alasan kuat kenapa direksi peduli sekali pada kepatuhan pajak perusahaan.",
+            },
+            {
+              h: "Titik selamatnya",
+              b: "Penagihan aktif hampir selalu bisa dihindari: <b>angsuran/penundaan pembayaran</b> dapat diajukan sebelum jatuh tempo, dan pengajuan keberatan atas ketetapan menangguhkan penagihan atas jumlah yang disengketakan (dengan syarat pembayaran minimal yang disetujui). Yang fatal adalah diam.",
+            },
+            {
+              h: "Di SAP",
+              b: "Utang pajak dari ketetapan dicatat sebagai liabilitas (FB60/FB50 ke akun hutang pajak) begitu diterima — bukan saat dibayar; monitoring jatuh temponya masuk daftar kontrol treasury (F110/FBL1N) seperti hutang vendor prioritas tertinggi.",
+            },
+          ],
+          tcodes: ["FB50", "FB60", "FBL1N", "F110"],
+        },
+      ];
 
       const AUDIT_ACADEMY = [
         {
@@ -8402,8 +10485,36 @@
           tcodes: ["F.01", "KSB1", "KP06", "CJ30", "FMBB"],
         },
         {
+          id: "psak0",
+          title: "Penomoran PSAK Baru 2025 — Selaras IFRS",
+          en: "The 2025 PSAK Renumbering",
+          level: "PSAK",
+          summary:
+            "Kenapa nomor PSAK di berita/laporan terbaru terlihat asing — dan cara membaca skema barunya.",
+          sections: [
+            {
+              h: "Apa yang berubah",
+              b: "DSAK IAI menata ulang penomoran PSAK agar <b>selaras dengan nomor IFRS/IAS</b> yang menjadi acuannya. Standar yang berbasis IFRS memakai awalan sesuai kelompoknya, sehingga nomor PSAK kini 'berbicara bahasa yang sama' dengan standar internasional. Isi/substansi standarnya tidak dirombak oleh penomoran ini — yang berubah adalah label nomornya.",
+            },
+            {
+              h: "Peta lama → baru (yang dipakai di aplikasi ini)",
+              b: "<div class='fin-formula'>Lama    Baru    Topik\nPSAK 1   → 201   Penyajian Laporan Keuangan\nPSAK 10  → 210   Perubahan Kurs Valas\nPSAK 71  → 109   Instrumen Keuangan (ECL)\nPSAK 72  → 115   Pendapatan dari Kontrak\nPSAK 73  → 116   Sewa\nPSAK 16  → 216   Aset Tetap\nPSAK 48  → 236   Penurunan Nilai Aset\nPSAK 24  → 219   Imbalan Kerja\nPSAK 65  → 110   Konsolidasi\nPSAK 2   → 207   Laporan Arus Kas\nPSAK 14  → 202   Persediaan\nPSAK 57  → 237   Provisi & Kontinjensi</div>Tiap topik PSAK di aplikasi ini sekarang menampilkan <b>dua nomor</b> (baru dan 'd/h' = dahulu) supaya kamu kenal keduanya — karena di lapangan, laporan & orang masih memakai campur keduanya selama masa transisi.",
+            },
+            {
+              h: "Kenapa penting untukmu",
+              b: "(1) Membaca laporan keuangan & CALK terbaru: catatan kebijakan akuntansi akan menyebut nomor baru; (2) ujian & sertifikasi profesi menyesuaikan; (3) diskusi dengan auditor/konsultan: memakai nomor yang tepat menunjukkan kamu update. Tapi tenang — kalau kamu terlanjur hafal nomor lama, cukup ingat peta di atas.",
+            },
+            {
+              h: "Rujukan",
+              b: "Skema & pemetaan ini mengikuti PSAK Pocket Guide 2025 (rujukan ringkas standar yang berlaku). Untuk penerapan resmi, teks lengkap PSAK dari IAI tetap acuan utama.",
+            },
+          ],
+          tcodes: ["F.01", "FS00"],
+        },
+        {
           id: "psak1",
-          title: "PSAK 1 — Penyajian Laporan Keuangan & OCI",
+          title: "PSAK 201 (d/h PSAK 1) — Penyajian Laporan Keuangan & OCI",
+          ref: "PSAK Pocket Guide 2025 — Bagian 3 'Presentation of financial statements – PSAK 201'. Efektif skema baru: PSAK 1 kini bernomor PSAK 201 (selaras IAS 1).",
           en: "IAS 1 — Presentation of Financial Statements",
           level: "PSAK",
           summary:
@@ -8430,7 +10541,8 @@
         },
         {
           id: "psak72",
-          title: "PSAK 72 — Pendapatan dari Kontrak",
+          title: "PSAK 115 (d/h PSAK 72) — Pendapatan dari Kontrak",
+          ref: "PSAK Pocket Guide 2025 — Bagian 8 'Revenue and government grants – PSAK 115' (selaras IFRS 15). Nomor lama PSAK 72.",
           en: "IFRS 15 — Revenue from Contracts with Customers",
           level: "PSAK",
           summary:
@@ -8475,7 +10587,8 @@
         },
         {
           id: "psak73",
-          title: "PSAK 73 — Sewa",
+          title: "PSAK 116 (d/h PSAK 73) — Sewa",
+          ref: "PSAK Pocket Guide 2025 — Bagian 18 'Lease accounting – PSAK 116' (selaras IFRS 16), dengan panduan ISAK 116. Nomor lama PSAK 73.",
           en: "IFRS 16 — Leases",
           level: "PSAK",
           summary:
@@ -8514,7 +10627,9 @@
         },
         {
           id: "psak71",
-          title: "PSAK 71 — Cadangan Piutang (ECL)",
+          title:
+            "PSAK 109 (d/h PSAK 71) — Instrumen Keuangan & Cadangan Piutang (ECL)",
+          ref: "PSAK Pocket Guide 2025 — Bagian 6 'Financial instruments – PSAK 232, 239, 107, PSAK 109 & ISAK 119'; aturan impairment (ECL) ada di PSAK 109. Nomor lama PSAK 71.",
           en: "IFRS 9 — Expected Credit Loss",
           level: "PSAK",
           summary:
@@ -8549,7 +10664,8 @@
         },
         {
           id: "psak16",
-          title: "PSAK 16 — Aset Tetap",
+          title: "PSAK 216 (d/h PSAK 16) — Aset Tetap",
+          ref: "PSAK Pocket Guide 2025 — Bagian 15 'Property, plant and equipment – PSAK 216' (selaras IAS 16). Nomor lama PSAK 16.",
           en: "IAS 16 — Property, Plant & Equipment",
           level: "PSAK",
           summary:
@@ -8576,7 +10692,8 @@
         },
         {
           id: "psak48",
-          title: "PSAK 48 — Penurunan Nilai Aset",
+          title: "PSAK 236 (d/h PSAK 48) — Penurunan Nilai Aset",
+          ref: "PSAK Pocket Guide 2025 — Bagian 17 'Impairment of assets – PSAK 236' (selaras IAS 36). Nomor lama PSAK 48.",
           en: "IAS 36 — Impairment of Assets",
           level: "PSAK",
           summary:
@@ -8603,7 +10720,8 @@
         },
         {
           id: "psak24",
-          title: "PSAK 24 — Imbalan Kerja",
+          title: "PSAK 219 (d/h PSAK 24) — Imbalan Kerja",
+          ref: "PSAK Pocket Guide 2025 — Bagian 10 'Employee benefits – PSAK 219' (selaras IAS 19). Nomor lama PSAK 24.",
           en: "IAS 19 — Employee Benefits",
           level: "PSAK",
           summary:
@@ -8630,7 +10748,8 @@
         },
         {
           id: "psak10",
-          title: "PSAK 10 — Pengaruh Perubahan Kurs",
+          title: "PSAK 210 (d/h PSAK 10) — Pengaruh Perubahan Kurs",
+          ref: "PSAK Pocket Guide 2025 — pengaruh perubahan kurs valuta asing kini PSAK 210 (selaras IAS 21). Nomor lama PSAK 10.",
           en: "IAS 21 — Foreign Exchange",
           level: "PSAK",
           summary:
@@ -8657,7 +10776,8 @@
         },
         {
           id: "psak65",
-          title: "PSAK 65 — Konsolidasi",
+          title: "PSAK 110 (d/h PSAK 65) — Konsolidasi",
+          ref: "PSAK Pocket Guide 2025 — Bagian 23 'Consolidated financial statements – PSAK 110' (selaras IFRS 10). Nomor lama PSAK 65.",
           en: "IFRS 10 — Consolidated Financial Statements",
           level: "PSAK",
           summary:
@@ -11075,6 +13195,327 @@
         });
       }
 
+      // ---------- mulai dari nol panel ----------
+      function renderBasicPanel() {
+        const panel = document.getElementById("basic-panel");
+        const levels = [
+          "Semua",
+          "Kenalan",
+          "Struktur",
+          "Navigasi",
+          "Konfigurasi",
+          "FI Global",
+          "Controlling",
+          "Aset",
+          "Bank",
+          "Karier",
+        ];
+        const labels = {
+          Kenalan: "Kenalan dengan SAP",
+          Struktur: "Struktur & Data",
+          Navigasi: "Navigasi & Error",
+          Konfigurasi: "Di Balik Layar (Config)",
+          "FI Global": "FI Global Settings",
+          Controlling: "Controlling (CO)",
+          Aset: "Asset Accounting",
+          Bank: "Bank & Treasury",
+          Karier: "Karier & Roadmap",
+        };
+        const clsOf = {
+          Kenalan: "dasar",
+          Struktur: "trx",
+          Navigasi: "adj",
+          Konfigurasi: "ppn",
+          "FI Global": "ppn",
+          Controlling: "trx",
+          Aset: "adj",
+          Bank: "dasar",
+          Karier: "prk",
+        };
+        const items = BASIC_ACADEMY.filter(
+          (t) => basicLevel === "Semua" || t.level === basicLevel,
+        );
+        panel.innerHTML = `
+    <div class="glossary-head">
+      <h3>🌱 Mulai dari Nol</h3>
+      <button class="glossary-close" id="basic-close">Tutup ✕</button>
+    </div>
+    <div class="flow-desc" style="margin-bottom:12px">Titik masuk untuk yang benar-benar baru — tanpa jargon, penuh analogi sehari-hari. Dari "apa itu ERP" sampai "cara membaca layar SAP dan apa yang harus dilakukan saat kena error". Selesaikan panel ini dulu sebelum menyelam ke materi lain.</div>
+    <div class="glossary-cats">${levels.map((l) => `<button class="gcat-chip${l === basicLevel ? " active" : ""}" data-lvl="${l}">${labels[l] || l}</button>`).join("")}</div>
+    <div class="bp-grid">
+    ${items
+      .map(
+        (t) => `
+      <div class="bp-card" id="bsc-${t.id}">
+        <div class="bp-head" id="bsh-${t.id}">
+          <span class="fin-level ${clsOf[t.level] || "dasar"}">${labels[t.level] || t.level}</span>
+          <div class="bp-titles">
+            <div class="bp-title">${escapeXML(t.title)}</div>
+            <div class="bp-en">${escapeXML(t.en)}</div>
+          </div>
+          <div class="bp-mods"><span class="arr" id="bsa-${t.id}">▶</span></div>
+        </div>
+        <div class="bp-body" id="bsb-${t.id}">
+          <div class="bp-desc">${escapeXML(t.summary)}</div>
+          <div class="fin-body">
+            ${t.sections.map((s) => `<div class="bp-section-label">${escapeXML(s.h)}</div><p>${s.b}</p>`).join("")}
+          </div>
+          ${
+            (t.tcodes || []).filter(tcExists).length
+              ? `<div class="bp-section-label">Coba T-code ini — klik untuk cari</div>
+          <div class="bp-tcodes">${t.tcodes
+            .filter(tcExists)
+            .map(
+              (c) =>
+                `<button class="bp-tc" data-tc="${c}" style="background:var(--fi-soft);color:var(--fi)">${c}</button>`,
+            )
+            .join("")}</div>`
+              : ""
+          }
+        </div>
+      </div>`,
+      )
+      .join("")}
+    </div>`;
+        document.getElementById("basic-close").addEventListener("click", () => {
+          basicOpen = false;
+          panel.style.display = "none";
+        });
+        panel.querySelectorAll(".gcat-chip").forEach((b) =>
+          b.addEventListener("click", () => {
+            basicLevel = b.dataset.lvl;
+            renderBasicPanel();
+          }),
+        );
+        items.forEach((t) => {
+          document
+            .getElementById("bsh-" + t.id)
+            .addEventListener("click", () => {
+              const body = document.getElementById("bsb-" + t.id),
+                card = document.getElementById("bsc-" + t.id),
+                arr = document.getElementById("bsa-" + t.id);
+              const open = body.classList.toggle("open");
+              card.classList.toggle("expanded", open);
+              arr.classList.toggle("open", open);
+            });
+        });
+        panel.querySelectorAll(".bp-tc").forEach((b) =>
+          b.addEventListener("click", (e) => {
+            e.stopPropagation();
+            jumpToTcode(b.dataset.tc);
+          }),
+        );
+      }
+
+      // ---------- akademi akuntansi panel ----------
+      function renderAccPanel() {
+        const panel = document.getElementById("acc-panel");
+        const levels = [
+          "Semua",
+          "Dasar",
+          "Transaksi",
+          "Penyesuaian",
+          "Praktik",
+        ];
+        const labels = {
+          Dasar: "Dasar",
+          Transaksi: "Jurnal Transaksi",
+          Penyesuaian: "Penyesuaian & Penutup",
+          Praktik: "Praktik & SAP",
+        };
+        const clsOf = {
+          Dasar: "dasar",
+          Transaksi: "trx",
+          Penyesuaian: "adj",
+          Praktik: "prk",
+        };
+        const items = ACC_ACADEMY.filter(
+          (t) => accLevel === "Semua" || t.level === accLevel,
+        );
+        panel.innerHTML = `
+    <div class="glossary-head">
+      <h3>📒 Akademi Akuntansi</h3>
+      <button class="glossary-close" id="acc-close">Tutup ✕</button>
+    </div>
+    <div class="flow-desc" style="margin-bottom:12px">Teknik pencatatan dari dasar sampai intermediate: saldo normal, jurnal per jenis transaksi (lengkap dengan contoh debit-kredit), penyesuaian & penutup, sampai kamus pemetaan konsep buku teks → SAP. Pasangan dari Akademi Keuangan (konsep & analisis) — panel ini fokus ke <b>cara mencatatnya</b>. Tiap topik dirujuk ke bab modul CAFB IAI (Akuntansi Keuangan Level Dasar) sebagai penanda letak materi resminya.</div>
+    <div class="glossary-cats">${levels.map((l) => `<button class="gcat-chip${l === accLevel ? " active" : ""}" data-lvl="${l}">${labels[l] || l}</button>`).join("")}</div>
+    <div class="bp-grid">
+    ${items
+      .map(
+        (t) => `
+      <div class="bp-card" id="accc-${t.id}">
+        <div class="bp-head" id="acch-${t.id}">
+          <span class="fin-level ${clsOf[t.level] || "dasar"}">${labels[t.level] || t.level}</span>
+          <div class="bp-titles">
+            <div class="bp-title">${escapeXML(t.title)}</div>
+            <div class="bp-en">${escapeXML(t.en)}</div>
+          </div>
+          <div class="bp-mods"><span class="arr" id="acca-${t.id}">▶</span></div>
+        </div>
+        <div class="bp-body" id="accb-${t.id}">
+          <div class="bp-desc">${escapeXML(t.summary)}</div>
+          <div class="fin-body">
+            ${t.sections.map((s) => `<div class="bp-section-label">${escapeXML(s.h)}</div><p>${s.b}</p>`).join("")}
+          </div>
+          ${
+            t.journal
+              ? `<div class="bp-section-label">Contoh jurnal</div>
+          <table class="fj-table"><tr><th>Keterangan</th><th>Debit</th><th>Kredit</th></tr>
+          ${t.journal.map((j) => `<tr><td>${escapeXML(j.d)}</td><td>${j.dr}</td><td>${j.cr}</td></tr>`).join("")}</table>`
+              : ""
+          }
+          ${t.ref ? `<div class="bp-note-int"><strong>📗 Rujukan modul CAFB IAI:</strong> ${escapeXML(t.ref)}</div>` : ""}
+          ${
+            (t.tcodes || []).filter(tcExists).length
+              ? `<div class="bp-section-label">Praktikkan di T-code ini — klik untuk cari</div>
+          <div class="bp-tcodes">${t.tcodes
+            .filter(tcExists)
+            .map(
+              (c) =>
+                `<button class="bp-tc" data-tc="${c}" style="background:var(--mm-soft);color:var(--mm)">${c}</button>`,
+            )
+            .join("")}</div>`
+              : ""
+          }
+        </div>
+      </div>`,
+      )
+      .join("")}
+    </div>`;
+        document.getElementById("acc-close").addEventListener("click", () => {
+          accOpen = false;
+          panel.style.display = "none";
+        });
+        panel.querySelectorAll(".gcat-chip").forEach((b) =>
+          b.addEventListener("click", () => {
+            accLevel = b.dataset.lvl;
+            renderAccPanel();
+          }),
+        );
+        items.forEach((t) => {
+          document
+            .getElementById("acch-" + t.id)
+            .addEventListener("click", () => {
+              const body = document.getElementById("accb-" + t.id),
+                card = document.getElementById("accc-" + t.id),
+                arr = document.getElementById("acca-" + t.id);
+              const open = body.classList.toggle("open");
+              card.classList.toggle("expanded", open);
+              arr.classList.toggle("open", open);
+            });
+        });
+        panel.querySelectorAll(".bp-tc").forEach((b) =>
+          b.addEventListener("click", (e) => {
+            e.stopPropagation();
+            jumpToTcode(b.dataset.tc);
+          }),
+        );
+      }
+
+      // ---------- pajak brevet AB panel ----------
+      function renderTaxPanel() {
+        const panel = document.getElementById("tax-panel");
+        const levels = [
+          "Semua",
+          "KUP",
+          "PPh",
+          "PPN",
+          "AkPajak",
+          "Daerah",
+          "Lainnya",
+        ];
+        const labels = {
+          KUP: "KUP",
+          PPh: "PPh",
+          PPN: "PPN & PPnBM",
+          AkPajak: "Akuntansi Pajak",
+          Daerah: "PBB & Pajak Daerah",
+          Lainnya: "Meterai & PPSP",
+        };
+        const clsOf = {
+          KUP: "kup",
+          PPh: "pph",
+          PPN: "ppn",
+          AkPajak: "akp",
+          Daerah: "dae",
+          Lainnya: "lain",
+        };
+        const items = TAX_ACADEMY.filter(
+          (t) => taxLevel === "Semua" || t.level === taxLevel,
+        );
+        panel.innerHTML = `
+    <div class="glossary-head">
+      <h3>🧾 Pajak — Kurikulum Brevet A & B</h3>
+      <button class="glossary-close" id="tax-close">Tutup ✕</button>
+    </div>
+    <div class="flow-desc" style="margin-bottom:12px">Mengikuti struktur 8 modul Brevet AB (KUP → PPh → PPN/PPnBM → Akuntansi Perpajakan → PBB/PDRD → Bea Meterai → PPSP) dengan aturan terkini: UU HPP, TER PPh 21 (PP 58/2023), PPN 12% & DPP 11/12 (PMK 131/2024), opsen pajak daerah (UU HKPD), dan Coretax 2025. Tiap topik ditutup dengan cara kerjanya di SAP, dan merujuk bab modul Brevet-mu (hasil pemetaan daftar isi ke-8 modul); bila aturan di modul sudah berubah, topiknya memakai aturan terbaru dan mencatatnya eksplisit.</div>
+    <div class="glossary-cats">${levels.map((l) => `<button class="gcat-chip${l === taxLevel ? " active" : ""}" data-lvl="${l}">${labels[l] || l}</button>`).join("")}</div>
+    <div class="bp-grid">
+    ${items
+      .map(
+        (t) => `
+      <div class="bp-card" id="txc-${t.id}">
+        <div class="bp-head" id="txh-${t.id}">
+          <span class="fin-level ${clsOf[t.level] || "kup"}">${labels[t.level] || t.level}</span>
+          <div class="bp-titles">
+            <div class="bp-title">${escapeXML(t.title)}</div>
+            <div class="bp-en">${escapeXML(t.en)}</div>
+          </div>
+          <div class="bp-mods"><span class="arr" id="txa-${t.id}">▶</span></div>
+        </div>
+        <div class="bp-body" id="txb-${t.id}">
+          <div class="bp-desc">${escapeXML(t.summary)}</div>
+          <div class="fin-body">
+            ${t.sections.map((s) => `<div class="bp-section-label">${escapeXML(s.h)}</div><p>${s.b}</p>`).join("")}
+          </div>
+          ${t.ref ? `<div class="bp-note-int"><strong>📚 Rujukan modul Brevet-mu:</strong> ${escapeXML(t.ref)}</div>` : ""}
+          ${
+            (t.tcodes || []).filter(tcExists).length
+              ? `<div class="bp-section-label">Eksekusi di SAP — klik untuk cari</div>
+          <div class="bp-tcodes">${t.tcodes
+            .filter(tcExists)
+            .map(
+              (c) =>
+                `<button class="bp-tc" data-tc="${c}" style="background:var(--pp-soft);color:var(--pp)">${c}</button>`,
+            )
+            .join("")}</div>`
+              : ""
+          }
+        </div>
+      </div>`,
+      )
+      .join("")}
+    </div>`;
+        document.getElementById("tax-close").addEventListener("click", () => {
+          taxOpen = false;
+          panel.style.display = "none";
+        });
+        panel.querySelectorAll(".gcat-chip").forEach((b) =>
+          b.addEventListener("click", () => {
+            taxLevel = b.dataset.lvl;
+            renderTaxPanel();
+          }),
+        );
+        items.forEach((t) => {
+          document
+            .getElementById("txh-" + t.id)
+            .addEventListener("click", () => {
+              const body = document.getElementById("txb-" + t.id),
+                card = document.getElementById("txc-" + t.id),
+                arr = document.getElementById("txa-" + t.id);
+              const open = body.classList.toggle("open");
+              card.classList.toggle("expanded", open);
+              arr.classList.toggle("open", open);
+            });
+        });
+        panel.querySelectorAll(".bp-tc").forEach((b) =>
+          b.addEventListener("click", (e) => {
+            e.stopPropagation();
+            jumpToTcode(b.dataset.tc);
+          }),
+        );
+      }
+
       // ---------- alur ICOFR end-to-end ----------
       function renderIcofrFlowHTML() {
         const lanes = [
@@ -11388,7 +13829,7 @@
       <h3>🎓 Akademi Keuangan & Akuntansi</h3>
       <button class="glossary-close" id="fin-close">Tutup ✕</button>
     </div>
-    <div class="flow-desc" style="margin-bottom:12px">Materi konsep keuangan yang langsung dipetakan ke SAP: tiap topik berisi konsep akuntansinya, cara kerjanya di sistem, contoh jurnal, dan T-code terkait yang bisa diklik. Urutan belajar disarankan: Dasar → Menengah → Lanjutan → CFA (analisis: rasio, valuasi, capital budgeting) → PSAK (standar akuntansi Indonesia/IFRS dan implementasinya di SAP).</div>
+    <div class="flow-desc" style="margin-bottom:12px">Materi konsep keuangan yang langsung dipetakan ke SAP: tiap topik berisi konsep akuntansinya, cara kerjanya di sistem, contoh jurnal, dan T-code terkait yang bisa diklik. Urutan belajar disarankan: Dasar → Menengah → Lanjutan → CFA (analisis: rasio, valuasi, capital budgeting) → PSAK (standar akuntansi Indonesia/IFRS dan implementasinya di SAP — memakai penomoran baru 2025 yang selaras IFRS, dengan nomor lama tetap dicantumkan).</div>
     <div class="glossary-cats">${levels.map((l) => `<button class="gcat-chip${l === finLevel ? " active" : ""}" data-lvl="${l}">${l}</button>`).join("")}</div>
     ${
       finLevel === "Kamus Rasio"
@@ -11443,6 +13884,7 @@
           ${t.journal.map((j) => `<tr><td>${escapeXML(j.d)}</td><td>${j.dr}</td><td>${j.cr}</td></tr>`).join("")}</table>`
               : ""
           }
+          ${t.ref ? `<div class="bp-note-int"><strong>📘 Rujukan PSAK Pocket Guide 2025:</strong> ${escapeXML(t.ref)}</div>` : ""}
           ${
             (t.tcodes || []).filter(tcExists).length
               ? `<div class="bp-section-label">Praktikkan di T-code ini — klik untuk cari</div>
@@ -12260,6 +14702,24 @@
         );
       }
 
+      document.getElementById("basic-toggle").addEventListener("click", () => {
+        basicOpen = !basicOpen;
+        const panel = document.getElementById("basic-panel");
+        panel.style.display = basicOpen ? "block" : "none";
+        if (basicOpen) renderBasicPanel();
+      });
+      document.getElementById("acc-toggle").addEventListener("click", () => {
+        accOpen = !accOpen;
+        const panel = document.getElementById("acc-panel");
+        panel.style.display = accOpen ? "block" : "none";
+        if (accOpen) renderAccPanel();
+      });
+      document.getElementById("tax-toggle").addEventListener("click", () => {
+        taxOpen = !taxOpen;
+        const panel = document.getElementById("tax-panel");
+        panel.style.display = taxOpen ? "block" : "none";
+        if (taxOpen) renderTaxPanel();
+      });
       document.getElementById("audit-toggle").addEventListener("click", () => {
         auditOpen = !auditOpen;
         const panel = document.getElementById("audit-panel");
