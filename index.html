@@ -7908,6 +7908,218 @@
           ],
           tcodes: ["FS00", "OB52", "FBL1N", "FBL3N"],
         },
+        {
+          id: "mm1",
+          title: "Material Master: Konsep & Struktur View",
+          en: "Material Master Structure",
+          level: "Material Master",
+          summary:
+            "Data induk paling kompleks di SAP — kenapa dibagi banyak 'view', dan siapa mengisi apa.",
+          sections: [
+            {
+              h: "Kenapa berlapis view",
+              b: "Satu material (mis. sparepart crane) disentuh banyak departemen: pembelian, gudang, akuntansi, mutu, perencanaan. Daripada satu layar raksasa, SAP membaginya jadi <b>views</b> — tiap departemen mengisi view-nya sendiri: bagian pembelian isi Purchasing view, akuntansi isi Accounting view, dst. Satu material master, banyak sudut pandang.",
+            },
+            {
+              h: "Level data — penting dipahami",
+              b: "<div class='fin-formula'>Client level      : berlaku SELURUH grup (deskripsi, satuan dasar,\n                    berat, material group) — isi sekali\nPlant level       : per plant/lokasi (MRP, purchasing, storage)\nSales org level    : per organisasi penjualan (harga, pengiriman)\nValuation level   : per area valuasi (harga, akun — Accounting view)\nStorage loc level : per gudang (stok per lokasi)</div>Data yang salah level = masalah: deskripsi salah menyebar ke semua plant; harga salah hanya di satu valuation area. Memahami level menjelaskan kenapa satu material bisa 'ada' di satu plant tapi 'tidak ada' di plant lain — view plant-nya belum dibuat.",
+            },
+            {
+              h: "Extend, bukan create ulang",
+              b: "Material yang sudah ada di plant A dan mau dipakai di plant B tidak dibuat ulang — di-<b>extend</b> (tambah view plant B saja). Data client-level tetap sama, hanya data plant-level baru yang diisi. Membuat material duplikat = dosa master data (topik Master Data di panel ini).",
+            },
+            {
+              h: "Di sistem",
+              b: "MM01 create, MM02 change, MM03 display. Saat MM01 kamu memilih view mana yang mau diisi + org level (plant, sales org, storage loc). Referensi struktur view: dokumen Material Master Views (Harwinder Singh) — dijelaskan ulang di sini per view.",
+            },
+          ],
+          tcodes: ["MM01", "MM02", "MM03", "MMBE"],
+        },
+        {
+          id: "mm2",
+          mock: {
+            title: "Create Material — Basic Data 1",
+            tabs: [
+              { label: "Basic 1", active: true },
+              { label: "Basic 2" },
+              { label: "Classification" },
+              { label: "Purchasing" },
+              { label: "MRP 1" },
+            ],
+            header: [
+              ["Material", "SPARE-CRANE-01"],
+              ["Descr.", "Hydraulic Seal Kit"],
+            ],
+            sections: [
+              {
+                name: "General Data",
+                fields: [
+                  { label: "Base Unit", value: "EA", hi: true },
+                  { label: "Material Group", value: "SPAREPART", hi: true },
+                  { label: "Old matl no.", value: "" },
+                  { label: "Division", value: "01" },
+                  { label: "Gross Weight", value: "2,5" },
+                  { label: "Net Weight", value: "2,1" },
+                  { label: "Weight Unit", value: "KG" },
+                  { label: "Volume", value: "" },
+                ],
+              },
+              {
+                name: "Basic Data Texts",
+                fields: [
+                  { label: "Language", value: "ID / EN" },
+                  { label: "EAN/UPC", value: "" },
+                ],
+              },
+            ],
+          },
+          title: "Basic Data & Classification",
+          en: "Basic Data 1/2 & Classification View",
+          level: "Material Master",
+          summary:
+            "View fondasi yang berlaku untuk seluruh grup — plus cara mengelompokkan material dengan karakteristik.",
+          sections: [
+            {
+              h: "Basic Data 1 & 2",
+              b: "View client-level (berlaku di mana-mana): <b>deskripsi</b> material, <b>base unit of measure</b> (satuan dasar — EA/pcs, KG, L; menentukan semua konversi), <b>material group</b> (pengelompokan untuk analisis & purchasing), <b>berat & volume</b> (untuk pengiriman & pergudangan), <b>EAN/barcode</b>. Basic Data 2 menampung atribut tambahan: dangerous goods, dokumen desain, konfigurasi. Karena client-level, isi sekali dengan benar — salah di sini menyebar ke semua plant.",
+            },
+            {
+              h: "Classification — pengelompokan fleksibel",
+              b: "Selain material group yang kaku, <b>Classification view</b> memungkinkan mengelompokkan material lewat <b>class</b> + <b>characteristics</b>: mis. class 'Sparepart Hidraulik' dengan karakteristik tekanan kerja, diameter, merek. Kegunaannya: pencarian material by atribut, dan yang penting — <b>batch classification</b> (class type 023) untuk melacak batch berdasarkan sifatnya (tanggal produksi, hasil uji mutu).",
+            },
+            {
+              h: "Kaitan ke materimu",
+              b: "Base unit of measure adalah dasar semua transaksi — salah satuan = salah kuantitas di seluruh PO, GR, stok. Material group menghubungkan ke analisis pembelian & account determination. Classification/batch relevan untuk material yang butuh telusur (BBM, bahan kimia) — bertemu topik QM & batch management.",
+            },
+            {
+              h: "Di sistem",
+              b: "Diisi saat MM01 (pilih view Basic Data & Classification). Class & characteristic dikelola di CL01/CT04 (config master). Untuk Pelindo: material group yang rapi memudahkan analisis belanja per kategori (sparepart, BBM, jasa).",
+            },
+          ],
+          tcodes: ["MM01", "MM03", "MMBE"],
+        },
+        {
+          id: "mm3",
+          mock: {
+            title: "Create Material — MRP 1 / Purchasing",
+            tabs: [
+              { label: "Purchasing" },
+              { label: "MRP 1", active: true },
+              { label: "MRP 2" },
+              { label: "MRP 3" },
+              { label: "MRP 4" },
+            ],
+            header: [
+              ["Material", "SPARE-CRANE-01"],
+              ["Plant", "1000  Terminal A"],
+            ],
+            sections: [
+              {
+                name: "General Data",
+                fields: [
+                  { label: "Purch. Group", value: "P01" },
+                  { label: "MRP Controller", value: "M01" },
+                ],
+              },
+              {
+                name: "MRP Procedure",
+                fields: [
+                  { label: "MRP Type", value: "PD", hi: true },
+                  { label: "Reorder Point", value: "20", hi: true },
+                  { label: "Lot Size", value: "EX" },
+                  { label: "Plan. Cycle", value: "" },
+                ],
+              },
+              {
+                name: "Net Requirements (MRP 2)",
+                fields: [
+                  { label: "Procurement", value: "F", hi: true },
+                  { label: "Plnd Del. Time", value: "14 hari", hi: true },
+                  { label: "Safety Stock", value: "10", hi: true },
+                  { label: "GR Proc. Time", value: "1 hari" },
+                ],
+              },
+            ],
+          },
+          title: "Purchasing & MRP Views",
+          en: "Purchasing & Material Requirements Planning Views",
+          level: "Material Master",
+          summary:
+            "View yang menggerakkan pengadaan otomatis — dari cara membeli sampai kapan sistem menyuruh memesan.",
+          sections: [
+            {
+              h: "Purchasing view",
+              b: "Data untuk proses beli (plant-level): <b>purchasing group</b> (siapa pembelinya), <b>order unit</b> (satuan pembelian, bisa beda dari base UoM), <b>tolerance under/over-delivery</b> (batas selisih terima yang boleh — mesin di balik toleransi GR), <b>reminder/expediting days</b> (kapan sistem mengingatkan vendor telat), <b>GR processing time</b> (berapa lama barang diproses setelah datang), <b>auto PO</b> flag. Data ini mengalir ke PO (ME21N) sebagai default.",
+            },
+            {
+              h: "MRP views (1–4): otak perencanaan",
+              b: "<div class='fin-formula'>MRP 1: MRP TYPE (cara rencana: PD=MRP, VB=reorder point),\n       reorder point, lot size, MRP controller\nMRP 2: PROCUREMENT type (E=produksi sendiri, F=beli),\n       planned delivery time, safety stock, GR/GI time\nMRP 3: strategy group, availability check, forecast\nMRP 4: BOM explosion, discontinuation, repetitive mfg</div>MRP-lah yang otomatis menghitung: 'stok akan habis, buat usulan pembelian (PR) sekarang'. Reorder point + safety stock + lead time = kapan & berapa memesan. Ini jantung pengadaan otomatis (topik Proses Bisnis: Forecast-to-Stock).",
+            },
+            {
+              h: "Kenapa penting untuk operasi",
+              b: "Setting MRP yang benar = stok optimal: tidak kehabisan sparepart kritikal saat crane rusak, tidak juga menumpuk modal di gudang. Safety stock terlalu tinggi = kas terkubur; terlalu rendah = risiko downtime. Ini keputusan bisnis yang dikodekan di material master.",
+            },
+            {
+              h: "Di sistem",
+              b: "Purchasing view mengalir ke ME21N; MRP dijalankan MD01/MD02 (topik yang sudah ada di tab T-code), hasilnya usulan PR di MD04. Salah satu MRP type/lot size = usulan pengadaan kacau.",
+            },
+          ],
+          tcodes: ["MM01", "ME21N", "MD02", "MD04", "MMBE"],
+        },
+        {
+          id: "mm4",
+          title: "Accounting & Costing Views",
+          en: "Accounting 1/2 & Costing 1/2 Views",
+          level: "Material Master",
+          summary:
+            "View tempat logistik bertemu keuangan — nilai persediaan dan harga standar material.",
+          sections: [
+            {
+              h: "Accounting view: valuasi",
+              b: "Data valuasi (valuation-level): <b>valuation class</b> (mengelompokkan material ke akun GL mana — jembatan ke automatic account determination/OBYC, topik Config), <b>price control</b> (S=standard price atau V=moving average — topik Persediaan di Akademi Akuntansi), <b>standard/moving price</b>, dan <b>inventory value</b>. Inilah view yang membuat setiap pergerakan barang otomatis jadi jurnal dengan nilai benar.",
+            },
+            {
+              h: "Price control S vs V",
+              b: "<div class='fin-formula'>S (Standard)      : harga tetap; selisih beli → VARIANCE\n                    (umum untuk barang produksi/hasil costing)\nV (Moving Average): harga rata-rata bergerak, update tiap GR\n                    (umum untuk bahan beli)</div>Pilihan ini menentukan bagaimana selisih harga diperlakukan — dan sekali dipilih, konsisten. Salah price control = penilaian persediaan & HPP menyimpang.",
+            },
+            {
+              h: "Costing view",
+              b: "Data untuk product costing (topik CO): <b>with quantity structure</b> (costing otomatis dari BOM+routing atau manual), <b>overhead group</b>, <b>profit center</b>, dan hasil <b>cost estimate</b> (standard cost per unit). Menghubungkan material ke perhitungan HPP dan variance produksi.",
+            },
+            {
+              h: "Kaitan ke materimu",
+              b: "Ini titik temu paling penting: valuation class → OBYC → jurnal otomatis (topik Config), price control → metode persediaan (Akademi Akuntansi), costing → CO-PC (track Controlling). Material master accounting view adalah 'DNA akuntansi' tiap material — auditor memeriksa konsistensinya.",
+            },
+          ],
+          tcodes: ["MM03", "MMBE", "FBL3N"],
+        },
+        {
+          id: "mm5",
+          title: "Storage, QM & Sales Views",
+          en: "Storage, Quality & Sales Views",
+          level: "Material Master",
+          summary:
+            "View sisanya — pergudangan, mutu, dan penjualan — melengkapi gambaran satu material.",
+          sections: [
+            {
+              h: "Plant Data / Storage & WM views",
+              b: "Data pergudangan: <b>storage bin</b>, <b>picking area</b>, <b>storage conditions</b> (suhu, penanganan khusus), dan <b>shelf life data</b> (masa simpan, SLED/expiration — kritikal untuk material kadaluarsa seperti bahan kimia/pelumas). WM Execution & Packaging view untuk material yang dikelola Warehouse Management (bin management, handling unit — topik WM di tab T-code).",
+            },
+            {
+              h: "Quality Management view",
+              b: "Untuk material yang butuh kontrol mutu (topik QM & ISO 9001): <b>inspection setup</b> (apakah barang datang harus diinspeksi), <b>QM control key</b>, <b>certificate type</b>, <b>inspection interval</b>. Mengaktifkan view ini = setiap GR material itu otomatis memicu inspection lot yang harus di-usage-decision sebelum stok bisa dipakai. Kontrol mutu yang di-enforce sistem.",
+            },
+            {
+              h: "Sales views",
+              b: "Untuk material yang DIJUAL (Sales Org 1/2, Sales General/Plant): <b>sales organization</b>, <b>delivering plant</b>, <b>tax classification</b> (menentukan PPN di billing — topik Pajak), <b>pricing</b>, <b>loading group</b>, <b>availability check</b>. Data ini mengalir ke sales order (VA01) & billing (VF01). Untuk pelabuhan, 'material' bisa berarti barang yang dijual atau bahkan jasa yang ditagihkan.",
+            },
+            {
+              h: "Menutup lingkaran",
+              b: "Kelima kelompok view (Basic, Purchasing/MRP, Accounting/Costing, Storage/QM, Sales) membuat satu material 'berfungsi penuh' di semua modul. Kelengkapan & konsistensi antar view = fondasi data yang membuat seluruh proses (P2P, O2C, inventory) berjalan benar. Material master yang buruk = akar banyak masalah operasional & temuan audit.",
+            },
+          ],
+          tcodes: ["MM03", "MMBE", "QE51N", "VA01"],
+        },
       ];
 
       const ACC_ACADEMY = [
@@ -13051,6 +13263,161 @@
         return l2 ? [l1, l2] : [l1];
       }
       let __svgUid = 0;
+
+      // ---------- per-step mini SAP screen ----------
+      function stepScreenMock(step, tcode, idx) {
+        // extract field hints from this step only
+        const fps = [];
+        const re = /<span class='fp'>(.*?)<\/span>/g;
+        let m;
+        while ((m = re.exec(step.d))) {
+          const v = m[1].replace(/<[^>]+>/g, "").trim();
+          if (v && !fps.includes(v)) fps.push(v);
+        }
+        const W = 300;
+        const esc = (s) =>
+          String(s == null ? "" : s)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+        let y = 0,
+          body = "";
+        // mini title bar with step number + tcode command
+        body += `<rect x="0" y="${y}" width="${W}" height="24" rx="6" fill="rgba(99,102,241,.12)" stroke="rgba(99,102,241,.22)"/>`;
+        body += `<circle cx="14" cy="${y + 12}" r="7" fill="var(--grad-a,#6366F1)"/><text x="14" y="${y + 15.5}" font-size="9" font-weight="700" fill="#fff" text-anchor="middle" font-family="Inter,sans-serif">${idx + 1}</text>`;
+        body += `<text x="28" y="${y + 15.5}" font-size="9.5" fill="var(--ink-soft)" font-family="'JetBrains Mono',monospace">${esc(tcode)}  ·  ${esc((step.t || "").slice(0, 26))}</text>`;
+        y += 32;
+        if (fps.length === 0) {
+          // no explicit fields — show an action line (e.g. Save)
+          const isSave = /simpan|ctrl\+s|post|save/i.test(step.t + step.d);
+          body += `<rect x="0" y="${y}" width="${W}" height="26" rx="6" fill="${isSave ? "rgba(5,150,105,.14)" : "rgba(255,255,255,.7)"}" stroke="${isSave ? "rgba(5,150,105,.5)" : "rgba(120,130,175,.25)"}"/>`;
+          body += `<text x="${W / 2}" y="${y + 16}" font-size="10" text-anchor="middle" fill="${isSave ? "var(--fi)" : "var(--ink-faint)"}" font-family="Inter,sans-serif" font-weight="${isSave ? "700" : "500"}">${isSave ? "💾  " + esc(step.t) : esc(step.t)}</text>`;
+          y += 32;
+        } else {
+          // field rows, highlighted
+          fps.slice(0, 6).forEach((f) => {
+            const lbl = f.length > 18 ? f.slice(0, 17) + "…" : f;
+            body += `<text x="0" y="${y + 14}" font-size="10" fill="var(--ink-faint)" font-family="Inter,sans-serif">${esc(lbl)}</text>`;
+            body += `<rect x="120" y="${y}" width="${W - 120}" height="20" rx="4" fill="rgba(251,191,36,.16)" stroke="rgba(217,119,6,.5)" stroke-width="1.3"/>`;
+            body += `<circle cx="${W - 11}" cy="${y + 10}" r="3" fill="#D97706"/>`;
+            y += 26;
+          });
+        }
+        const H = y + 2;
+        return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:${W}px;height:auto;margin:6px 0 2px" role="img">
+    <rect x="-8" y="-8" width="${W + 16}" height="${H + 16}" rx="10" fill="rgba(255,255,255,.4)" stroke="var(--glass-brd-soft)"/>${body}</svg>`;
+      }
+
+      // ---------- auto screen mock from a T-code card ----------
+      function mockFromTcode(tc) {
+        // Collect field-name hints from steps: text inside <span class='fp'>...</span>
+        const fps = [];
+        (tc.steps || []).forEach((s) => {
+          const re = /<span class='fp'>(.*?)<\/span>/g;
+          let m;
+          while ((m = re.exec(s.d))) {
+            const v = m[1].replace(/<[^>]+>/g, "").trim();
+            if (v && v !== tc.code && !fps.includes(v)) fps.push(v);
+          }
+        });
+        // Build field list (max 8), first two highlighted as the "key" inputs
+        const fieldNames = fps.slice(0, 8);
+        const fields = fieldNames.map((f, i) => ({
+          label: f.length > 16 ? f.slice(0, 15) + "…" : f,
+          value: "",
+          hi: i < 2,
+        }));
+        // Fallback if no fp hints
+        if (fields.length === 0) {
+          fields.push({ label: "(isi field sesuai langkah)", value: "" });
+        }
+        const modLabel = (
+          MODULE_META[
+            Object.keys(MODULE_META).find((k) => {
+              for (const c in DB[k] || {})
+                for (const t of DB[k][c]) if (t.code === tc.code) return true;
+              return false;
+            })
+          ] || { label: "SAP" }
+        ).label.split(" — ")[0];
+        return {
+          title: "Command: " + tc.code + "   ·   " + (tc.purpose || ""),
+          tabs: [{ label: tc.code, active: true }],
+          header: [
+            ["Transaksi", tc.code],
+            ["Fungsi", (tc.purpose || "").slice(0, 32)],
+          ],
+          sections: [{ name: "Field pada layar (dari langkah)", fields }],
+        };
+      }
+
+      // ---------- SAP screen mockup generator (original SVG, not SAP UI) ----------
+      function generateScreenMock(spec) {
+        // spec: {title, tabs:[{label,active}], header:[[label,value]], sections:[{name, fields:[{label,value,hi}]}]}
+        const W = 640,
+          pad = 16;
+        const esc = (s) =>
+          String(s == null ? "" : s)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+        let y = 0;
+        let body = "";
+        // toolbar strip
+        body += `<rect x="0" y="${y}" width="${W}" height="30" rx="7" fill="rgba(99,102,241,.10)" stroke="rgba(99,102,241,.20)"/>`;
+        body += `<circle cx="16" cy="${y + 15}" r="4" fill="#6366F1"/><circle cx="30" cy="${y + 15}" r="4" fill="#8B5CF6"/><circle cx="44" cy="${y + 15}" r="4" fill="#A855F7"/>`;
+        body += `<text x="60" y="${y + 19}" font-size="11" fill="var(--ink-faint)" font-family="'JetBrains Mono',monospace">${esc(spec.title || "")}</text>`;
+        y += 40;
+        // tabs
+        let tx = 0;
+        const tabW = Math.min(120, Math.floor(W / spec.tabs.length));
+        spec.tabs.forEach((t) => {
+          const active = t.active;
+          body += `<rect x="${tx}" y="${y}" width="${tabW - 3}" height="26" rx="6" fill="${active ? "var(--grad-a,#6366F1)" : "rgba(255,255,255,.6)"}" stroke="${active ? "transparent" : "rgba(120,130,175,.3)"}"/>`;
+          body += `<text x="${tx + (tabW - 3) / 2}" y="${y + 17}" font-size="10" text-anchor="middle" fill="${active ? "#fff" : "var(--ink-soft)"}" font-weight="${active ? "700" : "500"}" font-family="Inter,sans-serif">${esc(t.label)}</text>`;
+          tx += tabW;
+        });
+        y += 38;
+        // header key fields (material/desc/plant)
+        (spec.header || []).forEach((h) => {
+          body += `<text x="0" y="${y + 13}" font-size="11" fill="var(--ink-faint)" font-family="Inter,sans-serif">${esc(h[0])}</text>`;
+          body += `<rect x="120" y="${y}" width="200" height="19" rx="4" fill="rgba(255,255,255,.75)" stroke="rgba(120,130,175,.28)"/>`;
+          body += `<text x="128" y="${y + 13}" font-size="11" fill="var(--ink)" font-family="'JetBrains Mono',monospace">${esc(h[1])}</text>`;
+          y += 25;
+        });
+        y += 6;
+        // sections
+        (spec.sections || []).forEach((sec) => {
+          // section band
+          body += `<rect x="0" y="${y}" width="${W}" height="22" rx="5" fill="rgba(120,130,175,.12)"/>`;
+          body += `<text x="10" y="${y + 15}" font-size="10.5" font-weight="700" fill="var(--ink-soft)" font-family="Inter,sans-serif" letter-spacing=".04em">${esc(sec.name).toUpperCase()}</text>`;
+          y += 30;
+          // fields two-column
+          const colW = W / 2;
+          sec.fields.forEach((f, i) => {
+            const col = i % 2;
+            const cx = col * colW;
+            if (col === 0 && i > 0) {
+            }
+            const rowY = y + Math.floor(i / 2) * 27;
+            body += `<text x="${cx}" y="${rowY + 14}" font-size="10.5" fill="var(--ink-faint)" font-family="Inter,sans-serif">${esc(f.label)}</text>`;
+            const boxX = cx + 108,
+              boxW = colW - 116;
+            body += `<rect x="${boxX}" y="${rowY}" width="${boxW}" height="20" rx="4" fill="${f.hi ? "rgba(251,191,36,.18)" : "rgba(255,255,255,.75)"}" stroke="${f.hi ? "rgba(217,119,6,.55)" : "rgba(120,130,175,.28)"}" stroke-width="${f.hi ? "1.5" : "1"}"/>`;
+            if (f.value)
+              body += `<text x="${boxX + 7}" y="${rowY + 14}" font-size="10.5" fill="var(--ink)" font-family="'JetBrains Mono',monospace">${esc(f.value)}</text>`;
+            if (f.hi)
+              body += `<circle cx="${boxX + boxW - 9}" cy="${rowY + 10}" r="3.5" fill="#D97706"/>`;
+          });
+          y += Math.ceil(sec.fields.length / 2) * 27 + 8;
+        });
+        const H = y + 4;
+        return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:${W}px;margin:4px 0" role="img">
+    <rect x="-${pad}" y="-${pad}" width="${W + pad * 2}" height="${H + pad * 2}" rx="14" fill="rgba(255,255,255,.35)" stroke="var(--glass-brd-soft)"/>
+    ${body}
+  </svg>`;
+      }
+
       function svgDefs(uid) {
         return `<defs>
     <linearGradient id="gnum${uid}" x1="0" y1="0" x2="1" y2="1">
@@ -13202,6 +13569,7 @@
           "Semua",
           "Kenalan",
           "Struktur",
+          "Material Master",
           "Navigasi",
           "Konfigurasi",
           "FI Global",
@@ -13213,6 +13581,7 @@
         const labels = {
           Kenalan: "Kenalan dengan SAP",
           Struktur: "Struktur & Data",
+          "Material Master": "Material Master",
           Navigasi: "Navigasi & Error",
           Konfigurasi: "Di Balik Layar (Config)",
           "FI Global": "FI Global Settings",
@@ -13224,6 +13593,7 @@
         const clsOf = {
           Kenalan: "dasar",
           Struktur: "trx",
+          "Material Master": "trx",
           Navigasi: "adj",
           Konfigurasi: "ppn",
           "FI Global": "ppn",
@@ -13260,6 +13630,13 @@
           <div class="fin-body">
             ${t.sections.map((s) => `<div class="bp-section-label">${escapeXML(s.h)}</div><p>${s.b}</p>`).join("")}
           </div>
+          ${
+            t.mock
+              ? `<div class="bp-section-label">Ilustrasi layar (mock-up, bukan screenshot SAP asli)</div>
+          <div style="overflow-x:auto">${generateScreenMock(t.mock)}</div>
+          <div class="flow-desc" style="margin-top:2px;font-size:11.5px">Field bertanda 🟠 = yang dibahas di topik ini. Tata letak menyerupai layar SAP; nilai contoh untuk ilustrasi.</div>`
+              : ""
+          }
           ${
             (t.tcodes || []).filter(tcExists).length
               ? `<div class="bp-section-label">Coba T-code ini — klik untuk cari</div>
@@ -14522,7 +14899,7 @@
         const stepsHTML = tc.steps
           .map(
             (s, n) =>
-              `<div class='step'><div class='sn'>${n + 1}</div><div><div class='st'>${s.t}</div><div class='sd-text'>${s.d}</div></div></div>`,
+              `<div class='step'><div class='sn'>${n + 1}</div><div style='flex:1'><div class='st'>${s.t}</div><div class='sd-text'>${s.d}</div><div class='step-screen' id='ss-${tc.code.replace(/[^A-Za-z0-9]/g, "_")}-${n}' style='display:none'>${stepScreenMock(s, tc.code, n)}</div></div></div>`,
           )
           .join("");
         const noteHTML = tc.note
@@ -14553,6 +14930,7 @@
       ${noteHTML}${tipHTML}
       <button class='diagram-toggle' id='dg-${id}'>🔀 Lihat Diagram Alur</button>
       <div class='diagram-box' id='db-${id}'>${generateFlowSVG(tc.steps)}</div>
+      <button class='diagram-toggle' id='mk-${id}'>🖥️ Tampilkan Layar per Langkah</button>
       <button class='ask-btn'>Pelajari lebih dalam ${tc.code} ↗</button>
     </div>`;
         card.querySelectorAll(".chain-chip[data-tc]").forEach((b) =>
@@ -14571,12 +14949,22 @@
         card
           .querySelector(".star-btn")
           .addEventListener("click", (e) => toggleBookmark(tc.code, e));
-        card.querySelector(".diagram-toggle").addEventListener("click", (e) => {
-          const box = card.querySelector(".diagram-box");
+        card.querySelector("#dg-" + id).addEventListener("click", (e) => {
+          const box = card.querySelector("#db-" + id);
           const open = box.classList.toggle("open");
           e.currentTarget.textContent = open
             ? "🔀 Sembunyikan Diagram Alur"
             : "🔀 Lihat Diagram Alur";
+        });
+        card.querySelector("#mk-" + id).addEventListener("click", (e) => {
+          const screens = card.querySelectorAll(".step-screen");
+          const showing = screens.length && screens[0].style.display === "none";
+          screens.forEach((s) => {
+            s.style.display = showing ? "block" : "none";
+          });
+          e.currentTarget.textContent = showing
+            ? "🖥️ Sembunyikan Layar per Langkah"
+            : "🖥️ Tampilkan Layar per Langkah";
         });
         card
           .querySelector(".ask-btn")
